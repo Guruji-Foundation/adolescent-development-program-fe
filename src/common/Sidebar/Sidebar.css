@@ -1,0 +1,157 @@
+/* Divider Line with Faint Blue Color */
+.sidebar-divider {
+  border: none; /* Remove default border */
+  border-top: 1px solid #3d78d8; /* Faint blue color */
+  margin: 10px 0; /* Add space above and below the divider */
+}
+
+/* Sidebar Container with Right Border */
+.sidebar {
+  width: 236px;
+  height: 100vh;
+  background-color: #f9f9fb;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  transition: width 0.3s ease;
+  /* box-shadow: 2px 0 5px rgba(0,0,0,0.1); */
+  border-right: 1px solid #3d78d8; /* Faint blue right border */
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+
+/* Toggle Button */
+.toggle-button {
+  background-color: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #666;
+  line-height: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toggle-button:hover {
+  color: #1d2125;
+}
+
+/* User Info and Button Wrapper */
+.user-info-wrapper {
+  display: flex;
+  justify-content: space-between; /* Space between text and button */
+  align-items: center; /* Align vertically center */
+  margin-bottom: 10px;
+  padding-right: 10px; /* Add some padding to the right for better spacing */
+}
+
+/* User Info Section */
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info p {
+  font-size: 14px;
+  color: hsl(210, 13%, 13%);
+  margin: 0;
+}
+
+.user-info h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 5px 0;
+  color: #1d2125;
+}
+
+.sidebar.collapsed .user-info h1,
+.sidebar.collapsed .user-info p {
+  display: none;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  margin: 10px 0;
+}
+
+.sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-decoration: none;
+  font-size: 16px;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  gap: 10px;
+}
+
+.sidebar-menu li a:hover {
+  background-color: #e0e6ed;
+}
+
+.sidebar-menu li a.active {
+  background-color: #cde0ff;
+  color: #1d2125;
+}
+
+.icon {
+  font-size: 20px;
+  width: 24px;
+  height: 24px;
+}
+
+.sidebar.collapsed .sidebar-menu li a {
+  justify-content: center;
+}
+
+.sidebar.collapsed .icon {
+  margin-right: 0;
+}
+
+.sidebar.collapsed .sidebar-menu li a span {
+  display: none;
+}
+
+.sidebar .menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #6c757d; /* Default text color */
+  text-decoration: none;
+}
+
+/* For active link styles */
+.sidebar-menu li a.active {
+  background-color: hsl(209, 82%, 85%); /* Custom active background color */
+  color: hsl(216, 71%, 23%); /* Custom active text color */
+}
+
+.sidebar-menu li a:hover {
+  background-color: hsl(209, 82%, 90%); /* Slightly lighter hover state */
+  color: hsl(216, 71%, 23%); /* Hover text color */
+}
+
+/* Adjust icon color for active state */
+.sidebar-menu li a.active i {
+  color: hsl(216, 71%, 23%); /* Icon color for active state */
+}
+
+
+
+
+

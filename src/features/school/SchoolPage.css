@@ -1,0 +1,124 @@
+/* General Styling */
+body, html {
+    font-family: 'Poppins', sans-serif;
+    color: hsl(220, 6%, 40%);
+    line-height: 1.6;
+  }
+  
+  .school-page {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+/* Header Section */
+.school-page .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Column Layout for Headings */
+  .school-page .heading-container {
+    display: flex;
+    flex-direction: column; /* Stack the headings vertically */
+  }
+  
+  .school-page .school-heading {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: hsl(210, 25.3%, 32.5%);
+  }
+  
+  .school-page subheading {
+    font-size: 1.1rem;
+    color: rgba(0, 7, 20, 0.62);
+}
+  
+  .create-new-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+  
+  .create-new-button:hover {
+    background-color: #218838;
+  }
+  
+  
+  /* Table Section */
+  .school-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .school-table th, .school-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .school-table th {
+    background-color: #f9f9fb;
+    color: hsl(220, 6%, 40%);
+    font-weight: 600;
+  }
+  
+  .school-table td {
+    color: hsl(220, 6%, 40%);
+  }
+  
+  .school-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .school-table tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Action Buttons */
+  .action-button {
+    background-color: #f9f9fb;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    margin-left: 8px;
+  }
+  
+  .action-button:hover {
+    background-color: #e9ecef;
+  }
+  
+  .edit-button {
+    color: #007bff;
+  }
+  
+  .delete-button {
+    color: #dc3545;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .school-page {
+      padding: 10px;
+    }
+  
+    .school-table th, .school-table td {
+      padding: 8px 10px;
+    }
+  }
+  
