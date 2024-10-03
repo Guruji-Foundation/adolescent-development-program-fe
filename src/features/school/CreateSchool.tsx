@@ -2,12 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import "./CreateSchoolForm.css";
 import SuccessModal from "../../common/Sucess/SuccessModal";
 import { createSchool } from "../../services/SchoolService";
 import SchoolForm from "./SchoolForm";
 
-const CreateSchoolForm: React.FC = () => {
+const CreateSchool: React.FC = () => {
   const message = {
     heading: "School Created Successfully!",
     description: "Your school has been Created.",
@@ -42,4 +41,4 @@ const CreateSchoolForm: React.FC = () => {
   );
 };
 
-export default CreateSchoolForm;
+export default CreateSchool;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SuccessModal from "../../common/Sucess/SuccessModal"; // Import the modal component
-import "./CreateSchoolForm.css";
+import "./SchoolForm.css";
 
 import { createSchool } from "../../services/SchoolService";
 
