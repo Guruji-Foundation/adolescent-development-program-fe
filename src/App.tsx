@@ -22,7 +22,6 @@ const App: React.FC = () => {
             <Route path="/student" element={<StudentPage />} />
             <Route path="/create-school" element={<CreateSchool/>} />
             <Route path="/edit-school/:id" element={<EditSchool />} />
-      
             <Route path="/" element={<SchoolPage />} /> {/* Default route */}
           </Routes>
         </div>

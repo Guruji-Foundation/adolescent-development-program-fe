@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import "./SchoolPage.css";
 import { fetchSchools, deleteSchool } from "../../services/SchoolService";
 import { School } from "../../types/School";
 import { useNavigate } from "react-router-dom";
+import ConfirmationModal from "../../common/Confirmation/ConfirmationModal"; // Import the modal component
 
 const SchoolPage: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedSchoolId, setSelectedSchoolId] = useState<number | null>(null); // State to store the selected school for deletion
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // State to control modal visibility
   const navigate = useNavigate();
+
   useEffect(() => {
-    // Fetch school data from the service
     fetchSchools()
       .then((data) => {
         if (data && data.length > 0) {
@@ -28,22 +30,39 @@ const SchoolPage: React.FC = () => {
         setLoading(false);
       });
   }, []);
+
   const handleEdit = (id: number) => {
-    console.log("Edit school with id:", id);
     navigate(`/edit-school/${id}`);
   };
 
+  // Handle showing the delete confirmation modal
   const handleDelete = (id: number) => {
-    console.log("Delete school with id:", id);
-    deleteSchool(id)
-      .then(() => {
-        // Filter out the deleted school from the schools array
-        const updatedSchools = schools.filter((school) => school.id !== id);
-        setSchools(updatedSchools); // Update state with the filtered array
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    setSelectedSchoolId(id); // Store the school id for deletion
+    setIsModalVisible(true); // Show the confirmation modal
+  };
+
+  // Confirm deletion and delete the school
+  const confirmDelete = () => {
+    if (selectedSchoolId !== null) {
+      deleteSchool(selectedSchoolId)
+        .then(() => {
+          const updatedSchools = schools.filter(
+            (school) => school.id !== selectedSchoolId
+          );
+          setSchools(updatedSchools); // Update the schools state
+          setSelectedSchoolId(null); // Reset the selected school id
+          setIsModalVisible(false); // Close the modal
+        })
+        .catch((error) => {
+          console.error("Error deleting school:", error);
+        });
+    }
+  };
+
+  // Cancel deletion and close the modal
+  const cancelDelete = () => {
+    setSelectedSchoolId(null); // Reset the selected school id
+    setIsModalVisible(false); // Close the modal
   };
 
   const handleCreateNew = () => {
@@ -111,6 +130,16 @@ const SchoolPage: React.FC = () => {
           ))}
         </tbody>
       </table>
+
+      {/* Confirmation Modal */}
+      {isModalVisible && (
+        <ConfirmationModal
+          title="Confirm Deletion"
+          message="Do you really want to delete this school?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
     </div>
   );
 };
