@@ -1,13 +1,14 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Sidebar from './common/Sidebar/Sidebar';
-import Navbar from './common/Navbar/Navbar'; 
-import SchoolPage from './features/school/SchoolPage';
-import CreateSchoolForm from './features/school/CreateSchoolForm';
-import CreateSchoolForm1 from './features/school/CreateSchoolForm1';
-import TeacherList from './features/teacher/TeacherPage';
-import StudentPage from './features/student/StudentPage';
-import './App.css'; // Global styles
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Sidebar from "./common/Sidebar/Sidebar";
+import Navbar from "./common/Navbar/Navbar";
+import SchoolPage from "./features/school/SchoolPage";
+import CreateSchoolForm from "./features/school/CreateSchoolForm";
+import CreateSchoolForm1 from "./features/school/CreateSchoolForm1";
+import TeacherList from "./features/teacher/TeacherPage";
+import StudentPage from "./features/student/StudentPage";
+import EditSchool from "./features/school/EditSchool";
+import "./App.css"; // Global styles
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
             <Route path="/teacher" element={<TeacherList />} />
             <Route path="/student" element={<StudentPage />} />
             <Route path="/create-school" element={<CreateSchoolForm />} />
+            <Route path="/edit-school/:id" element={<EditSchool />} />
             <Route path="/create-school1" element={<CreateSchoolForm1 />} />
             <Route path="/" element={<SchoolPage />} /> {/* Default route */}
           </Routes>
