@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SuccessModal from "../../common/Sucess/SuccessModal"; // Import the modal component
 import "./SchoolForm.css";
+import "../../CSS/Main.css";
 
 import { createSchool } from "../../services/SchoolService";
+import ErrorMessage from "../../common/FormInput/ErrorMessage";
+import NumberInput from "../../common/FormInput/NumberInput";
+import TextInput from "../../common/FormInput/TextInput";
 
 interface SchoolFormProps {
   handleSubmit: (schoolData: any) => Promise<any>;
@@ -35,7 +39,6 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
   const [errorMessages, setErrorMessages] = useState<string[] | null>(null);
 
   useEffect(() => {
-    console.log("form school form ");
     if (schoolDataDefault != null) {
       console.log("if");
       console.log(schoolDataDefault);
@@ -80,111 +83,68 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
       <h2>{heading}</h2>
       <form onSubmit={handleSubmitButton}>
         <div className="form-layout">
-          <div className="form-field">
-            <label htmlFor="name" className="required">
-              School Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={schoolData.name}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+          <TextInput
+            label="School Name"
+            name="name"
+            value={schoolData.name}
+            onChange={handleInputChange}
+            required
+          />
 
-          <div className="form-field">
-            <label htmlFor="address" className="required">
-              Address
-            </label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              value={schoolData.address}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+          <TextInput
+            label="Address"
+            name="address"
+            value={schoolData.address}
+            onChange={handleInputChange}
+            required
+          />
+          <TextInput
+            label=" Phone Number"
+            name="phoneNumber"
+            value={schoolData.phoneNumber}
+            onChange={handleInputChange}
+            required
+          />
 
-          <div className="form-field">
-            <label htmlFor="phoneNumber" className="required">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={schoolData.phoneNumber}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+          <TextInput
+            label="Principal Name"
+            name="principalName"
+            value={schoolData.principalName}
+            onChange={handleInputChange}
+            required
+          />
 
-          <div className="form-field">
-            <label htmlFor="principalName" className="required">
-              Principal Name
-            </label>
-            <input
-              type="text"
-              id="principalName"
-              name="principalName"
-              value={schoolData.principalName}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+          <TextInput
+            label="Principal Contact No"
+            name="principalContactNo"
+            value={schoolData.principalContactNo}
+            onChange={handleInputChange}
+            required
+          />
 
-          <div className="form-field">
-            <label htmlFor="principalContactNo" className="required">
-              Principal Contact No
-            </label>
-            <input
-              type="tel"
-              id="principalContactNo"
-              name="principalContactNo"
-              value={schoolData.principalContactNo}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+          <TextInput
+            label="Managing Trustee"
+            name="managingTrustee"
+            value={schoolData.managingTrustee}
+            onChange={handleInputChange}
+          />
 
-          <div className="form-field">
-            <label htmlFor="managingTrustee">Managing Trustee</label>
-            <input
-              type="text"
-              id="managingTrustee"
-              name="managingTrustee"
-              value={schoolData.managingTrustee}
-              onChange={handleInputChange}
-            />
-          </div>
+          <TextInput
+            label="Trustee Contact Info"
+            name="trusteeContactInfo"
+            value={schoolData.trusteeContactInfo}
+            onChange={handleInputChange}
+          />
 
-          <div className="form-field">
-            <label htmlFor="trusteeContactInfo">Trustee Contact Info</label>
-            <input
-              type="tel"
-              id="trusteeContactInfo"
-              name="trusteeContactInfo"
-              value={schoolData.trusteeContactInfo}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="website">Website</label>
-            <input
-              type="url"
-              id="website"
-              name="website"
-              value={schoolData.website}
-              onChange={handleInputChange}
-            />
-          </div>
+          <TextInput
+            label="Website"
+            name="website"
+            value={schoolData.website}
+            onChange={handleInputChange}
+          />
         </div>
 
-        <button type="submit" className="submit-button">
+        <button type="submit" className="g-button submit-button">
           Submit
         </button>
       </form>

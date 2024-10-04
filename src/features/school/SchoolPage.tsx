@@ -1,47 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import "./SchoolPage.css";
-import { fetchSchools, deleteSchool } from "../../services/SchoolService";
-import { School } from "../../types/School";
+import React, { useState } from "react";
+import { FaEdit, FaTrashAlt, FaExclamationTriangle } from "react-icons/fa"; // Warning icon
 import { useNavigate } from "react-router-dom";
-import ConfirmationModal from "../../common/Confirmation/ConfirmationModal"; // Import the modal component
+import { deleteSchool } from "../../services/SchoolService";
+import ConfirmationModal from "../../common/Confirmation/ConfirmationModal";
+import Tooltip from "../../common/Tooltip/ToolTip";
+import "../../CSS/Main.css";
+import "./SchoolPage.css";
+
+import useFetchSchools from "../../hooks/useFetchSchools";
+import useError from "../../hooks/useError";
+
+
+import ErrorMessage from "../../common/FormInput/ErrorMessage";
 
 const SchoolPage: React.FC = () => {
-  const [schools, setSchools] = useState<School[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedSchoolId, setSelectedSchoolId] = useState<number | null>(null); // State to store the selected school for deletion
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // State to control modal visibility
+  const [selectedSchoolId, setSelectedSchoolId] = useState<number | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
   const navigate = useNavigate();
+  const { schools, setSchools, loading } = useFetchSchools();
+  const { errors, setError, clearError } = useError(); // Handle multiple errors
 
-  useEffect(() => {
-    fetchSchools()
-      .then((data) => {
-        if (data && data.length > 0) {
-          setSchools(data);
-        } else {
-          setSchools([]); // If no schools exist, set an empty array
-        }
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError("Error fetching school data.");
-        console.error("Error fetching school data:", error);
-        setLoading(false);
-      });
-  }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-school/${id}`);
-  };
-
-  // Handle showing the delete confirmation modal
+// delete school 
   const handleDelete = (id: number) => {
-    setSelectedSchoolId(id); // Store the school id for deletion
-    setIsModalVisible(true); // Show the confirmation modal
+    clearError(); // Clear errors before attempting to delete
+    setSelectedSchoolId(id);
+    setIsModalVisible(true);
   };
 
-  // Confirm deletion and delete the school
   const confirmDelete = () => {
     if (selectedSchoolId !== null) {
       deleteSchool(selectedSchoolId)
@@ -49,48 +36,53 @@ const SchoolPage: React.FC = () => {
           const updatedSchools = schools.filter(
             (school) => school.id !== selectedSchoolId
           );
-          setSchools(updatedSchools); // Update the schools state
-          setSelectedSchoolId(null); // Reset the selected school id
-          setIsModalVisible(false); // Close the modal
+          setSchools(updatedSchools);
+          setSelectedSchoolId(null);
+          setIsModalVisible(false);
         })
         .catch((error) => {
           console.error("Error deleting school:", error);
+          setError("Failed to delete school. Please try again later.");
         });
     }
   };
 
-  // Cancel deletion and close the modal
   const cancelDelete = () => {
-    setSelectedSchoolId(null); // Reset the selected school id
-    setIsModalVisible(false); // Close the modal
+    setSelectedSchoolId(null);
+    setIsModalVisible(false);
   };
 
+
+  ///creation button 
   const handleCreateNew = () => {
     navigate("/create-school");
   };
+
+  //edit button 
+  const handleEdit = (id: number) => {
+    navigate(`/edit-school/${id}`);
+  };
+
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
     <div className="school-page">
-      {/* Header Section */}
       <div className="header">
         <div className="heading-container">
           <h2 className="school-heading">School</h2>
           <p className="subheading">List of Schools</p>
         </div>
-        <button className="create-new-button" onClick={handleCreateNew}>
+        <button className="g-button create-new-button" onClick={handleCreateNew}>
           Create New
         </button>
       </div>
 
-      {/* School Table */}
+      {/* Global error handling for both fetch and delete */}
+      {errors.length > 0 && <ErrorMessage errors={errors} />}
+
       <table className="school-table">
         <thead>
           <tr>
@@ -113,25 +105,28 @@ const SchoolPage: React.FC = () => {
               <td>{school.managingTrustee}</td>
               <td>{school.trusteeContactInfo}</td>
               <td>
-                <button
-                  onClick={() => handleEdit(school.id)}
-                  className="action-button edit-button"
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  onClick={() => handleDelete(school.id)}
-                  className="action-button delete-button"
-                >
-                  <FaTrashAlt />
-                </button>
+                <Tooltip text="Edit">
+                  <button
+                    onClick={() => handleEdit(school.id)}
+                    className="action-button edit-button"
+                  >
+                    <FaEdit />
+                  </button>
+                </Tooltip>
+                <Tooltip text="Delete">
+                  <button
+                    onClick={() => handleDelete(school.id)}
+                    className="action-button delete-button"
+                  >
+                    <FaTrashAlt />
+                  </button>
+                </Tooltip>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Confirmation Modal */}
       {isModalVisible && (
         <ConfirmationModal
           title="Confirm Deletion"

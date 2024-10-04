@@ -18,7 +18,7 @@ body {
 h2 {
   font-size: 26px;
   font-weight: 700;
-  color: #0057d9;
+  color: #4a4a4a;
   text-align: center;
   margin-bottom: 30px;
 }
@@ -76,21 +76,17 @@ input:hover {
 .submit-button {
   width: 160px;
   padding: 12px;
-  background-color: #0057d9;
-  color: white;
   border: none;
   border-radius: 6px;
   font-size: 16px;
-  cursor: pointer;
   margin: 30px auto;
   display: block;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.submit-button:hover {
+/* .submit-button:hover {
   background-color: #004bb5;
-  box-shadow: 0 4px 8px rgba(0, 87, 217, 0.2); /* Slight shadow on hover */
-}
+  box-shadow: 0 4px 8px rgba(0, 87, 217, 0.2); /* Slight shadow on hover} */
 
 /* Success and Error Messages */
 .success-message,

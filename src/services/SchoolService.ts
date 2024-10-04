@@ -15,7 +15,7 @@ export const createSchool = async (schoolData: Object) => {
 export const fetchSchools = async (): Promise<School[]> => {
   const response = await MainAPI.get("/schools");
   if (response.data && response.data.status) {
-    return response.data.data.students; // Adjust the property according to API structure
+    return response.data.data.schools; // Adjust the property according to API structure
   }
   return [];
 };

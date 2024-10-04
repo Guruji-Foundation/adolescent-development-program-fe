@@ -1,0 +1,47 @@
+import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import SuccessModal from "../../common/Sucess/SuccessModal";
+import { createTeacher } from "../../services/TeacherService";
+import TeacherForm from "./TeacherForm";
+
+const CreateSchool: React.FC = () => {
+  const message = {
+    heading: "Teacher Created Successfully!",
+    description: "You have successfully created Teacher!",
+  };
+  const heading = "Create Teacher";
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (teacherData: any) => {
+    console.log("from ct");
+    console.log(teacherData);
+    try {
+      const response = await createTeacher(teacherData);
+      return response;
+    } catch (error) {
+      return error; // Return the error object to handle it in the form
+    }
+  };
+
+  //rediret to teachers list page 
+  const handleCloseModal = () => {
+    navigate("/teacher"); // Redirect to the school list page after closing the modal
+  };
+
+  return (
+    <div>
+      <TeacherForm
+        handleSubmit={handleSubmit}
+        message={message}
+        heading={heading}
+        handleCloseModal={handleCloseModal}
+        teacherDataDefault={null}
+      />
+    </div>
+  );
+};
+
+export default CreateSchool;

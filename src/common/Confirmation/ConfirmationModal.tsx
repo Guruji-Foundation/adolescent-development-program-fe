@@ -1,6 +1,6 @@
-
 import React from "react";
 import "./ConfirmationModal.css"; // Optional: create CSS for modal
+import "../../CSS/Main.css";
 
 interface ConfirmationModalProps {
   title: string;
@@ -21,10 +21,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <h3>{title}</h3>
         <p>{message}</p>
         <div className="modal-actions">
-          <button className="confirm-button" onClick={onConfirm}>
+          <button className="r-button confirm-button" onClick={onConfirm}>
             Confirm
           </button>
-          <button className="cancel-button" onClick={onCancel}>
+          <button className="g-button cancel-button" onClick={onCancel}>
             Cancel
           </button>
         </div>
