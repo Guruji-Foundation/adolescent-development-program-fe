@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { FaEdit, FaTrashAlt, FaExclamationTriangle } from "react-icons/fa"; // Warning icon
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { deleteSchool } from "../../services/SchoolService";
-import ConfirmationModal from "../../common/Confirmation/ConfirmationModal";
-import Tooltip from "../../common/Tooltip/ToolTip";
+import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
+import Tooltip from "../../common/FeedbackComponents/Tooltip/ToolTip";
 import "../../CSS/Main.css";
 import "./SchoolPage.css";
 
 import useFetchSchools from "../../hooks/useFetchSchools";
 import useError from "../../hooks/useError";
 
-
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
+import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner"; // Import loading spinner
 
 const SchoolPage: React.FC = () => {
   const [selectedSchoolId, setSelectedSchoolId] = useState<number | null>(null);
@@ -19,12 +19,10 @@ const SchoolPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { schools, setSchools, loading } = useFetchSchools();
-  const { errors, setError, clearError } = useError(); // Handle multiple errors
+  const { errors, setError, clearError } = useError();
 
-
-// delete school 
   const handleDelete = (id: number) => {
-    clearError(); // Clear errors before attempting to delete
+    clearError();
     setSelectedSchoolId(id);
     setIsModalVisible(true);
   };
@@ -52,20 +50,21 @@ const SchoolPage: React.FC = () => {
     setIsModalVisible(false);
   };
 
-
-  ///creation button 
   const handleCreateNew = () => {
     navigate("/create-school");
   };
 
-  //edit button 
   const handleEdit = (id: number) => {
     navigate(`/edit-school/${id}`);
   };
 
-
+  // Display the loading spinner when data is being fetched
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
+  }
+  if (errors.length > 0) {
+    clearError();
+    return <div>{errors.length > 0 && <ErrorMessage errors={errors} />}</div>;
   }
 
   return (
@@ -75,13 +74,15 @@ const SchoolPage: React.FC = () => {
           <h2 className="school-heading">School</h2>
           <p className="subheading">List of Schools</p>
         </div>
-        <button className="g-button create-new-button" onClick={handleCreateNew}>
+        <button
+          className="g-button create-new-button"
+          onClick={handleCreateNew}
+        >
           Create New
         </button>
       </div>
 
-      {/* Global error handling for both fetch and delete */}
-      {errors.length > 0 && <ErrorMessage errors={errors} />}
+      {/* {errors.length > 0 && <ErrorMessage errors={errors} />} */}
 
       <table className="school-table">
         <thead>

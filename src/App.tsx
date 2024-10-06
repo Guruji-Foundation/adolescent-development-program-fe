@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Sidebar from "./common/Sidebar/Sidebar";
-import Navbar from "./common/Navbar/Navbar";
+import Sidebar from "./common/Navigation/Sidebar/Sidebar";
+import Navbar from "./common/Navigation/Navbar/Navbar";
 import SchoolPage from "./features/school/SchoolPage";
 import CreateSchool from "./features/school/CreateSchool";
 import TeacherPage from "./features/teacher/TeacherPage";

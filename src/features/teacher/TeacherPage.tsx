@@ -6,15 +6,18 @@ import { useNavigate } from "react-router-dom";
 import "./TeacherPage.css"; // Assuming your styles are in TeacherPage.css
 import { Teacher } from "../../types/Teacher";
 import { fetchTeachers, deleteTeacher } from "../../services/TeacherService";
-import ConfirmationModal from "../../common/Confirmation/ConfirmationModal"; // Import the modal component
-import ToolTip from "../../common/Tooltip/ToolTip";
+import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal"; // Import the modal component
+import ToolTip from "../../common/FeedbackComponents/Tooltip/ToolTip";
+import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
+import useError from "../../hooks/useError";
+import ErrorMessage from "../../common/FormInput/ErrorMessage";
 
 import "../../CSS/Main.css";
 
 const TeacherPage: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { errors, setError, clearError } = useError();
   const [selectedTeacherId, setSelectedTeacherId] = useState<number | null>(
     null
   ); // State to store the selected school for deletion
@@ -33,7 +36,7 @@ const TeacherPage: React.FC = () => {
         setLoading(false);
       })
       .catch((error) => {
-        setError("Error fetching teacher data");
+        setError("Error fetching teacher data ");
         console.error("Error fetching teacher data:", error);
         setLoading(false);
       });
@@ -78,11 +81,11 @@ const TeacherPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
-  if (error) {
-    return <div>{error}</div>;
+  if (errors.length > 0) {
+    return <div>{errors.length > 0 && <ErrorMessage errors={errors} />}</div>;
   }
 
   return (

@@ -9,7 +9,7 @@ const EditTeacher: React.FC = () => {
   const [teacherData, setTeacherData] = useState({
     name: "",
     experience: 0,
-    schoolId: NaN,
+    schoolId: 0,
   });
 
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const EditTeacher: React.FC = () => {
     heading: "Teacher Edited Sccussfully!",
     description: "You have edited teacher.",
   };
-  console.log("form et");
+
   const heading = "Edit Teacher";
 
   useEffect(() => {

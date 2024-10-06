@@ -52,14 +52,17 @@ const EditSchool: React.FC = () => {
     navigate("/school"); // Redirect to the school list page after closing the modal
   };
 
-  return <div>
-    <SchoolForm 
-    handleSubmit = {handleSubmit} 
-    message = {message} 
-    heading = {heading} 
-    handleCloseModal={handleCloseModal} 
-    schoolDataDefault={schoolData}/>
-  </div>;
+  return (
+    <div>
+      <SchoolForm
+        handleSubmit={handleSubmit}
+        message={message}
+        heading={heading}
+        handleCloseModal={handleCloseModal}
+        schoolDataDefault={schoolData}
+      />
+    </div>
+  );
 };
 
 export default EditSchool;

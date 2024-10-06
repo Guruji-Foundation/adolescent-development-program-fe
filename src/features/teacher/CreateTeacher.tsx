@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import SuccessModal from "../../common/Sucess/SuccessModal";
+import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
 import { createTeacher } from "../../services/TeacherService";
 import TeacherForm from "./TeacherForm";
 
@@ -12,6 +12,12 @@ const CreateSchool: React.FC = () => {
     description: "You have successfully created Teacher!",
   };
   const heading = "Create Teacher";
+
+  const [teacherData, setTeacherData] = useState({
+    name: "",
+    experience: 0,
+    schoolId: NaN,
+  });
 
   const navigate = useNavigate();
 
@@ -26,7 +32,7 @@ const CreateSchool: React.FC = () => {
     }
   };
 
-  //rediret to teachers list page 
+  //rediret to teachers list page
   const handleCloseModal = () => {
     navigate("/teacher"); // Redirect to the school list page after closing the modal
   };
@@ -38,7 +44,7 @@ const CreateSchool: React.FC = () => {
         message={message}
         heading={heading}
         handleCloseModal={handleCloseModal}
-        teacherDataDefault={null}
+        teacherDataDefault={teacherData}
       />
     </div>
   );

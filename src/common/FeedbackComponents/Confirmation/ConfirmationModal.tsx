@@ -1,6 +1,6 @@
 import React from "react";
 import "./ConfirmationModal.css"; // Optional: create CSS for modal
-import "../../CSS/Main.css";
+import "../../../CSS/Main.css";
 
 interface ConfirmationModalProps {
   title: string;

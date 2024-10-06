@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import SuccessModal from "../../common/Sucess/SuccessModal";
+import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
 import { createSchool } from "../../services/SchoolService";
 import SchoolForm from "./SchoolForm";
 
@@ -12,6 +12,17 @@ const CreateSchool: React.FC = () => {
     description: "Your school has been Created.",
   };
   const heading = "Create School";
+
+  const [schoolData, setSchoolData] = useState({
+    name: "",
+    address: "",
+    phoneNumber: "",
+    principalName: "",
+    principalContactNo: "",
+    managingTrustee: "",
+    trusteeContactInfo: "",
+    website: "",
+  });
 
   const navigate = useNavigate();
 
@@ -35,7 +46,7 @@ const CreateSchool: React.FC = () => {
         message={message}
         heading={heading}
         handleCloseModal={handleCloseModal}
-        schoolDataDefault={null}
+        schoolDataDefault={schoolData}
       />
     </div>
   );

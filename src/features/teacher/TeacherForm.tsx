@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SuccessModal from "../../common/Sucess/SuccessModal"; // Import the modal component
-import { fetchSchools } from "../../services/SchoolService";
+import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal"; // Import the modal component
 import useError from "../../hooks/useError";
 import useFetchSchools from "../../hooks/useFetchSchools";
 
@@ -8,6 +7,7 @@ import TextInput from "../../common/FormInput/TextInput"; // Import TextInput
 import NumberInput from "../../common/FormInput/NumberInput"; // Import NumberInput
 import SelectInput from "../../common/FormInput/SelectInput"; // Import SelectInput
 import ErrorMessage from "../../common/FormInput/ErrorMessage"; // Import ErrorMessage
+import Button from "../../common/FormInput/Button";
 
 import "./TeacherForm.css";
 import "../../CSS/Main.css";
@@ -27,21 +27,21 @@ const TeacherForm: React.FC<TeacherFormProps> = ({
   handleCloseModal,
   teacherDataDefault,
 }) => {
+  const { schools } = useFetchSchools();
+  //creating state and assigning teacherData from crate or edit component teacherData
   const [teacherData, setTeacherData] = useState({
-    name: "",
-    experience: 0,
-    schoolId: NaN,
+    name: teacherDataDefault.name,
+    experience: teacherDataDefault.experience,
+    schoolId: teacherDataDefault.schoolId,
   });
 
-  const [showModal, setShowModal] = useState(false);
-  const { schools } = useFetchSchools();
-  const { errors, setError, clearError } = useError();
-
   useEffect(() => {
-    if (teacherDataDefault != null) {
-      setTeacherData(teacherDataDefault);
-    }
+    setTeacherData(teacherDataDefault);
   }, [teacherDataDefault]);
+
+  const [showModal, setShowModal] = useState(false);
+
+  const { errors, setError, clearError } = useError();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTeacherData({
@@ -103,15 +103,18 @@ const TeacherForm: React.FC<TeacherFormProps> = ({
           />
           <SelectInput
             label="School Details"
-            value={teacherData.schoolId || NaN}
+            value={teacherData.schoolId || ""}
             onChange={handleSchoolChange}
             options={schools}
             required
           />
         </div>
-        <button type="submit" className="g-button submit-button">
-          Submit
-        </button>
+
+        <Button
+          type="submit"
+          label="Submit"
+          className="g-button submit-button"
+        />
       </form>
 
       {errors.length > 0 && <ErrorMessage errors={errors} />}

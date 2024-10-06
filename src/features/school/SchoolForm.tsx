@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import SuccessModal from "../../common/Sucess/SuccessModal"; // Import the modal component
+import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal"; // Import the modal component
 import "./SchoolForm.css";
 import "../../CSS/Main.css";
 
@@ -8,6 +8,8 @@ import { createSchool } from "../../services/SchoolService";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
 import NumberInput from "../../common/FormInput/NumberInput";
 import TextInput from "../../common/FormInput/TextInput";
+import Button from "../../common/FormInput/Button";
+import useError from "../../hooks/useError";
 
 interface SchoolFormProps {
   handleSubmit: (schoolData: any) => Promise<any>;
@@ -25,26 +27,22 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
   schoolDataDefault,
 }) => {
   const [schoolData, setSchoolData] = useState({
-    name: "",
-    address: "",
-    phoneNumber: "",
-    principalName: "",
-    principalContactNo: "",
-    managingTrustee: "",
-    trusteeContactInfo: "",
-    website: "",
+    name: schoolDataDefault.name,
+    address: schoolDataDefault.address,
+    phoneNumber: schoolDataDefault.phoneNumber,
+    principalName: schoolDataDefault.principalName,
+    principalContactNo: schoolDataDefault.principalContactNo,
+    managingTrustee: schoolDataDefault.managingTrustee,
+    trusteeContactInfo: schoolDataDefault.trusteeContactInfo,
+    website: schoolDataDefault.website,
   });
 
-  const [showModal, setShowModal] = useState(false);
-  const [errorMessages, setErrorMessages] = useState<string[] | null>(null);
-
   useEffect(() => {
-    if (schoolDataDefault != null) {
-      console.log("if");
-      console.log(schoolDataDefault);
-      setSchoolData(schoolDataDefault);
-    }
+    setSchoolData(schoolDataDefault);
   }, [schoolDataDefault]);
+
+  const [showModal, setShowModal] = useState(false);
+  const { errors, setError, clearError } = useError();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSchoolData({
@@ -62,14 +60,14 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
 
       if (response.data?.status) {
         setShowModal(true); // Show success modal
-        setErrorMessages(null); // Clear errors
+        clearError(); // Clear errors
       } else if (response.data?.messages) {
-        setErrorMessages(response.data.messages.map((msg: any) => msg.message));
+        setError(response.data.messages.map((msg: any) => msg.message));
       } else {
-        setErrorMessages(["An unexpected error occurred."]);
+        setError("An unexpected error occurred.");
       }
     } catch (error: any) {
-      setErrorMessages([error.message || "Error submitting the form."]);
+      setError(error.message || "Error submitting the form.");
     }
   };
 
@@ -144,18 +142,15 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
           />
         </div>
 
-        <button type="submit" className="g-button submit-button">
-          Submit
-        </button>
+        {/* Use Button component */}
+        <Button
+          type="submit"
+          label="Submit"
+          className="g-button submit-button"
+        />
       </form>
 
-      {errorMessages && (
-        <div className="error-messages">
-          {errorMessages.map((msg, index) => (
-            <p key={index}>{msg}</p>
-          ))}
-        </div>
-      )}
+      {errors.length > 0 && <ErrorMessage errors={errors} />}
 
       {showModal && <SuccessModal data={message} onClose={handleClose} />}
     </div>

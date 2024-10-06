@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import "./Sidebar.css"; // Import custom styles
 import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
-import ToolTip from "../../common/Tooltip/ToolTip";
+import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 
 const Sidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
