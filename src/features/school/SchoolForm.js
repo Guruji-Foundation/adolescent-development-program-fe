@@ -4,7 +4,6 @@ import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal"; 
 import "./SchoolForm.css";
 import "../../CSS/Main.css";
 
-import { createSchool } from "../../services/SchoolService";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
 import NumberInput from "../../common/FormInput/NumberInput";
 import TextInput from "../../common/FormInput/TextInput";

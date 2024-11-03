@@ -1,17 +1,62 @@
 import HttpInterceptor from "./HttpInterceptor";
-import { GET_ALL_SCHOOL_LIST } from "./APIURLs";
+import { SCHOOL, TEACHER } from "./APIURLs";
 
 const apiServiceBased = HttpInterceptor();
 
 export default {
-  getAllSchollList: async () => {
-    return apiServiceBased.get(GET_ALL_SCHOOL_LIST);
+  //school api methods
+
+  //get all school list
+  getAllSchoolList: async () => {
+    return apiServiceBased.get(SCHOOL);
+  },
+  
+  //fetch one school
+  fetchSchool: async (id) => {
+    return apiServiceBased.get(`${SCHOOL}/${id}`);
   },
 
+  //create school
   createSchool: async (schoolData) => {
-    return apiServiceBased.post(GET_ALL_SCHOOL_LIST, schoolData);
+    return apiServiceBased.post(SCHOOL, schoolData);
   },
-  deleteSchool: async (id) =>{
-    return apiServiceBased.delete(`${GET_ALL_SCHOOL_LIST}/${id}`);
-  }
+
+  //delete school
+  deleteSchool: async (id) => {
+    return apiServiceBased.delete(`${SCHOOL}/${id}`);
+  },
+
+  //update school
+  updateSchool: async (id, schoolData) => {
+    return apiServiceBased.put(`${SCHOOL}/${id}`, schoolData);
+  },
+  //---------------------------
+
+  //Teacher api methods 
+
+  //get all teacher list
+  getAllTeacherList: async () => {
+    return apiServiceBased.get(TEACHER);
+  },
+
+  //fetch one Teacher
+  fetchTeacher: async (id) => {
+    return apiServiceBased.get(`${TEACHER}/${id}`);
+  },
+
+  //create Teacher
+  createTeacher: async (teacherData) => {
+    return apiServiceBased.post(TEACHER, teacherData);
+  },
+
+  //delete Teacher
+  deleteTeacher: async (id) => {
+    return apiServiceBased.delete(`${TEACHER}/${id}`);
+  },
+
+  //update Teacher
+  updateTeacher: async (id, teacherData) => {
+    return apiServiceBased.put(`${TEACHER}/${id}`, teacherData);
+  },
+  //---------------------------
 };

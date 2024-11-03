@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { fetchSchool, updateSchool } from "../../services/SchoolService";
+import apiServices from "../../common/ServiCeProvider/Services";
 import SchoolForm from "./SchoolForm";
 
 const EditSchool: React.FC = () => {
@@ -27,10 +27,12 @@ const EditSchool: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetchSchool(Number(id))
+      apiServices
+        .fetchSchool(Number(id))
         .then((res) => {
           if (res) {
-            setSchoolData(res);
+            // console.log(res?.data?.data);
+            setSchoolData(res?.data?.data);
           }
         })
         .catch((error) => {
@@ -41,7 +43,7 @@ const EditSchool: React.FC = () => {
 
   const handleSubmit = async (schoolData: any) => {
     try {
-      const response = await updateSchool(Number(id), schoolData);
+      const response = await apiServices.updateSchool(Number(id), schoolData);
       return response;
     } catch (error) {
       return error; // Return the error object to handle it in the form

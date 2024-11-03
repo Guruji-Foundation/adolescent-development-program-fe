@@ -66,7 +66,7 @@ function SchoolPage() {
   const getSchooList = async () => {
     try {
       setLoading(true);
-      const data = (await apiServices.getAllSchollList())?.data?.data?.schools;
+      const data = (await apiServices.getAllSchoolList())?.data?.data?.schools;
       const rowData = data?.map((item) => ({
         id: item?.id,
         name: item?.name,
@@ -98,7 +98,7 @@ function SchoolPage() {
   const columDefs = [
     {
       headerCheckboxSelection: true,
-      checkboxSelection: true,
+      checkboxSelection: false,
       width: 50,
     },
     {
@@ -132,8 +132,14 @@ function SchoolPage() {
       floatingFilter: true,
     },
     {
-      headerName: "Action",
+      headerName: "Trustee Contact Info",
       field: "trusteeContactInfo",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      headerName: "Actions",
+      // field: "actions",
       filter: true,
       floatingFilter: true,
       cellRenderer: (params) => {
@@ -154,18 +160,6 @@ function SchoolPage() {
           </div>
         );
       },
-    },
-    {
-      headerName: "Actions",
-      field: "actions",
-      cellRendererFramework: (params) => (
-        <button
-          onClick={() => handleEdit(params.data.id)}
-          className="action-button edit-button"
-        >
-          Edit
-        </button>
-      ),
     },
   ];
 

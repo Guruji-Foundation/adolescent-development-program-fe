@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
-import { createTeacher } from "../../services/TeacherService";
 import TeacherForm from "./TeacherForm";
+
+import apiServices from "../../common/ServiCeProvider/Services";
 
 const CreateSchool: React.FC = () => {
   const message = {
@@ -25,7 +26,7 @@ const CreateSchool: React.FC = () => {
     console.log("from ct");
     console.log(teacherData);
     try {
-      const response = await createTeacher(teacherData);
+      const response = await apiServices.createTeacher(teacherData);
       return response;
     } catch (error) {
       return error; // Return the error object to handle it in the form

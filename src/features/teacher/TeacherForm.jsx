@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal"; // Import the modal component
 import useError from "../../hooks/useError";
-import useFetchSchools from "../../hooks/useFetchSchools";
 
 import TextInput from "../../common/FormInput/TextInput"; // Import TextInput
 import NumberInput from "../../common/FormInput/NumberInput"; // Import NumberInput
@@ -12,52 +11,66 @@ import Button from "../../common/FormInput/Button";
 import "./TeacherForm.css";
 import "../../CSS/Main.css";
 
-interface TeacherFormProps {
-  handleSubmit: (teacherData: any) => Promise<any>;
-  message: { heading: string; description: string };
-  heading: string;
-  handleCloseModal: () => void;
-  teacherDataDefault: any | null;
-}
+import apiServices from "../../common/ServiCeProvider/Services";
 
-const TeacherForm: React.FC<TeacherFormProps> = ({
+const TeacherForm = ({
   handleSubmit,
   message,
   heading,
   handleCloseModal,
   teacherDataDefault,
 }) => {
-  const { schools } = useFetchSchools();
-  //creating state and assigning teacherData from crate or edit component teacherData
+  const [schools, setSchools] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [teacherData, setTeacherData] = useState({
-    name: teacherDataDefault.name,
-    experience: teacherDataDefault.experience,
-    schoolId: teacherDataDefault.schoolId,
+    name: teacherDataDefault?.name,
+    experience: teacherDataDefault?.experience,
+    schoolId: teacherDataDefault?.schoolId,
   });
 
   useEffect(() => {
     setTeacherData(teacherDataDefault);
   }, [teacherDataDefault]);
 
+  useEffect(() => {
+    apiServices
+      .getAllSchoolList()
+      .then((res) => {
+        res = res?.data?.data?.schools;
+        // console.log(res);
+        if (res && res.length > 0) {
+          setSchools(res);
+        } else {
+          setSchools([]);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError("Error fetching school data.");
+        console.error("Error fetching school data:", error);
+        setLoading(false);
+      });
+  }, []);
+
   const [showModal, setShowModal] = useState(false);
 
   const { errors, setError, clearError } = useError();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     setTeacherData({
       ...teacherData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSchoolChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSchoolChange = (e) => {
     setTeacherData({
       ...teacherData,
       schoolId: Number(e.target.value),
     });
   };
 
-  const handleSubmitButton = async (e: React.FormEvent) => {
+  const handleSubmitButton = async (e) => {
     e.preventDefault();
     if (teacherData.schoolId != null && teacherData.schoolId) {
       try {
@@ -67,11 +80,11 @@ const TeacherForm: React.FC<TeacherFormProps> = ({
           setShowModal(true);
           clearError();
         } else if (response.data?.messages) {
-          setError(response.data.messages.map((msg: any) => msg.message));
+          setError(response.data.messages.map((msg) => msg.message));
         } else {
           setError("An unexpected error occurred.");
         }
-      } catch (error: any) {
+      } catch (error) {
         setError(error.message || "Error submitting the form.");
       }
     }
