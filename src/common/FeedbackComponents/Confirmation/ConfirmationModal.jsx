@@ -2,19 +2,8 @@ import React from "react";
 import "./ConfirmationModal.css"; // Optional: create CSS for modal
 import "../../../CSS/Main.css";
 
-interface ConfirmationModalProps {
-  title: string;
-  message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
-  title,
-  message,
-  onConfirm,
-  onCancel,
-}) => {
+const ConfirmationModal = ({ title, message, onConfirm, onCancel }) => {
   return (
     <div className="modal-backdrop">
       <div className="modal-content">

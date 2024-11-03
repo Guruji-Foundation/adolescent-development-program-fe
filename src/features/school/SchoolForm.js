@@ -11,15 +11,7 @@ import TextInput from "../../common/FormInput/TextInput";
 import Button from "../../common/FormInput/Button";
 import useError from "../../hooks/useError";
 
-interface SchoolFormProps {
-  handleSubmit: (schoolData: any) => Promise<any>;
-  message: { heading: string; description: string };
-  heading: string;
-  handleCloseModal: () => void;
-  schoolDataDefault: any | null;
-}
-
-const SchoolForm: React.FC<SchoolFormProps> = ({
+const SchoolForm = ({
   handleSubmit,
   message,
   heading,
@@ -44,7 +36,7 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
   const [showModal, setShowModal] = useState(false);
   const { errors, setError, clearError } = useError();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     setSchoolData({
       ...schoolData,
       [e.target.name]: e.target.value,
@@ -52,7 +44,7 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
   };
 
   //submit button
-  const handleSubmitButton = async (e: React.FormEvent) => {
+  const handleSubmitButton = async (e) => {
     e.preventDefault();
 
     try {
@@ -62,11 +54,11 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
         setShowModal(true); // Show success modal
         clearError(); // Clear errors
       } else if (response.data?.messages) {
-        setError(response.data.messages.map((msg: any) => msg.message));
+        setError(response.data.messages.map((msg) => msg.message));
       } else {
         setError("An unexpected error occurred.");
       }
-    } catch (error: any) {
+    } catch (error) {
       setError(error.message || "Error submitting the form.");
     }
   };
