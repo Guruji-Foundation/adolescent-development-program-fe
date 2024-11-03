@@ -1,0 +1,33 @@
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center horizontally */
+  background-color: #ffe5e5;
+  padding: 10px;
+  border: 1px solid #ff4d4d;
+  border-radius: 5px;
+  color: #ff4d4d;
+  font-family: Arial, sans-serif;
+  margin: 0 auto; /* Ensure the message stays centered */
+  width: 50%; /* Adjust width as needed */
+  position: fixed; /* Stick the error message to the top */
+  top: 70px; /* Adjust this to be below the navigation bar (assuming it's 60px) */
+  left: 50%; /* Position relative to the left */
+  transform: translateX(-50%); /* Center the message horizontally */
+  z-index: 1000; /* Ensure the message appears on top */
+}
+
+.warning-icon {
+  margin-right: 10px;
+  font-size: 1.5rem;
+}
+
+.error-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.error-item {
+  margin: 0;
+  line-height: 1.5;
+}

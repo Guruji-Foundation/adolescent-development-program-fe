@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import './Sidebar.css'; // Import custom styles
-import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from 'react-icons/fa'; // Import icons from react-icons
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+import "./Sidebar.css"; // Import custom styles
+import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
+import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 
 const Sidebar: React.FC = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const location = useLocation(); // Get current location
 
   const toggleSidebar = () => {
@@ -26,7 +28,7 @@ const Sidebar: React.FC = () => {
 
         {/* Toggle Button */}
         <button className="toggle-button" onClick={toggleSidebar}>
-          {isCollapsed ? '»' : '«'}
+          {isCollapsed ? "»" : "«"}
         </button>
       </div>
 
@@ -36,19 +38,28 @@ const Sidebar: React.FC = () => {
       {/* Sidebar Menu */}
       <ul className="sidebar-menu">
         <li>
-          <Link to="/school" className={`menu-item ${isActive('/school') ? 'active' : ''}`}>
+          <Link
+            to="/school"
+            className={`menu-item ${isActive("/school") ? "active" : ""}`}
+          >
             <FaSchool className="icon" /> {/* School icon */}
             {!isCollapsed && <span>School</span>}
           </Link>
         </li>
         <li>
-          <Link to="/teacher" className={`menu-item ${isActive('/teacher') ? 'active' : ''}`}>
+          <Link
+            to="/teacher"
+            className={`menu-item ${isActive("/teacher") ? "active" : ""}`}
+          >
             <FaChalkboardTeacher className="icon" /> {/* Teacher icon */}
             {!isCollapsed && <span>Teacher</span>}
           </Link>
         </li>
         <li>
-          <Link to="/student" className={`menu-item ${isActive('/student') ? 'active' : ''}`}>
+          <Link
+            to="/student"
+            className={`menu-item ${isActive("/student") ? "active" : ""}`}
+          >
             <FaUserGraduate className="icon" /> {/* Student icon */}
             {!isCollapsed && <span>Student</span>}
           </Link>

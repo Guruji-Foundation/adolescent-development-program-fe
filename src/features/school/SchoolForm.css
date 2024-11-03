@@ -1,6 +1,6 @@
 /* General Styles */
 body {
-  font-family: 'Roboto', sans-serif; /* Modern, clean font */
+  font-family: "Roboto", sans-serif; /* Modern, clean font */
   background-color: #f5f7fa; /* Light background color */
 }
 
@@ -18,7 +18,7 @@ body {
 h2 {
   font-size: 26px;
   font-weight: 700;
-  color: #0057D9;
+  color: #4a4a4a;
   text-align: center;
   margin-bottom: 30px;
 }
@@ -39,14 +39,14 @@ h2 {
 label {
   font-size: 15px;
   font-weight: 600;
-  color: #4A4A4A; /* Softer dark gray for labels */
+  color: #4a4a4a; /* Softer dark gray for labels */
   display: block;
   margin-bottom: 5px;
 }
 
 /* Red Asterisk for required fields */
 label.required:after {
-  content: ' *';
+  content: " *";
   color: red;
   font-weight: bold;
   font-size: 18px; /* Make the asterisk bigger */
@@ -63,7 +63,7 @@ input {
 }
 
 input:focus {
-  border-color: #0057D9; /* Accent color for focus */
+  border-color: #0057d9; /* Accent color for focus */
   outline: none;
   box-shadow: 0 0 5px rgba(0, 87, 217, 0.2); /* Add a subtle glow on focus */
 }
@@ -76,24 +76,21 @@ input:hover {
 .submit-button {
   width: 160px;
   padding: 12px;
-  background-color: #0057D9;
-  color: white;
   border: none;
   border-radius: 6px;
   font-size: 16px;
-  cursor: pointer;
   margin: 30px auto;
   display: block;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.submit-button:hover {
+/* .submit-button:hover {
   background-color: #004bb5;
-  box-shadow: 0 4px 8px rgba(0, 87, 217, 0.2); /* Slight shadow on hover */
-}
+  box-shadow: 0 4px 8px rgba(0, 87, 217, 0.2); /* Slight shadow on hover} */
 
 /* Success and Error Messages */
-.success-message, .error-messages {
+.success-message,
+.error-messages {
   margin-top: 20px;
   padding: 15px;
   border-radius: 6px;

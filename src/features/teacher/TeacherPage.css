@@ -37,19 +37,14 @@ body, html {
 }
 
 .create-new-button {
-    background-color: #28a745;
-    color: white;
+   
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
+   
 }
 
-.create-new-button:hover {
-    background-color: #218838;
-}
 
 /* Table Section */
 .teacher-table {
@@ -119,4 +114,34 @@ body, html {
     .teacher-table th, .teacher-table td {
         padding: 8px 10px;
     }
+}
+
+
+/* Dropdown Styling */
+.form-field select {
+    width: 100%; /* Make the dropdown take full width */
+    padding: 10px; /* Add padding for better touch targets */
+    border: 1px solid #e5e7eb; /* Light gray border */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #fff; /* White background */
+    font-size: 1rem; /* Font size */
+    color: hsl(220, 6%, 40%); /* Text color */
+    appearance: none; /* Remove default dropdown arrow */
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="hsl(220, 6%, 40%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cline x1="6" y1="9" x2="12" y2="15" /%3E%3Cline x1="12" y1="9" x2="18" y2="15" /%3E%3C/svg%3E'); /* Custom dropdown arrow */
+    background-repeat: no-repeat; /* Prevent repeating background */
+    background-position: right 10px center; /* Position arrow */
+    background-size: 12px; /* Size of the arrow */
+    transition: border-color 0.2s ease; /* Transition effect */
+}
+
+/* On focus, change the border color */
+.form-field select:focus {
+    outline: none; /* Remove default outline */
+    border-color: hsl(210, 25.3%, 50%); /* Darker border color on focus */
+}
+
+/* Error Messages Styling */
+.error-messages {
+    color: #dc3545; /* Red color for error messages */
+    margin-top: 10px; /* Space above error messages */
 }

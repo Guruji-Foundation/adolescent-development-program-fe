@@ -24,7 +24,6 @@
   width: 80px;
 }
 
-
 /* Toggle Button */
 .toggle-button {
   background-color: transparent;
@@ -150,8 +149,3 @@
 .sidebar-menu li a.active i {
   color: hsl(216, 71%, 23%); /* Icon color for active state */
 }
-
-
-
-
-
