@@ -116,7 +116,6 @@ function SchoolPage() {
 
 
   const handleDelete = (id) => {
-    clearError();
     setSelectedSchoolId(id);
     setIsModalVisible(true);
   };
@@ -149,6 +148,7 @@ function SchoolPage() {
   };
 
   const handleEdit = (id) => {
+    console.log(id)
     navigate(`/edit-school/${id}`);
   };
 
@@ -156,6 +156,7 @@ function SchoolPage() {
     try {
       const data = (await apiServices.getAllSchollList())?.data?.data?.students;
       const rowData = data?.map((item) => ({
+        id: item?.id,
         name: item?.name,
         address: item?.address,
         principalName: item?.principalName,
@@ -219,9 +220,20 @@ function SchoolPage() {
     },
     {
       headerName: "Action",
-      field: "trusteeContactInfo",
       filter: true,
       floatingFilter: true,
+      cellRenderer: (params) => {
+        return (
+          <div>
+            <button onClick={() => handleEdit(params?.data?.id)} className="action-button edit-button">
+              <FaEdit />
+            </button>
+            <button onClick={() => handleDelete(params?.data?.id)} className="action-button delete-button">
+              <FaTrashAlt />
+            </button>
+          </div>
+        )
+      }
     },
   ]
 

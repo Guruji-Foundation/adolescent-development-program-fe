@@ -69,7 +69,6 @@ const HttpInterceptor = () => {
         return request('delete', url, data, customHeaders);
     };
  
-    console.log("8888888888",apiUrl)
     return { get, post, put, delete: _delete };
 };
  
