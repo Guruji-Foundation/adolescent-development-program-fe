@@ -79,7 +79,7 @@ function SchoolPage() {
       setSchoolRowData(rowData);
       setLoading(false);
     } catch (err) {
-      throw err;
+      setError(err.message);
     }
   };
 

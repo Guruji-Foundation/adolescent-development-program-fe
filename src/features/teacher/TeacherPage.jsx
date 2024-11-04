@@ -54,12 +54,12 @@ const TeacherPage = () => {
 
   // Confirm deletion and delete the school
   const confirmDelete = () => {
-    if (selectedTeacherId !== null) {
+    if (selectedTeacherId != null) {
       apiServices
         .deleteTeacher(selectedTeacherId)
         .then(() => {
           const updatedTeachers = teachers.filter(
-            (school) => school.id !== selectedTeacherId
+            (school) => school.id != selectedTeacherId
           );
           setTeachers(updatedTeachers); // Update the schools state
           setSelectedTeacherId(null); // Reset the selected school id

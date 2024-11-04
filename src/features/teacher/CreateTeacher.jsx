@@ -7,7 +7,7 @@ import TeacherForm from "./TeacherForm";
 
 import apiServices from "../../common/ServiCeProvider/Services";
 
-const CreateSchool: React.FC = () => {
+const CreateSchool = () => {
   const message = {
     heading: "Teacher Created Successfully!",
     description: "You have successfully created Teacher!",
@@ -22,8 +22,9 @@ const CreateSchool: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (teacherData: any) => {
+  const handleSubmit = async (teacherData) => {
     console.log("from ct");
+    
     console.log(teacherData);
     try {
       const response = await apiServices.createTeacher(teacherData);

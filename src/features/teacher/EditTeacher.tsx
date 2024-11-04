@@ -9,7 +9,7 @@ const EditTeacher: React.FC = () => {
   const [teacherData, setTeacherData] = useState({
     name: "",
     experience: 0,
-    schoolId: 0,
+    schoolId: NaN,
   });
 
   const navigate = useNavigate();
@@ -34,6 +34,8 @@ const EditTeacher: React.FC = () => {
               experience: res?.data?.data?.experience,
               schoolId: res?.data?.data?.schoolDetails?.id,
             });
+            console.log(teacherData);
+            console.log("heii");
           }
         })
         .catch((error) => {

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
 import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal"; // Import the modal component
 import "./SchoolForm.css";
 import "../../CSS/Main.css";
-
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
 import NumberInput from "../../common/FormInput/NumberInput";
 import TextInput from "../../common/FormInput/TextInput";
@@ -18,14 +17,14 @@ const SchoolForm = ({
   schoolDataDefault,
 }) => {
   const [schoolData, setSchoolData] = useState({
-    name: schoolDataDefault.name,
-    address: schoolDataDefault.address,
-    phoneNumber: schoolDataDefault.phoneNumber,
-    principalName: schoolDataDefault.principalName,
-    principalContactNo: schoolDataDefault.principalContactNo,
-    managingTrustee: schoolDataDefault.managingTrustee,
-    trusteeContactInfo: schoolDataDefault.trusteeContactInfo,
-    website: schoolDataDefault.website,
+    name: schoolDataDefault?.name,
+    address: schoolDataDefault?.address,
+    phoneNumber: schoolDataDefault?.phoneNumber,
+    principalName: schoolDataDefault?.principalName,
+    principalContactNo: schoolDataDefault?.principalContactNo,
+    managingTrustee: schoolDataDefault?.managingTrustee,
+    trusteeContactInfo: schoolDataDefault?.trusteeContactInfo,
+    website: schoolDataDefault?.website,
   });
 
   useEffect(() => {

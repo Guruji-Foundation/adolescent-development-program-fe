@@ -1,5 +1,5 @@
 import HttpInterceptor from "./HttpInterceptor";
-import { SCHOOL, TEACHER } from "./APIURLs";
+import { SCHOOL, TEACHER, PROJECT } from "./APIURLs";
 
 const apiServiceBased = HttpInterceptor();
 
@@ -10,7 +10,7 @@ export default {
   getAllSchoolList: async () => {
     return apiServiceBased.get(SCHOOL);
   },
-  
+
   //fetch one school
   fetchSchool: async (id) => {
     return apiServiceBased.get(`${SCHOOL}/${id}`);
@@ -32,7 +32,7 @@ export default {
   },
   //---------------------------
 
-  //Teacher api methods 
+  //Teacher api methods
 
   //get all teacher list
   getAllTeacherList: async () => {
@@ -57,6 +57,34 @@ export default {
   //update Teacher
   updateTeacher: async (id, teacherData) => {
     return apiServiceBased.put(`${TEACHER}/${id}`, teacherData);
+  },
+  //---------------------------
+
+  //Project api methods
+
+  //get all project list
+  getAllProjectList: async () => {
+    return apiServiceBased.get(PROJECT);
+  },
+
+  //fetch one project
+  fetchProject: async (id) => {
+    return apiServiceBased.get(`${PROJECT}/${id}`);
+  },
+
+  //create Project
+  createProject: async (projectData) => {
+    return apiServiceBased.post(PROJECT, projectData);
+  },
+
+  //delete Project
+  deleteProject: async (id) => {
+    return apiServiceBased.delete(`${PROJECT}/${id}`);
+  },
+
+  //update Project
+  updateProject: async (id, projectData) => {
+    return apiServiceBased.put(`${PROJECT}/${id}`, projectData);
   },
   //---------------------------
 };

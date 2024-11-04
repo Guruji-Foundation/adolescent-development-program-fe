@@ -1,19 +1,17 @@
-/* General Styling */
 body,
 html {
-  font-family: Poppins, sans-serif;
+  font-family: poppins, san-serif;
   color: hsl(220, 6%, 40%);
   line-height: 1.6;
 }
 
-.school-page {
+.project-page {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Header Section */
-.school-page .header {
+.project-page .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,18 +19,18 @@ html {
 }
 
 /* Column Layout for Headings */
-.school-page .heading-container {
+.projct-page .heading-container {
   display: flex;
   flex-direction: column; /* Stack the headings vertically */
 }
 
-.school-page .school-heading {
+.project-page .school-heading {
   font-size: 1.8rem;
   font-weight: bold;
   color: hsl(210, 25.3%, 32.5%);
 }
 
-.school-page subheading {
+.project-page subheading {
   font-size: 1.1rem;
   color: rgba(0, 7, 20, 0.62);
 }
@@ -46,42 +44,6 @@ html {
 
 .create-new-button:hover {
   background-color: #218838;
-}
-
-/* Table Section */
-.school-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-top: 20px;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.school-table th,
-.school-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.school-table th {
-  background-color: #f9f9fb;
-  color: hsl(220, 6%, 40%);
-  font-weight: 600;
-}
-
-.school-table td {
-  color: hsl(220, 6%, 40%);
-}
-
-.school-table tr:last-child td {
-  border-bottom: none;
-}
-
-.school-table tr:hover {
-  background-color: #f5f5f5;
 }
 
 /* Action Buttons */

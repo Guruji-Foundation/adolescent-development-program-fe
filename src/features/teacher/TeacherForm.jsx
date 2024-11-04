@@ -62,7 +62,7 @@ const TeacherForm = ({
       [e.target.name]: e.target.value,
     });
   };
-
+  console.log(teacherData.schoolId);
   const handleSchoolChange = (e) => {
     setTeacherData({
       ...teacherData,
@@ -76,11 +76,11 @@ const TeacherForm = ({
       try {
         const response = await handleSubmit(teacherData);
 
-        if (response.data?.status) {
+        if (response?.data?.status) {
           setShowModal(true);
           clearError();
-        } else if (response.data?.messages) {
-          setError(response.data.messages.map((msg) => msg.message));
+        } else if (response?.data?.messages) {
+          setError(response?.data?.messages.map((msg) => msg.message));
         } else {
           setError("An unexpected error occurred.");
         }
