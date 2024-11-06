@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
-import { createSchool } from "../../services/SchoolService";
+import apiServices from "../../common/ServiCeProvider/Services";
 import SchoolForm from "./SchoolForm";
 
 const CreateSchool: React.FC = () => {
@@ -28,7 +28,7 @@ const CreateSchool: React.FC = () => {
 
   const handleSubmit = async (schoolData: any) => {
     try {
-      const response = await createSchool(schoolData);
+      const response = await apiServices.createSchool(schoolData);
       return response;
     } catch (error) {
       return error; // Return the error object to handle it in the form

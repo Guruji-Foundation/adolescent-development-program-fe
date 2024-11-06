@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
-import { fetchTeacher, updateTeacher } from "../../services/TeacherService";
 import TeacherForm from "./TeacherForm";
+
+import apiServices from "../../common/ServiCeProvider/Services";
 
 const EditTeacher: React.FC = () => {
   // teacher details
   const [teacherData, setTeacherData] = useState({
     name: "",
     experience: 0,
-    schoolId: 0,
+    schoolId: NaN,
   });
 
   const navigate = useNavigate();
@@ -24,16 +24,18 @@ const EditTeacher: React.FC = () => {
   useEffect(() => {
     console.log("form et ue");
     if (id) {
-      fetchTeacher(Number(id))
+      apiServices
+        .fetchTeacher(Number(id))
         .then((res) => {
           if (res) {
-            console.log("form et");
-            console.log(res);
+            console.log(res?.data?.data);
             setTeacherData({
-              name: res.name,
-              experience: res.experience,
-              schoolId: res.schoolDetails.id,
+              name: res?.data?.data?.name,
+              experience: res?.data?.data?.experience,
+              schoolId: res?.data?.data?.schoolDetails?.id,
             });
+            console.log(teacherData);
+            console.log("heii");
           }
         })
         .catch((error) => {
@@ -44,7 +46,7 @@ const EditTeacher: React.FC = () => {
 
   const handleSubmit = async (teacherData: any) => {
     try {
-      const response = await updateTeacher(Number(id), teacherData);
+      const response = await apiServices.updateTeacher(Number(id), teacherData);
       return response;
     } catch (error) {
       return error; // Return the error object to handle it in the form
