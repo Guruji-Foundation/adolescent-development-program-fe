@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { fetchSchool, updateSchool } from "../../services/SchoolService";
+import apiServices from "../../common/ServiCeProvider/Services";
 import SchoolForm from "./SchoolForm";
+import useError from "../../hooks/useError";
+import ErrorMessage from "../../common/FormInput/ErrorMessage";
 
-const EditSchool: React.FC = () => {
+const EditSchool = () => {
   const [schoolData, setSchoolData] = useState({
     name: "",
     address: "",
@@ -17,7 +19,8 @@ const EditSchool: React.FC = () => {
   });
 
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { errors, setError, clearError } = useError();
+  const { id } = useParams();
   const message = {
     heading: "School Edited Sccussfully!",
     description: "Your school data has been edited",
@@ -27,24 +30,26 @@ const EditSchool: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetchSchool(Number(id))
+      apiServices
+        .fetchSchool(Number(id))
         .then((res) => {
           if (res) {
-            setSchoolData(res);
+            // console.log(res?.data?.data);
+            setSchoolData(res?.data?.data);
           }
         })
         .catch((error) => {
-          console.error(error);
+          setError(error.message);
         });
     }
   }, [id]);
 
-  const handleSubmit = async (schoolData: any) => {
+  const handleSubmit = async (schoolData) => {
     try {
-      const response = await updateSchool(Number(id), schoolData);
+      const response = await apiServices.updateSchool(Number(id), schoolData);
       return response;
     } catch (error) {
-      return error; // Return the error object to handle it in the form
+      setError(error.message);
     }
   };
 
@@ -61,6 +66,7 @@ const EditSchool: React.FC = () => {
         handleCloseModal={handleCloseModal}
         schoolDataDefault={schoolData}
       />
+      {errors.length > 0 && <ErrorMessage errors={errors} />}
     </div>
   );
 };

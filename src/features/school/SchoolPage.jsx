@@ -1,133 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { deleteSchool } from "../../services/SchoolService";
-import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
-import Tooltip from "../../common/FeedbackComponents/Tooltip/ToolTip";
 import "../../CSS/Main.css";
 import "./SchoolPage.css";
-import useFetchSchools from "../../hooks/useFetchSchools";
 import useError from "../../hooks/useError";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner"; // Import loading spinner
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
+
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";
+
 import apiServices from "../../common/ServiCeProvider/Services";
-
-// const SchoolPage: React.FC = () => {
-//   const [schools, setSchools] = useState<School[]>([]);
-//   const [loading, setLoading] = useState<boolean>(true);
-//   const [error, setError] = useState<string | null>(null);
-//   const navigate = useNavigate(); 
-//   useEffect(() => {
-//     // Fetch school data from the service
-//     fetchSchools()
-//       .then((data) => {
-//         if (data && data.length > 0) {
-//           setSchools(data);
-//         } else {
-//           setSchools([]); // If no schools exist, set an empty array
-//         }
-//         setLoading(false);
-//       })
-//       .catch((error) => {
-//         setError('Error fetching school data.');
-//         console.error('Error fetching school data:', error);
-//         setLoading(false);
-//       });
-//   }, []);
-//   const handleEdit = (id: number) => {
-//       console.log('Edit school with id:', id);
-//   };
-
-//   const handleDelete = (id: number) => {
-//       console.log('Delete school with id:', id);
-//   };
-
-//   const handleCreateNew = () => {
-//       navigate('/create-school');
-//     };
-
-//   if (loading) {
-//       return <div>Loading...</div>;
-//     }
-
-//     if (error) {
-//       return <div>{error}</div>;
-//     }
-
-//   return (
-//       <div className="school-page">
-//           {/* Header Section */}
-//           <div className="header">
-//               <div className="heading-container">
-//                   <h2 className="school-heading">School</h2>
-//                   <p className="subheading">List of Schools</p>
-//               </div>
-//               <button className="create-new-button" onClick={handleCreateNew}>Create New</button>
-//           </div>
-
-//           {/* School Table */}
-//           <table className="school-table">
-//               <thead>
-//                   <tr>
-//                       <th>School Name</th>
-//                       <th>Address</th>
-//                       <th>Principal Name</th>
-//                       <th>Principal Contact</th>
-//                       <th>Managing Trustee</th>
-//                       <th>Trustee Contact</th>
-//                       <th>Action</th>
-//                   </tr>
-//               </thead>
-//               <tbody>
-//                   {schools.map((school) => (
-//                       <tr key={school.id}>
-//                           <td>{school.name}</td>
-//                           <td>{school.address}</td>
-//                           <td>{school.principalName}</td>
-//                           <td>{school.principalContactNo}</td>
-//                           <td>{school.managingTrustee}</td>
-//                           <td>{school.trusteeContactInfo}</td>
-//                           <td>
-//                               <button onClick={() => handleEdit(school.id)} className="action-button edit-button">
-//                                   <FaEdit />
-//                               </button>
-//                               <button onClick={() => handleDelete(school.id)} className="action-button delete-button">
-//                                   <FaTrashAlt />
-//                               </button>
-//                           </td>
-//                       </tr>
-//                   ))}
-//               </tbody>
-//           </table>
-//       </div>
-//   );
-// };
 
 function SchoolPage() {
   const [selectedSchoolId, setSelectedSchoolId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [schoolRowData, setSchoolRowData] = useState([])
+  const [schoolRowData, setSchoolRowData] = useState([]);
   const navigate = useNavigate();
-  const { schools, setSchools, loading } = useFetchSchools();
+  const [loading, setLoading] = useState(false);
   const { errors, setError, clearError } = useError();
 
+  const title = "Delete School!";
+  const message = "Do you really want to delete this school";
 
   const handleDelete = (id) => {
+    clearError();
     setSelectedSchoolId(id);
     setIsModalVisible(true);
   };
 
   const confirmDelete = () => {
     if (selectedSchoolId !== null) {
-      deleteSchool(selectedSchoolId)
+      apiServices
+        .deleteSchool(selectedSchoolId)
         .then(() => {
-          const updatedSchools = schools.filter(
+          const updatedSchools = schoolRowData.filter(
             (school) => school.id !== selectedSchoolId
           );
-          setSchools(updatedSchools);
+          setSchoolRowData(updatedSchools);
           setSelectedSchoolId(null);
           setIsModalVisible(false);
         })
@@ -148,13 +60,13 @@ function SchoolPage() {
   };
 
   const handleEdit = (id) => {
-    console.log(id)
     navigate(`/edit-school/${id}`);
   };
 
   const getSchooList = async () => {
     try {
-      const data = (await apiServices.getAllSchollList())?.data?.data?.students;
+      setLoading(true);
+      const data = (await apiServices.getAllSchoolList())?.data?.data?.schools;
       const rowData = data?.map((item) => ({
         id: item?.id,
         name: item?.name,
@@ -163,16 +75,17 @@ function SchoolPage() {
         principalContactNo: item?.principalContactNo,
         managingTrustee: item?.managingTrustee,
         trusteeContactInfo: item?.trusteeContactInfo,
-      }))
-      setSchoolRowData(rowData)
+      }));
+      setSchoolRowData(rowData);
+      setLoading(false);
     } catch (err) {
-      throw err;
+      setError(err.message);
     }
-  }
+  };
 
   useEffect(() => {
     getSchooList();
-  }, [])
+  }, []);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -185,7 +98,7 @@ function SchoolPage() {
   const columDefs = [
     {
       headerCheckboxSelection: true,
-      checkboxSelection: true,
+      checkboxSelection: false,
       width: 50,
     },
     {
@@ -207,7 +120,7 @@ function SchoolPage() {
       floatingFilter: true,
     },
     {
-      headerName: "Managing Trusteet",
+      headerName: "Managing Trustee",
       field: "principalContactNo",
       filter: true,
       floatingFilter: true,
@@ -219,52 +132,36 @@ function SchoolPage() {
       floatingFilter: true,
     },
     {
-      headerName: "Action",
+      headerName: "Trustee Contact Info",
+      field: "trusteeContactInfo",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      headerName: "Actions",
+      // field: "actions",
       filter: true,
       floatingFilter: true,
       cellRenderer: (params) => {
         return (
           <div>
-            <button onClick={() => handleEdit(params?.data?.id)} className="action-button edit-button">
+            <button
+              onClick={() => handleEdit(params?.data?.id)}
+              className="action-button edit-button"
+            >
               <FaEdit />
             </button>
-            <button onClick={() => handleDelete(params?.data?.id)} className="action-button delete-button">
+            <button
+              onClick={() => handleDelete(params?.data?.id)}
+              className="action-button delete-button"
+            >
               <FaTrashAlt />
             </button>
           </div>
-        )
-      }
-    },
-  ]
-
-  const tempData = [
-    {
-      name: "Greenfield High School",
-      address: "123 Main St, Springfield",
-      principalName: "John Doe",
-      principalContactNo: "555-1234",
-      managingTrustee: "Jane Smith",
-      trusteeContactInfo: "jane.smith@example.com",
-    },
-    {
-      name: "Riverside Academy",
-      address: "456 Elm St, Riverside",
-      principalName: "Alice Johnson",
-      principalContactNo: "555-5678",
-      managingTrustee: "Robert Williams",
-      trusteeContactInfo: "robert.williams@example.com",
-    },
-    {
-      name: "Sunrise Elementary",
-      address: "789 Oak St, Lakeside",
-      principalName: "Michael Brown",
-      principalContactNo: "555-8765",
-      managingTrustee: "Linda Davis",
-      trusteeContactInfo: "linda.davis@example.com",
+        );
+      },
     },
   ];
-
-
 
   return (
     <div className="school-page">
@@ -280,15 +177,19 @@ function SchoolPage() {
           Create New
         </button>
       </div>
-
       <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable
-          rowData={schoolRowData}
-          columnDefs={columDefs}
-        />
+        <AgGridTable rowData={schoolRowData} columnDefs={columDefs} />
       </div>
+      {isModalVisible && (
+        <ConfirmationModal
+          title={title}
+          message={message}
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
     </div>
-  )
+  );
 }
 
 export default SchoolPage;

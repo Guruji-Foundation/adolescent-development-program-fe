@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import "./Sidebar.css"; // Import custom styles
 import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
+import { MdCastForEducation } from "react-icons/md";
 import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 
 const Sidebar: React.FC = () => {
@@ -23,7 +24,7 @@ const Sidebar: React.FC = () => {
         {/* User Info Section */}
         <div className="user-info">
           <p>Welcome!</p>
-          <h1>Akshay Pokharkar</h1>
+          <h1>Rajesh Pokharkar</h1>
         </div>
 
         {/* Toggle Button */}
@@ -62,6 +63,15 @@ const Sidebar: React.FC = () => {
           >
             <FaUserGraduate className="icon" /> {/* Student icon */}
             {!isCollapsed && <span>Student</span>}
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/projects"
+            className={`menu-item ${isActive("/projects") ? "active" : ""}`}
+          >
+            <MdCastForEducation className="icon" /> {/* Projects icon */}
+            {!isCollapsed && <span>Projects</span>}
           </Link>
         </li>
       </ul>
