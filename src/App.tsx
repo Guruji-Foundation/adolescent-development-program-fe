@@ -15,6 +15,8 @@ import "./App.css"; // Global styles
 import ProjectPage from "./features/project/ProjectPage";
 import EditProject from "./features/project/EditProject";
 import HomePage from "./features/homepage";
+import ProjectAllocationPage from "./features/project-allocate/ProjectAllocationPage";
+import ProjectAllocationViewPage from "./features/project-allocate/ProjectAllocationViewPage";
 
 const App: React.FC = () => {
   return (
@@ -38,6 +40,15 @@ const App: React.FC = () => {
             <Route path="/projects" element={<ProjectPage />} />
             <Route path="/create-project" element={<CreateProject />} />
             <Route path="/edit-project/:id" element={<EditProject />} />
+            {/* Project Allocation */}
+            <Route
+              path="/project-allocation"
+              element={<ProjectAllocationPage />}
+            />
+            <Route
+              path="/project-allocation-view"
+              element={<ProjectAllocationViewPage />}
+            />
             {/* Home Page Route */}
             <Route path="/" element={<HomePage />} /> {/* Default route */}
           </Routes>

@@ -3,7 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 
 import "./Sidebar.css"; // Import custom styles
 import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
-import { MdCastForEducation } from "react-icons/md";
+import { MdCastForEducation, MdAssignment } from "react-icons/md";
+import { AiOutlineUserAdd } from "react-icons/ai";
 import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 
 const Sidebar: React.FC = () => {
@@ -72,6 +73,28 @@ const Sidebar: React.FC = () => {
           >
             <MdCastForEducation className="icon" /> {/* Projects icon */}
             {!isCollapsed && <span>Projects</span>}
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/project-allocation"
+            className={`menu-item ${
+              isActive("/projects-allocation") ? "active" : ""
+            }`}
+          >
+            <AiOutlineUserAdd className="icon" /> {/* Projects icon */}
+            {!isCollapsed && <span>Project Allocation</span>}
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/project-allocation-view"
+            className={`menu-item ${
+              isActive("/project-allocation-view") ? "active" : ""
+            }`}
+          >
+            <MdAssignment className="icon" /> {/* Projects icon */}
+            {!isCollapsed && <span>Project Allocation View</span>}
           </Link>
         </li>
       </ul>

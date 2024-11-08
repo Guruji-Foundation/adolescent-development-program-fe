@@ -17,7 +17,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
 }) => {
   return (
     <div className="form-field">
-      <label htmlFor="schoolDetails" className={required ? "required" : ""}>
+      <label htmlFor="selectinput" className={required ? "required" : ""}>
         {label}
       </label>
       <select value={value} onChange={onChange} required={required}>
@@ -25,8 +25,8 @@ const SelectInput: React.FC<SelectInputProps> = ({
           Select Something
         </option>
         {options.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.name}
+          <option key={option?.id} value={option?.id}>
+            {option?.name}
           </option>
         ))}
       </select>

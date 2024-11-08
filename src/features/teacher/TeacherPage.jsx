@@ -16,13 +16,12 @@ import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 
 import apiServices from "../../common/ServiCeProvider/Services";
 
-
-
 const TeacherPage = () => {
   const [teachers, setTeachers] = useState([]);
+  const [selectedTeacherId, setSelectedTeacherId] = useState(null);
   const [loading, setLoading] = useState(true);
   const { errors, setError, clearError } = useError();
-  const [selectedTeacherId, setSelectedTeacherId] = useState(null); // State to store the selected school for deletion
+
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
 
   const navigate = useNavigate();
