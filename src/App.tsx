@@ -14,6 +14,7 @@ import CreateProject from "./features/project/CreateProject";
 import "./App.css"; // Global styles
 import ProjectPage from "./features/project/ProjectPage";
 import EditProject from "./features/project/EditProject";
+import HomePage from "./features/homepage";
 import Performance from "./features/Performance/Performance";
 import AddPerformance from "./features/Performance/AddPerformance";
 import EditPerformance from "./features/Performance/EditPerformance";
@@ -46,7 +47,7 @@ const App: React.FC = () => {
             <Route path="/edit-performance/:id" element={<EditPerformance />} />
 
             {/* Home Page Route */}
-            <Route path="/" element={<SchoolPage />} /> {/* Default route */}
+            <Route path="/" element={<HomePage />} /> {/* Default route */}
           </Routes>
         </div>
       </div>

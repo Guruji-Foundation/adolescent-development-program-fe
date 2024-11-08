@@ -5,6 +5,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";
+import useError from "../../hooks/useError";
 
 function Performance() {
     const navigate = useNavigate();
@@ -13,6 +14,8 @@ function Performance() {
     }
     const [selectedPerformanceId, setSelectedPerformanceId] = useState(null); // State to store the selected school for deletion
     const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
+    const [performanceData,setPerfomaceData]=useState([]);
+    const { errors, setError, clearError } = useError();
 
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
@@ -83,6 +86,20 @@ function Performance() {
         },
     ]
 
+    const getPerformanceData = async ()=>{
+        try{
+            const data = (await apiServices.getPerformanceList())?.data?.data?.performances
+            setPerfomaceData(data);
+        }catch(err){
+            setError(err.message);
+            throw err;
+        }
+    }
+
+    useEffect(()=>{
+        getPerformanceData();
+    },[])
+    
     const rowData = [
         {
             id: 1,
