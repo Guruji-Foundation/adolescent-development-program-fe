@@ -1,7 +1,7 @@
 // Navbar.tsx
 
-import React from 'react';
-import './Navbar.css';
+import React from "react";
+import "./Navbar.css";
 
 const Navbar: React.FC = () => {
   return (
@@ -11,9 +11,15 @@ const Navbar: React.FC = () => {
         <h1 className="navbar-title">ADP Platform</h1>
       </div>
       <ul className="navbar-links">
-        <li><a href="/home">Home</a></li>
-        <li><a href="/about">About Us</a></li>
-        <li><a href="/contact">Contact</a></li>
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/about">About Us</a>
+        </li>
+        <li>
+          <a href="/contact">Contact</a>
+        </li>
       </ul>
     </nav>
   );

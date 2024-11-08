@@ -1,0 +1,51 @@
+/* src/HomePage.css */
+
+.home-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh; /* Adjusted height to position the box higher */
+  background-color: #f2f5fa; /* Matching background color */
+  color: #333;
+  font-family: Arial, sans-serif;
+}
+
+.welcome-message {
+  text-align: center;
+  padding: 40px; /* Increased padding for a larger box */
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(20px); /* Adjusted initial position */
+  animation: fadeInUp 1s ease-out forwards;
+  width: 60%; /* Increased width for a larger box */
+  max-width: 800px; /* Limit the maximum width */
+}
+
+.welcome-message h1 {
+  font-size: 3em; /* Increased font size */
+  margin: 0;
+  color: #4a4a4a;
+}
+
+.welcome-message p {
+  font-size: 1.4em; /* Increased font size */
+  margin-top: 15px;
+  opacity: 0;
+  color: #666;
+  animation: fadeIn 2s ease-out 1s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
