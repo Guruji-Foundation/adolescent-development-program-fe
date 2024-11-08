@@ -1,5 +1,5 @@
 import HttpInterceptor from "./HttpInterceptor";
-import { SCHOOL, TEACHER, PROJECT, PERFORMANCE, STUDENTS } from "./APIURLs";
+import { SCHOOL, TEACHER, PROJECT, PERFORMANCE, STUDENTS, STUDENT } from "./APIURLs";
 
 const apiServiceBased = HttpInterceptor();
 
@@ -63,7 +63,9 @@ export default {
   //Project api methods
 
   //get all project list
-  getAllProjectList: async () => {
+  getAllProjectList: async (schoolId) => {
+    // console.log("form service " + schoolId);
+    if (schoolId) return apiServiceBased.get(`${PROJECT}?schoolId=${schoolId}`);
     return apiServiceBased.get(PROJECT);
   },
 
@@ -86,8 +88,37 @@ export default {
   updateProject: async (id, projectData) => {
     return apiServiceBased.put(`${PROJECT}/${id}`, projectData);
   },
+
+  allocateProjectToStudent: async (studentId, projectId) => {
+    return apiServiceBased.post(`${PROJECT}/${projectId}/students/allocate`, {
+      studentIds: [Number(studentId)],
+    });
+  },
+  deAllocateProjectToStudent: async (studentId, projectId) => {
+    return apiServiceBased.post(
+      `${PROJECT}/${projectId}/students/de-allocate`,
+      {
+        studentIds: [Number(studentId)],
+      }
+    );
+  },
   //---------------------------
 
+  //Students
+  getAllStudentList: async (schoolId) => {
+    console.log("form service student " + schoolId);
+    if (schoolId)
+      return apiServiceBased.get(`${STUDENT}/?schoolId=${schoolId}`);
+    return apiServiceBased.get(STUDENT);
+  },
+  getAllUnAllocatedStudents: async (schoolId, projectId) => {
+    console.log("form service student " + schoolId + " Prject " + projectId);
+    if (schoolId)
+      return apiServiceBased.get(
+        `${STUDENT}${PROJECT}?schoolId=${schoolId}&projectId=${projectId}`
+      );
+    return apiServiceBased.get(STUDENT);
+  },
   getPerformanceList: () => {
     return apiServiceBased.get(`${PERFORMANCE}`);
   },

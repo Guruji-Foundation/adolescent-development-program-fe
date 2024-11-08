@@ -42,7 +42,7 @@ const EditProject = () => {
               actualStartDate: res?.actualStartDate,
               actualEndDate: res?.actualEndDate,
               status: res?.status,
-              schoolId: res?.schoolDetails?.id,
+              schoolId: res?.school?.id,
             });
           }
         })
