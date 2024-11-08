@@ -66,7 +66,7 @@ function SchoolPage() {
   const getSchooList = async () => {
     try {
       setLoading(true);
-      const data = (await apiServices.getAllSchoolList())?.data?.data?.schools;
+      const data = (await apiServices.getAllSchoolList())?.data?.data?.students;
       const rowData = data?.map((item) => ({
         id: item?.id,
         name: item?.name,
