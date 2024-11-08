@@ -48,7 +48,7 @@ const ProjectAllocationViewPage = () => {
         trusteeContactInfo: item?.trusteeContactInfo,
       }));
       setSchools(rowData);
-      console.log("get list..");
+      console.log("get list..,,,,");
       console.log(rowData);
       // setLoading(false);
     } catch (err) {
