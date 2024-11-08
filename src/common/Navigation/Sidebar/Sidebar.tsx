@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import "./Sidebar.css"; // Import custom styles
-import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
+// import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
 import { MdCastForEducation, MdAssignment } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import { FaSchool, FaChalkboardTeacher, FaUserGraduate,FaChartBar } from "react-icons/fa"; // Import icons from react-icons
-import { MdCastForEducation } from "react-icons/md";
+import {
+  FaSchool,
+  FaChalkboardTeacher,
+  FaUserGraduate,
+  FaChartBar,
+} from "react-icons/fa"; // Import icons from react-icons
 import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 
 const Sidebar: React.FC = () => {
@@ -77,6 +81,7 @@ const Sidebar: React.FC = () => {
             {!isCollapsed && <span>Projects</span>}
           </Link>
         </li>
+
         <li>
           <Link
             to="/project-allocation"
@@ -95,12 +100,16 @@ const Sidebar: React.FC = () => {
               isActive("/project-allocation-view") ? "active" : ""
             }`}
           >
-            <MdAssignment className="icon" /> {/* Projects icon */}
+            <MdAssignment className="icon" />
             {!isCollapsed && <span>Project Allocation View</span>}
+          </Link>
+        </li>
+        <li>
+          <Link
             to="/performance"
             className={`menu-item ${isActive("/performance") ? "active" : ""}`}
           >
-            <FaChartBar className="icon" /> {/* Student icon */}
+            <FaChartBar className="icon" />
             {!isCollapsed && <span>Performance</span>}
           </Link>
         </li>
