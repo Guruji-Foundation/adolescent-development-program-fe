@@ -5,6 +5,8 @@ import "./Sidebar.css"; // Import custom styles
 import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
 import { MdCastForEducation, MdAssignment } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
+import { FaSchool, FaChalkboardTeacher, FaUserGraduate,FaChartBar } from "react-icons/fa"; // Import icons from react-icons
+import { MdCastForEducation } from "react-icons/md";
 import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 
 const Sidebar: React.FC = () => {
@@ -95,6 +97,11 @@ const Sidebar: React.FC = () => {
           >
             <MdAssignment className="icon" /> {/* Projects icon */}
             {!isCollapsed && <span>Project Allocation View</span>}
+            to="/performance"
+            className={`menu-item ${isActive("/performance") ? "active" : ""}`}
+          >
+            <FaChartBar className="icon" /> {/* Student icon */}
+            {!isCollapsed && <span>Performance</span>}
           </Link>
         </li>
       </ul>

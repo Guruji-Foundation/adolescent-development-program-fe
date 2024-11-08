@@ -17,6 +17,9 @@ import EditProject from "./features/project/EditProject";
 import HomePage from "./features/homepage";
 import ProjectAllocationPage from "./features/project-allocate/ProjectAllocationPage";
 import ProjectAllocationViewPage from "./features/project-allocate/ProjectAllocationViewPage";
+import Performance from "./features/Performance/Performance";
+import AddPerformance from "./features/Performance/AddPerformance";
+import EditPerformance from "./features/Performance/EditPerformance";
 
 const App: React.FC = () => {
   return (
@@ -49,6 +52,10 @@ const App: React.FC = () => {
               path="/project-allocation-view"
               element={<ProjectAllocationViewPage />}
             />
+            {/* performance routes */}
+            <Route path="/performance" element={<Performance />} />
+            <Route path="/add-performance" element={<AddPerformance />} />
+            <Route path="/edit-performance/:id" element={<EditPerformance />} />
             {/* Home Page Route */}
             <Route path="/" element={<HomePage />} /> {/* Default route */}
           </Routes>
