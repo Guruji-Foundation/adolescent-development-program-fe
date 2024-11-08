@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import "./Sidebar.css"; // Import custom styles
-import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
+import { FaSchool, FaChalkboardTeacher, FaUserGraduate,FaChartBar } from "react-icons/fa"; // Import icons from react-icons
 import { MdCastForEducation } from "react-icons/md";
 import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 
@@ -72,6 +72,15 @@ const Sidebar: React.FC = () => {
           >
             <MdCastForEducation className="icon" /> {/* Projects icon */}
             {!isCollapsed && <span>Projects</span>}
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/performance"
+            className={`menu-item ${isActive("/performance") ? "active" : ""}`}
+          >
+            <FaChartBar className="icon" /> {/* Student icon */}
+            {!isCollapsed && <span>Performance</span>}
           </Link>
         </li>
       </ul>

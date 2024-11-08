@@ -1,5 +1,5 @@
 import HttpInterceptor from "./HttpInterceptor";
-import { SCHOOL, TEACHER, PROJECT } from "./APIURLs";
+import { SCHOOL, TEACHER, PROJECT, PERFORMANCE, STUDENTS } from "./APIURLs";
 
 const apiServiceBased = HttpInterceptor();
 
@@ -87,4 +87,24 @@ export default {
     return apiServiceBased.put(`${PROJECT}/${id}`, projectData);
   },
   //---------------------------
+
+  getPerformanceList: () => {
+    return apiServiceBased.get(`${PERFORMANCE}`);
+  },
+
+  savePerformance: (data) => {
+    return apiServiceBased.post(PERFORMANCE, data);
+  },
+
+  getPerformanceById: (id) => {
+    return apiServiceBased.get(`${PERFORMANCE}/${id}`)
+  },
+
+  editPerformance: (id, data) => {
+    return apiServiceBased.put(`${PERFORMANCE}/${id}`, data);
+  },
+
+  getStudentList: () => {
+    return apiServiceBased.get(`${STUDENTS}`);
+  }
 };
