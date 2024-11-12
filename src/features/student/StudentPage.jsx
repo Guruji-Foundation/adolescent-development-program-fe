@@ -137,8 +137,6 @@ const StudentPage = () => {
     },
   ];
 
-
-  console.log("88888", rowData)
   return (<div className="project-page">
     <div className="header">
       <div className="heading-container">

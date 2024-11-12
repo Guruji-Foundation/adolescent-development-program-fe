@@ -24,7 +24,6 @@ function EditStudentForm() {
     const getStudentData = async () => {
         try {
             const apiResponseData = (await apiServices.getStudentDetailsById(Number(id)))?.data?.data;
-            console.log("555555555555",apiResponseData)
             setStudentData({
                 schoolId: apiResponseData?.schoolDetails?.id || "",
                 studentName: apiResponseData?.name || "",
@@ -48,10 +47,8 @@ function EditStudentForm() {
     const handleSubmit = async (data) => {
         try {
             const res = await apiServices.editStudent(id, data);
-            console.log("9999999999999999",res)
             return res;
         } catch (err) {
-            console.log("9999999999999999",err)
             setError(err.message);
             throw err;
         }

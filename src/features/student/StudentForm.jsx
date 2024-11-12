@@ -102,7 +102,6 @@ function StudentForm({
         getSchoolData()
     }, [])
 
-    console.log("wwwwwwwwwwwww", editInitialData, formData)
     return (
         <div className="form-container">
             <h2>{heading}</h2>
