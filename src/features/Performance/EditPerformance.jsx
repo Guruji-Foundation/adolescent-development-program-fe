@@ -25,7 +25,7 @@ function EditPerformance() {
       }
 
     } catch (err) {
-     console.log("Error in GetPerformance",err)
+      console.log("Error in GetPerformance", err)
     }
   }
   useEffect(() => {

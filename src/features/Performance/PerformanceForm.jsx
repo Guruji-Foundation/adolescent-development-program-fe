@@ -23,7 +23,6 @@ function PerformanceForm({
 
     const handleSubmitButton = async (e) => {
         e.preventDefault()
-        console.log("88888888888", formData)
         try {
             const res = await handleSubmit(formData);
             if (res?.data?.status) {
@@ -85,9 +84,11 @@ function PerformanceForm({
             setFormData(editInitialData)
         }
     },[editInitialData])
+
     const handleClose = () => {
         navigate("/performance")
     }
+    
     return (
         <div className="form-container">
             <h2>{heading}</h2>

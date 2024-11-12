@@ -20,6 +20,9 @@ import ProjectAllocationViewPage from "./features/project-allocate/ProjectAlloca
 import Performance from "./features/Performance/Performance";
 import AddPerformance from "./features/Performance/AddPerformance";
 import EditPerformance from "./features/Performance/EditPerformance";
+import AddStudentForm from "./features/student/AddStudentForm";
+import EditStudentForm from "./features/student/EditStudentForm";
+import ProjectCordinator from "./features/ProjectCoordinator/ProjectCordinator";
 
 const App: React.FC = () => {
   return (
@@ -58,6 +61,11 @@ const App: React.FC = () => {
             <Route path="/edit-performance/:id" element={<EditPerformance />} />
             {/* Home Page Route */}
             <Route path="/" element={<HomePage />} /> {/* Default route */}
+            <Route path="/add-student" element={<AddStudentForm />} />
+            <Route path="/edit-student/:id" element={<EditStudentForm />} />
+            {/* project coordinator */}
+            <Route path="/project-coordinator" element={<ProjectCordinator />} />
+            
           </Routes>
         </div>
       </div>

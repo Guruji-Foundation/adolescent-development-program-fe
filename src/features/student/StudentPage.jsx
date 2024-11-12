@@ -46,12 +46,25 @@ const StudentPage = () => {
         parentOccupation: data?.parent?.occupation,
         parentPhoneNumber: data?.parent?.phoneNumber,
       }))
-      setRowData(data);
+      setRowData(rData);
     } catch (err) {
       console.log("Error in get Student", err)
     }
   }
-  useState(() => { getAllSchools() }, [])
+
+  useState(() => {
+    getAllSchools()
+  }, [])
+
+  const confirmDelete = async () => {
+    try {
+      const res = await apiServices.deleteStudent(selectedStudentId)
+      setIsModalVisible(false);
+      getAllSchools()
+    } catch (err) {
+      console.log("Error in delete", err)
+    }
+  }
   const columnDefs = [
     {
       headerName: "Name",
@@ -124,8 +137,6 @@ const StudentPage = () => {
     },
   ];
 
-
-  console.log("88888", rowData)
   return (<div className="project-page">
     <div className="header">
       <div className="heading-container">
@@ -148,7 +159,7 @@ const StudentPage = () => {
       <ConfirmationModal
         title="Confirm Deletion"
         message="Do you really want to delete this Teacher?"
-        onConfirm={cancelDelete}
+        onConfirm={confirmDelete}
         onCancel={cancelDelete}
       />
     )}

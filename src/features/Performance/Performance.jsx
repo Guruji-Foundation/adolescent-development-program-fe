@@ -14,7 +14,7 @@ function Performance() {
     }
     const [selectedPerformanceId, setSelectedPerformanceId] = useState(null); // State to store the selected school for deletion
     const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
-    const [performanceData,setPerfomaceData]=useState([]);
+    const [performanceData, setPerfomaceData] = useState([]);
     const { errors, setError, clearError } = useError();
 
     const handleDelete = (id) => {
@@ -25,7 +25,19 @@ function Performance() {
     const cancelDelete = () => {
         setSelectedPerformanceId(null);
         setIsModalVisible(false);
-      };
+    };
+
+    const deletePerformance = async () => {
+        try {
+            const res = await apiServices.deletePerformance(selectedPerformanceId);
+            if (res?.data?.status) {
+                setIsModalVisible(false);
+                getPerformanceData()
+            }
+        } catch (err) {
+            console.log("Error in Deleting", err)
+        }
+    }
 
     const handleEdit = (id) => {
         navigate(`/edit-performance/${id}`);
@@ -86,20 +98,20 @@ function Performance() {
         },
     ]
 
-    const getPerformanceData = async ()=>{
-        try{
+    const getPerformanceData = async () => {
+        try {
             const data = (await apiServices.getPerformanceList())?.data?.data?.performances
             setPerfomaceData(data);
-        }catch(err){
+        } catch (err) {
             setError(err.message);
             throw err;
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getPerformanceData();
-    },[])
-    
+    }, [])
+
     const rowData = [
         {
             id: 1,
@@ -149,14 +161,14 @@ function Performance() {
             </div>
 
             <div className="ag-theme-quartz" style={{ height: "500px" }}>
-                <AgGridTable rowData={rowData} columnDefs={columnDefs} />
+                <AgGridTable rowData={performanceData} columnDefs={columnDefs} />
             </div>
 
             {isModalVisible && (
                 <ConfirmationModal
                     title="Confirm Deletion"
                     message="Do you really want to delete this Teacher?"
-                    onConfirm={cancelDelete}
+                    onConfirm={deletePerformance}
                     onCancel={cancelDelete}
                 />
             )}
