@@ -104,7 +104,29 @@ export default {
     return apiServiceBased.put(`${PERFORMANCE}/${id}`, data);
   },
 
+  deletePerformance: async (id) => {
+    return apiServiceBased.delete(`${PERFORMANCE}/${id}`);
+  },
+  
+  //Student
   getStudentList: () => {
     return apiServiceBased.get(`${STUDENTS}`);
-  }
+  },
+
+  addStudent:(data)=>{
+    return apiServiceBased.post(STUDENTS, data);
+
+  },
+
+  deleteStudent:(id)=>{
+    return apiServiceBased.delete(`${STUDENTS}/${id}`);
+  },
+
+  editStudent: (id, data) => {
+    return apiServiceBased.put(`${STUDENTS}/${id}`, data);
+  },
+
+  getStudentDetailsById:(id)=>{
+    return apiServiceBased.get(`${STUDENTS}/${id}`)
+  },
 };

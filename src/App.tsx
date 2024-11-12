@@ -18,6 +18,8 @@ import HomePage from "./features/homepage";
 import Performance from "./features/Performance/Performance";
 import AddPerformance from "./features/Performance/AddPerformance";
 import EditPerformance from "./features/Performance/EditPerformance";
+import AddStudentForm from "./features/student/AddStudentForm";
+import EditStudentForm from "./features/student/EditStudentForm";
 
 const App: React.FC = () => {
   return (
@@ -48,6 +50,8 @@ const App: React.FC = () => {
 
             {/* Home Page Route */}
             <Route path="/" element={<HomePage />} /> {/* Default route */}
+            <Route path="/add-student" element={<AddStudentForm />} />
+            <Route path="/edit-student/:id" element={<EditStudentForm />} />
           </Routes>
         </div>
       </div>
