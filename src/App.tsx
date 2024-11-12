@@ -15,7 +15,7 @@ import "./App.css"; // Global styles
 import ProjectPage from "./features/project/ProjectPage";
 import EditProject from "./features/project/EditProject";
 import HomePage from "./features/homepage";
-import ProjectAllocationPage from "./features/project-allocate/ProjectAllocationPage";
+import ProjectAllocationPage from "./features/project-allocate/AssignProjectToStudentPage";
 
 import Performance from "./features/Performance/Performance";
 import AddPerformance from "./features/Performance/AddPerformance";
@@ -28,6 +28,13 @@ import EditStudentForm from "./features/student/EditStudentForm";
 import ProjectCordinator from "./features/ProjectCoordinator/ProjectCordinator";
 import AddProjectCoordinator from "./features/ProjectCoordinator/AddProjectCoordinator";
 import EditProjectCoordinator from "./features/ProjectCoordinator/EditProjectCoordinator";
+import TopicsPage from "./features/topics/TopicsPage";
+import CreateTopic from "./features/topics/CreateTopic";
+import EditTopic from "./features/topics/EditTopic";
+import AssignProjectToSchoolPage from "./features/project-allocate/AssignProjectToSchoolPage";
+import AssignProjectToSchool from "./features/project-allocate/AssignProjectToSchool";
+import EditAssignProjectToSchool from "./features/project-allocate/EditAssignProjectToSchool";
+import ProjectAssign from "./features/project-allocate/ProjectAssign";
 
 const App: React.FC = () => {
   return (
@@ -56,7 +63,19 @@ const App: React.FC = () => {
             <Route path="/create-topic" element={<CreateTopic />} />
             <Route path="/edit-topic/:id" element={<EditTopic />} />
             {/* Project Allocation */}
-            <Route path="/project-assign" element={<ProjectAllocationPage />} />
+            <Route path="/project-assign" element={<ProjectAssign />} />
+            {/* <Route
+              path="/project-assign-school"
+              element={<AssignProjectToSchoolPage />}
+            /> */}
+            <Route
+              path="/project/school/assign"
+              element={<AssignProjectToSchool />}
+            />
+            <Route
+              path="/project/:id/school/assign"
+              element={<EditAssignProjectToSchool />}
+            />
             {/* performance routes */}
             <Route path="/performance" element={<Performance />} />
             <Route path="/add-performance" element={<AddPerformance />} />
@@ -66,10 +85,18 @@ const App: React.FC = () => {
             <Route path="/add-student" element={<AddStudentForm />} />
             <Route path="/edit-student/:id" element={<EditStudentForm />} />
             {/* project coordinator */}
-            <Route path="/project-coordinator" element={<ProjectCordinator />} />
-            <Route path="/add-coordinator" element={<AddProjectCoordinator />} />
-            <Route path="/edit-coordinator/:id" element={<EditProjectCoordinator />} />
-            
+            <Route
+              path="/project-coordinator"
+              element={<ProjectCordinator />}
+            />
+            <Route
+              path="/add-coordinator"
+              element={<AddProjectCoordinator />}
+            />
+            <Route
+              path="/edit-coordinator/:id"
+              element={<EditProjectCoordinator />}
+            />
           </Routes>
         </div>
       </div>

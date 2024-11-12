@@ -1,0 +1,125 @@
+/* General Styles */
+body {
+  font-family: "Roboto", sans-serif; /* Modern, clean font */
+  background-color: #f5f7fa; /* Light background color */
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #4a4a4a;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Flexbox Layout */
+.form-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Form Fields: 48% width for 2-column layout */
+.form-field {
+  width: 48%;
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #4a4a4a; /* Softer dark gray for labels */
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Red Asterisk for required fields */
+label.required:after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+  font-size: 18px; /* Make the asterisk bigger */
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px; /* Rounded corners */
+  border: 1px solid #dcdcdc;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+  border-color: #0057d9; /* Accent color for focus */
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 87, 217, 0.2); /* Add a subtle glow on focus */
+}
+
+input:hover {
+  border-color: #0073e6; /* Slight hover effect */
+}
+
+/* Submit button styling */
+.submit-button {
+  width: 160px;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  margin: 30px auto;
+  display: block;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* .submit-button:hover {
+    background-color: #004bb5;
+    box-shadow: 0 4px 8px rgba(0, 87, 217, 0.2); /* Slight shadow on hover} */
+
+/* Success and Error Messages */
+.success-message,
+.error-messages {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.success-message {
+  background-color: #eaf8e6; /* Soft green for success */
+  border-left: 4px solid #28a745;
+  color: #28a745;
+}
+
+.error-messages {
+  background-color: #f8e6e6; /* Soft red for error */
+  border-left: 4px solid #dc3545;
+  color: #dc3545;
+}
+
+.error-messages p {
+  margin: 5px 0;
+}
+
+/* Responsive: Stack fields on small screens */
+@media (max-width: 768px) {
+  .form-field {
+    width: 100%; /* Make fields full-width on smaller screens */
+  }
+
+  .submit-button {
+    width: 100%;
+  }
+}

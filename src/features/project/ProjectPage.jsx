@@ -26,6 +26,9 @@ const ProjectPage = () => {
   const handleEdit = (id) => {
     navigate(`/edit-project/${id}`);
   };
+  const handleAssign = () => {
+    navigate("/project/school/assign");
+  };
   const handleDelete = (id) => {
     setSelectedProjectId(id);
     setIsModalVisible(true);
@@ -172,7 +175,6 @@ const ProjectPage = () => {
       <div className="header">
         <div className="heading-container">
           <h2 className="project-heading">Projects</h2>
-          <p className="subheading">List of Projects</p>
         </div>
         <button
           className="g-button create-new-button"
@@ -184,6 +186,7 @@ const ProjectPage = () => {
       <div className="ag-theme-quartz" style={{ height: "500px" }}>
         <AgGridTable rowData={projects} columnDefs={columnDefs} />
       </div>
+
       {isModalVisible && (
         <ConfirmationModal
           title="Confirm Deletion"

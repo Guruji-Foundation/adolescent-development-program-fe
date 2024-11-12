@@ -134,6 +134,31 @@
   text-decoration: none;
 }
 
+.sidebar-menu .submenu {
+  padding-left: 20px;
+  list-style: none;
+}
+
+.sidebar-menu .submenu-item {
+  padding: 5px 0;
+  color: #666;
+  text-decoration: none;
+}
+
+.sidebar-menu .submenu-item.active {
+  font-weight: bold;
+  color: #333;
+}
+
+.chevron-icon {
+  margin-left: auto;
+  transition: transform 0.3s;
+}
+
+.chevron-icon.rotated {
+  transform: rotate(180deg);
+}
+
 /* For active link styles */
 .sidebar-menu li a.active {
   background-color: hsl(209, 82%, 85%); /* Custom active background color */

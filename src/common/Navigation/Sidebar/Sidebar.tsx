@@ -5,6 +5,8 @@ import "./Sidebar.css"; // Import custom styles
 // import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
 import { MdCastForEducation, MdAssignment, MdTopic } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
+import { BiChevronDown } from "react-icons/bi";
+import { HiOutlineUserGroup } from "react-icons/hi";
 import {
   FaSchool,
   FaChalkboardTeacher,
@@ -16,7 +18,11 @@ import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 
 const Sidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isProjectsSubmenuOpen, setIsProjectsSubmenuOpen] = useState(false);
   const location = useLocation(); // Get current location
+  const toggleProjectsSubmenu = () => {
+    setIsProjectsSubmenuOpen(!isProjectsSubmenuOpen);
+  };
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -75,13 +81,16 @@ const Sidebar: React.FC = () => {
         </li>
         <li>
           <Link
-            to="/topics"
-            className={`menu-item ${isActive("/topics") ? "active" : ""}`}
+            to="/project-coordinator"
+            className={`menu-item ${
+              isActive("/project-coordinator") ? "active" : ""
+            }`}
           >
-            <MdTopic className="icon" /> {/* Projects icon */}
-            {!isCollapsed && <span>Topics</span>}
+            <FaCentercode className="icon" />
+            {!isCollapsed && <span>Project coordinator</span>}
           </Link>
         </li>
+
         <li>
           <Link
             to="/projects"
@@ -89,6 +98,15 @@ const Sidebar: React.FC = () => {
           >
             <MdCastForEducation className="icon" /> {/* Projects icon */}
             {!isCollapsed && <span>Projects</span>}
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/topics"
+            className={`menu-item ${isActive("/topics") ? "active" : ""}`}
+          >
+            <MdTopic className="icon" /> {/* Projects icon */}
+            {!isCollapsed && <span>Topics</span>}
           </Link>
         </li>
 
@@ -100,20 +118,10 @@ const Sidebar: React.FC = () => {
             }`}
           >
             <AiOutlineUserAdd className="icon" /> {/* Projects icon */}
-            {!isCollapsed && <span>Assign Project To Student</span>}
+            {!isCollapsed && <span>Assign Project</span>}
           </Link>
         </li>
-        {/* <li>
-          <Link
-            to="/project-allocation-view"
-            className={`menu-item ${
-              isActive("/project-allocation-view") ? "active" : ""
-            }`}
-          >
-            <MdAssignment className="icon" />
-            {!isCollapsed && <span>Project Allocation View</span>}
-          </Link>
-        </li> */}
+
         <li>
           <Link
             to="/performance"
@@ -121,15 +129,6 @@ const Sidebar: React.FC = () => {
           >
             <FaChartBar className="icon" />
             {!isCollapsed && <span>Performance</span>}
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/project-coordinator"
-            className={`menu-item ${isActive("/project-coordinator") ? "active" : ""}`}
-          >
-            <FaCentercode className="icon" />
-            {!isCollapsed && <span>Project coordinator</span>}
           </Link>
         </li>
       </ul>
