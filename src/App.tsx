@@ -16,10 +16,13 @@ import ProjectPage from "./features/project/ProjectPage";
 import EditProject from "./features/project/EditProject";
 import HomePage from "./features/homepage";
 import ProjectAllocationPage from "./features/project-allocate/ProjectAllocationPage";
-import ProjectAllocationViewPage from "./features/project-allocate/ProjectAllocationViewPage";
+
 import Performance from "./features/Performance/Performance";
 import AddPerformance from "./features/Performance/AddPerformance";
 import EditPerformance from "./features/Performance/EditPerformance";
+import TopicsPage from "./features/topics/TopicsPage";
+import CreateTopic from "./features/topics/CreateTopic";
+import EditTopic from "./features/topics/EditTopic";
 
 const App: React.FC = () => {
   return (
@@ -43,15 +46,12 @@ const App: React.FC = () => {
             <Route path="/projects" element={<ProjectPage />} />
             <Route path="/create-project" element={<CreateProject />} />
             <Route path="/edit-project/:id" element={<EditProject />} />
+            {/* Project Route */}
+            <Route path="/topics" element={<TopicsPage />} />
+            <Route path="/create-topic" element={<CreateTopic />} />
+            <Route path="/edit-topic/:id" element={<EditTopic />} />
             {/* Project Allocation */}
-            <Route
-              path="/project-allocation"
-              element={<ProjectAllocationPage />}
-            />
-            <Route
-              path="/project-allocation-view"
-              element={<ProjectAllocationViewPage />}
-            />
+            <Route path="/project-assign" element={<ProjectAllocationPage />} />
             {/* performance routes */}
             <Route path="/performance" element={<Performance />} />
             <Route path="/add-performance" element={<AddPerformance />} />

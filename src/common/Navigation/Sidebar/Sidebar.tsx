@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import "./Sidebar.css"; // Import custom styles
 // import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
-import { MdCastForEducation, MdAssignment } from "react-icons/md";
+import { MdCastForEducation, MdAssignment, MdTopic } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import {
   FaSchool,
@@ -74,6 +74,15 @@ const Sidebar: React.FC = () => {
         </li>
         <li>
           <Link
+            to="/topics"
+            className={`menu-item ${isActive("/topics") ? "active" : ""}`}
+          >
+            <MdTopic className="icon" /> {/* Projects icon */}
+            {!isCollapsed && <span>Topics</span>}
+          </Link>
+        </li>
+        <li>
+          <Link
             to="/projects"
             className={`menu-item ${isActive("/projects") ? "active" : ""}`}
           >
@@ -84,16 +93,16 @@ const Sidebar: React.FC = () => {
 
         <li>
           <Link
-            to="/project-allocation"
+            to="/project-assign"
             className={`menu-item ${
-              isActive("/projects-allocation") ? "active" : ""
+              isActive("/projects-assign") ? "active" : ""
             }`}
           >
             <AiOutlineUserAdd className="icon" /> {/* Projects icon */}
-            {!isCollapsed && <span>Project Allocation</span>}
+            {!isCollapsed && <span>Assign Project To Student</span>}
           </Link>
         </li>
-        <li>
+        {/* <li>
           <Link
             to="/project-allocation-view"
             className={`menu-item ${
@@ -103,7 +112,7 @@ const Sidebar: React.FC = () => {
             <MdAssignment className="icon" />
             {!isCollapsed && <span>Project Allocation View</span>}
           </Link>
-        </li>
+        </li> */}
         <li>
           <Link
             to="/performance"

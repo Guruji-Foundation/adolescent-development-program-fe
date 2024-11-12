@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-import "./ProjectAllocationPage.css"; // Assuming your styles are in TeacherPage.css
+import "./ProjectAllocationPage.css";
 import "../../CSS/Main.css";
 
-import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal"; // Import the modal component
+import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import useError from "../../hooks/useError";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
@@ -16,27 +15,34 @@ import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 
 import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
-import Button from "../../common/FormInput/Button";
 
 const ProjectAllocationPage = () => {
   const [loading, setLoading] = useState(true);
   const { errors, setError, clearError } = useError();
 
   const [schools, setSchools] = useState([]);
-  const [selectedSchoolId, setSelectedSchoolId] = useState(null); // State to store the selected school for deletion
-
+  const [selectedSchoolId, setSelectedSchoolId] = useState(null);
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   const [students, setStudents] = useState([]);
-  const [selectedStudentsId, setSelectedStudentsId] = useState(null);
+  const [unAssignStudents, setUnAssignStudents] = useState([]);
 
-  const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [assignFlag, setAssignFlag] = useState(true);
+  const AssignModelData = {
+    heading: "Success!",
+    description: "You Have Successfully Assigned Project to Student",
+  };
+  const UnAssignModelData = {
+    heading: "Success!",
+    description: "You Have Successfully Unassigned Project from Student",
+  };
   const navigate = useNavigate();
+
+  // Fetch list of schools on initial render
   const getSchooList = async () => {
     try {
-      // setLoading(true);
       const data = (await apiServices.getAllSchoolList())?.data?.data?.schools;
       const rowData = data?.map((item) => ({
         id: item?.id,
@@ -48,11 +54,55 @@ const ProjectAllocationPage = () => {
         trusteeContactInfo: item?.trusteeContactInfo,
       }));
       setSchools(rowData);
-      console.log("get list");
-      console.log(rowData);
-      // setLoading(false);
     } catch (err) {
       setError(err.message);
+    }
+  };
+
+  // Fetch project list based on selected school
+  const getProjectList = async () => {
+    if (selectedSchoolId) {
+      try {
+        const res = (await apiServices.getAllProjectList(selectedSchoolId))
+          ?.data?.data?.projects;
+        setProjects(res);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  };
+
+  // Fetch allocated students
+  const getAllAllocatedStudents = async () => {
+    if (selectedProjectId && selectedSchoolId) {
+      try {
+        setLoading(true);
+        const studentData = (
+          await apiServices.getAllUnAllocatedStudents(
+            selectedSchoolId,
+            selectedProjectId
+          )
+        )?.data?.data?.students;
+        setStudents(studentData);
+      } catch (error) {
+        setError("Error fetching allocated students");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  // Fetch unallocated students
+
+  const getAllUnAssginStudent = async () => {
+    if (selectedProjectId && selectedSchoolId) {
+      try {
+        const res = (await apiServices.fetchProject(selectedProjectId))?.data
+          ?.data?.students;
+        setUnAssignStudents(res);
+      } catch (err) {
+        setError(err.message);
+      }
     }
   };
 
@@ -60,85 +110,68 @@ const ProjectAllocationPage = () => {
     getSchooList();
   }, []);
 
-  const getProjectList = async () => {
-    try {
-      // setLoading(true);
-      console.log("form get " + selectedSchoolId);
-      const res = (await apiServices.getAllProjectList(selectedSchoolId))?.data
-        ?.data?.projects;
-      // console.log(res);
-      setProjects(res);
-      // setLoading(false);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
   useEffect(() => {
-    if (selectedSchoolId != null) getProjectList();
+    if (selectedSchoolId) {
+      getProjectList();
+    }
   }, [selectedSchoolId]);
 
   useEffect(() => {
-    if (selectedProjectId && selectedSchoolId) {
-      setLoading(true);
-      apiServices
-        .getAllUnAllocatedStudents(selectedSchoolId, selectedProjectId)
-        .then((studentData) => {
-          studentData = studentData?.data?.data?.students;
-          setStudents(studentData);
-        })
-        .catch((error) => {
-          setError("Error fetching Student data ");
-          console.error("Error fetching student data:", error);
-          setLoading(false);
-        });
-      setLoading(false);
+    if (selectedSchoolId && selectedProjectId) {
+      getAllAllocatedStudents();
+      getAllUnAssginStudent();
     }
   }, [selectedSchoolId, selectedProjectId]);
 
   const handleSchoolChange = (e) => {
-    console.log("from school handle ");
     setSelectedSchoolId(e.target.value);
     setSelectedProjectId(null);
     setStudents([]);
-    console.log(e.target.value);
+    setUnAssignStudents([]);
   };
 
   const handleProjectChange = (e) => {
-    console.log("from project handle ");
     setSelectedProjectId(e.target.value);
-    console.log(e.target.value);
   };
 
+  // Assign student to project
   const handleAssign = async (id) => {
-    console.log("form handle assign");
-    // console.log(selectedProjectId);
     try {
-      const response = await apiServices.allocateProjectToStudent(
-        id,
-        selectedProjectId
-      );
-      const updateStudents = students.filter((student) => student.id != id);
-      setStudents(updateStudents);
-      console.log(response);
+      await apiServices.allocateProjectToStudent(id, selectedProjectId);
+      setAssignFlag(true);
+      setIsModalVisible(true);
+
+      // Refresh unassigned and assigned students data
+      await getAllAllocatedStudents();
+      await getAllUnAssginStudent();
     } catch (error) {
       setError(error.message);
     }
   };
-  // if (loading) {
-  //   return <LoadingSpinner />;
-  // }
 
-  if (errors.length > 0) {
-    return <div>{errors.length > 0 && <ErrorMessage errors={errors} />}</div>;
-  }
-  console.log(students);
+  // Unassign student from project
+  const handleUnAssign = async (id) => {
+    try {
+      await apiServices.deAllocateProjectToStudent(id, selectedProjectId);
+      setAssignFlag(false);
+      setIsModalVisible(true);
+
+      // Refresh assigned and unassigned students data
+      await getAllUnAssginStudent();
+      await getAllAllocatedStudents();
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleClose = () => {
+    setIsModalVisible(false);
+  };
+
+  if (errors.length > 0) return <ErrorMessage errors={errors} />;
+
   const columDefs = [
-    {
-      headerCheckboxSelection: true,
-      checkboxSelection: false,
-      width: 50,
-    },
+    { headerCheckboxSelection: true, checkboxSelection: false, width: 50 },
     {
       headerName: "Student Name",
       field: "name",
@@ -151,42 +184,52 @@ const ProjectAllocationPage = () => {
       filter: true,
       floatingFilter: true,
     },
-    {
-      headerName: "Email",
-      field: "email",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Address",
-      field: "address",
-      filter: true,
-      floatingFilter: true,
-    },
-
+    { headerName: "Email", field: "email", filter: true, floatingFilter: true },
     {
       headerName: "Actions",
       field: "actions",
+      cellRenderer: (params) => (
+        <button
+          onClick={() => handleAssign(params?.data?.id)}
+          className="action-button edit-button"
+        >
+          Assign
+        </button>
+      ),
+    },
+  ];
+
+  const uncolumDefs = [
+    { headerCheckboxSelection: true, checkboxSelection: false, width: 50 },
+    {
+      headerName: "Student Name",
+      field: "name",
       filter: true,
       floatingFilter: true,
-      cellRenderer: (params) => {
-        return (
-          <div>
-            <button
-              onClick={() => handleAssign(params?.data?.id)}
-              className="action-button edit-button"
-            >
-              Assign
-            </button>
-          </div>
-        );
-      },
+    },
+    {
+      headerName: "Phone Number",
+      field: "phoneNumber",
+      filter: true,
+      floatingFilter: true,
+    },
+    { headerName: "Email", field: "email", filter: true, floatingFilter: true },
+    {
+      headerName: "Actions",
+      field: "actions",
+      cellRenderer: (params) => (
+        <button
+          onClick={() => handleUnAssign(params?.data?.id)}
+          className="action-button edit-button"
+        >
+          Unassign
+        </button>
+      ),
     },
   ];
 
   return (
     <div className="teacher-page">
-      {/* Header Section */}
       <div className="header">
         <div className="heading-container">
           <h2 className="teacher-heading">Allocate Student to Project</h2>
@@ -200,7 +243,6 @@ const ProjectAllocationPage = () => {
           onChange={handleSchoolChange}
           required
         />
-
         <SelectInput
           label="Select Project"
           value={selectedProjectId || ""}
@@ -208,26 +250,27 @@ const ProjectAllocationPage = () => {
           options={projects}
           required
         />
-        {/* <Button
-          label="Assign"
-          type="button"
-          className="g-button submit-button"
-        /> */}
       </div>
 
-      {/* AgGrid Tables */}
       <div className="ag-theme-quartz" style={{ height: "500px" }}>
         <AgGridTable rowData={students} columnDefs={columDefs} />
       </div>
-      {/* Confirmation Modal */}
-      {/* {isModalVisible && (
-        <ConfirmationModal
-          title="Confirm Deletion"
-          message="Do you really want to delete this Teacher?"
-          onConfirm={confirmDelete}
-          onCancel={cancelDelete}
+
+      <div className="header">
+        <div className="heading-container">
+          <h2 className="teacher-heading">Allocated Student to Project</h2>
+        </div>
+      </div>
+      <div className="ag-theme-quartz" style={{ height: "500px" }}>
+        <AgGridTable rowData={unAssignStudents} columnDefs={uncolumDefs} />
+      </div>
+
+      {isModalVisible && (
+        <SuccessModal
+          data={assignFlag ? AssignModelData : UnAssignModelData}
+          onClose={handleClose}
         />
-      )} */}
+      )}
     </div>
   );
 };
