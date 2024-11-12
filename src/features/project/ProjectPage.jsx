@@ -50,7 +50,7 @@ const ProjectPage = () => {
   };
 
   const cancelDelete = () => {
-    setSelectedProjectId(null);
+    setSelectedProjectId();
     setIsModalVisible(false);
   };
 
@@ -61,7 +61,8 @@ const ProjectPage = () => {
   const getProjectList = async () => {
     try {
       setLoading(true);
-      const res = (await apiServices.getAllProjectList())?.data?.data?.projects;
+      const res = (await apiServices.getAllProjectList(null))?.data?.data
+        ?.projects;
       // console.log(res);
       setProjects(res);
       setLoading(false);
@@ -132,13 +133,13 @@ const ProjectPage = () => {
     },
     {
       headerName: "School Name",
-      field: "schoolDetails.name",
+      field: "school.name",
       filter: true,
       floatingFilter: true,
     },
     {
       headerName: "School Address",
-      field: "schoolDetails.address",
+      field: "school.address",
       filter: true,
       floatingFilter: true,
     },
