@@ -23,6 +23,8 @@ import EditPerformance from "./features/Performance/EditPerformance";
 import AddStudentForm from "./features/student/AddStudentForm";
 import EditStudentForm from "./features/student/EditStudentForm";
 import ProjectCordinator from "./features/ProjectCoordinator/ProjectCordinator";
+import AddProjectCoordinator from "./features/ProjectCoordinator/AddProjectCoordinator";
+import EditProjectCoordinator from "./features/ProjectCoordinator/EditProjectCoordinator";
 
 const App: React.FC = () => {
   return (
@@ -65,6 +67,8 @@ const App: React.FC = () => {
             <Route path="/edit-student/:id" element={<EditStudentForm />} />
             {/* project coordinator */}
             <Route path="/project-coordinator" element={<ProjectCordinator />} />
+            <Route path="/add-coordinator" element={<AddProjectCoordinator />} />
+            <Route path="/edit-coordinator/:id" element={<EditProjectCoordinator />} />
             
           </Routes>
         </div>

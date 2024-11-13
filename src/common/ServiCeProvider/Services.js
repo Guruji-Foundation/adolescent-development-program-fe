@@ -1,5 +1,5 @@
 import HttpInterceptor from "./HttpInterceptor";
-import { SCHOOL, TEACHER, PROJECT, PERFORMANCE, STUDENTS, STUDENT } from "./APIURLs";
+import { SCHOOL, TEACHER, PROJECT, PERFORMANCE, STUDENTS, STUDENT,PROJECT_COORDINATOR } from "./APIURLs";
 
 const apiServiceBased = HttpInterceptor();
 
@@ -159,5 +159,26 @@ export default {
 
   getStudentDetailsById:(id)=>{
     return apiServiceBased.get(`${STUDENTS}/${id}`)
+  },
+
+  //PROJECT COORDINATOR
+  getProjectCoOrdinatorList: () => {
+    return apiServiceBased.get(`${PROJECT_COORDINATOR}`);
+  },
+
+  deleteCoOrdinator: async (id) => {
+    return apiServiceBased.delete(`${PROJECT_COORDINATOR }/${id}`);
+  },
+
+  addProjectCoordinator:(data)=>{
+    return apiServiceBased.post(PROJECT_COORDINATOR, data);
+  },
+
+  getCoordinatorDetailsById:(id)=>{
+    return apiServiceBased.get(`${PROJECT_COORDINATOR}/${id}`)
+  },
+
+  editCoordinatorDetails: (id, data) => {
+    return apiServiceBased.put(`${PROJECT_COORDINATOR}/${id}`, data);
   },
 };
