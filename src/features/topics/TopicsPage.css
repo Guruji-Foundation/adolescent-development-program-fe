@@ -1,0 +1,146 @@
+/* General Styling */
+body,
+html {
+  font-family: Poppins, sans-serif;
+  color: hsl(220, 6%, 40%);
+  line-height: 1.6;
+}
+
+.teacher-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.teacher-page .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Column Layout for Headings */
+.teacher-page .heading-container {
+  display: flex;
+  flex-direction: column; /* Stack the headings vertically */
+}
+
+.teacher-page .teacher-heading {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: hsl(210, 25.3%, 32.5%);
+}
+
+.teacher-page .subheading {
+  font-size: 1.1rem;
+  color: rgba(0, 7, 20, 0.62);
+}
+
+.create-new-button {
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+/* Table Section */
+.teacher-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.teacher-table th,
+.teacher-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.teacher-table th {
+  background-color: #f9f9fb;
+  color: hsl(220, 6%, 40%);
+  font-weight: 600;
+}
+
+.teacher-table td {
+  color: hsl(220, 6%, 40%);
+}
+
+.teacher-table tr:last-child td {
+  border-bottom: none;
+}
+
+.teacher-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Action Buttons */
+.action-button {
+  background-color: #f9f9fb;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  margin-left: 8px;
+}
+
+.action-button:hover {
+  background-color: #e9ecef;
+}
+
+.edit-button {
+  color: #007bff;
+}
+
+.delete-button {
+  color: #dc3545;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .teacher-page {
+    padding: 10px;
+  }
+
+  .teacher-table th,
+  .teacher-table td {
+    padding: 8px 10px;
+  }
+}
+
+/* Dropdown Styling */
+.form-field select {
+  width: 100%; /* Make the dropdown take full width */
+  padding: 10px; /* Add padding for better touch targets */
+  border: 1px solid #e5e7eb; /* Light gray border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #fff; /* White background */
+  font-size: 1rem; /* Font size */
+  color: hsl(220, 6%, 40%); /* Text color */
+  appearance: none; /* Remove default dropdown arrow */
+  background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="hsl(220, 6%, 40%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cline x1="6" y1="9" x2="12" y2="15" /%3E%3Cline x1="12" y1="9" x2="18" y2="15" /%3E%3C/svg%3E'); /* Custom dropdown arrow */
+  background-repeat: no-repeat; /* Prevent repeating background */
+  background-position: right 10px center; /* Position arrow */
+  background-size: 12px; /* Size of the arrow */
+  transition: border-color 0.2s ease; /* Transition effect */
+}
+
+/* On focus, change the border color */
+.form-field select:focus {
+  outline: none; /* Remove default outline */
+  border-color: hsl(210, 25.3%, 50%); /* Darker border color on focus */
+}
+
+/* Error Messages Styling */
+.error-messages {
+  color: #dc3545; /* Red color for error messages */
+  margin-top: 10px; /* Space above error messages */
+}

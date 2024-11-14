@@ -1,5 +1,14 @@
 import HttpInterceptor from "./HttpInterceptor";
-import { SCHOOL, TEACHER, PROJECT, PERFORMANCE, STUDENTS, STUDENT,PROJECT_COORDINATOR } from "./APIURLs";
+import {
+  SCHOOL,
+  TEACHER,
+  PROJECT,
+  PERFORMANCE,
+  STUDENTS,
+  STUDENT,
+  TOPIC,
+  PROJECT_COORDINATOR
+} from "./APIURLs";
 
 const apiServiceBased = HttpInterceptor();
 
@@ -57,6 +66,34 @@ export default {
   //update Teacher
   updateTeacher: async (id, teacherData) => {
     return apiServiceBased.put(`${TEACHER}/${id}`, teacherData);
+  },
+  //---------------------------
+
+  //get all Topic list
+  getAllTopicList: async (projectId) => {
+    if (projectId)
+      return apiServiceBased.get(`${TOPIC}?projectId=${projectId}`);
+    else return apiServiceBased.get(TOPIC);
+  },
+
+  //fetch one school
+  fetchTopic: async (id) => {
+    return apiServiceBased.get(`${TOPIC}/${id}`);
+  },
+
+  //create school
+  createTopic: async (topicData) => {
+    return apiServiceBased.post(TOPIC, topicData);
+  },
+
+  //delete school
+  deleteTopic: async (id) => {
+    return apiServiceBased.delete(`${TOPIC}/${id}`);
+  },
+
+  //update school
+  updateTopic: async (id, topicData) => {
+    return apiServiceBased.put(`${TOPIC}/${id}`, topicData);
   },
   //---------------------------
 
@@ -128,7 +165,7 @@ export default {
   },
 
   getPerformanceById: (id) => {
-    return apiServiceBased.get(`${PERFORMANCE}/${id}`)
+    return apiServiceBased.get(`${PERFORMANCE}/${id}`);
   },
 
   editPerformance: (id, data) => {
