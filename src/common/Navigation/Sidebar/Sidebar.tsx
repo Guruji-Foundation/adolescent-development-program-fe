@@ -10,6 +10,7 @@ import {
   FaChalkboardTeacher,
   FaUserGraduate,
   FaChartBar,
+  FaCentercode,
 } from "react-icons/fa"; // Import icons from react-icons
 import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 
@@ -120,6 +121,15 @@ const Sidebar: React.FC = () => {
           >
             <FaChartBar className="icon" />
             {!isCollapsed && <span>Performance</span>}
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/project-coordinator"
+            className={`menu-item ${isActive("/project-coordinator") ? "active" : ""}`}
+          >
+            <FaCentercode className="icon" />
+            {!isCollapsed && <span>Project coordinator</span>}
           </Link>
         </li>
       </ul>
