@@ -1,18 +1,12 @@
 import React from "react";
 
-interface SelectInputProps {
-  label: string;
-  value: number | any;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: { id: number; name: string }[];
-  required?: boolean;
-}
-
-const SelectInput: React.FC<SelectInputProps> = ({
+const SelectInput = ({
   label,
   value,
+  name,
   onChange,
   options,
+  selectsomthingtext,
   required = false,
 }) => {
   return (
@@ -20,9 +14,9 @@ const SelectInput: React.FC<SelectInputProps> = ({
       <label htmlFor="selectinput" className={required ? "required" : ""}>
         {label}
       </label>
-      <select value={value} onChange={onChange} required={required}>
+      <select value={value} name={name} onChange={onChange} required={required}>
         <option value="" disabled>
-          Select Something
+          {selectsomthingtext ? selectsomthingtext : "Select Something"}
         </option>
         {options.map((option) => (
           <option key={option?.id} value={option?.id}>
