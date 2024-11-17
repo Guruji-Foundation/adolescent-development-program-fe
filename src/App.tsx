@@ -15,7 +15,6 @@ import "./App.css"; // Global styles
 import ProjectPage from "./features/project/ProjectPage";
 import EditProject from "./features/project/EditProject";
 import HomePage from "./features/homepage";
-import ProjectAllocationPage from "./features/project-allocate/AssignProjectToStudentPage";
 
 import Performance from "./features/Performance/Performance";
 import AddPerformance from "./features/Performance/AddPerformance";
@@ -28,9 +27,6 @@ import EditStudentForm from "./features/student/EditStudentForm";
 import ProjectCordinator from "./features/ProjectCoordinator/ProjectCordinator";
 import AddProjectCoordinator from "./features/ProjectCoordinator/AddProjectCoordinator";
 import EditProjectCoordinator from "./features/ProjectCoordinator/EditProjectCoordinator";
-import TopicsPage from "./features/topics/TopicsPage";
-import CreateTopic from "./features/topics/CreateTopic";
-import EditTopic from "./features/topics/EditTopic";
 import AssignProjectToSchoolPage from "./features/project-allocate/AssignProjectToSchoolPage";
 import AssignProjectToSchool from "./features/project-allocate/AssignProjectToSchool";
 import EditAssignProjectToSchool from "./features/project-allocate/EditAssignProjectToSchool";

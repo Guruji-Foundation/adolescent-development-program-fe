@@ -6,7 +6,7 @@ import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
 import apiServices from "../../common/ServiCeProvider/Services";
 import AssignProjectToSchoolForm from "./AssignProjectToSchoolForm";
 
-const CreateTopic = () => {
+const AssignProjectToSchool = () => {
   const message = {
     heading: "Project Assign Successfully!",
     description: "You have Successfully assign Project to school",
@@ -46,4 +46,4 @@ const CreateTopic = () => {
   );
 };
 
-export default CreateTopic;
+export default AssignProjectToSchool;
