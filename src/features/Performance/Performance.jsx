@@ -16,6 +16,8 @@ function Performance() {
     const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
     const [performanceData, setPerfomaceData] = useState([]);
     const { errors, setError, clearError } = useError();
+    const [studentData, setStudentData] = useState([]);
+    const [topicData, setTopicData] = useState([]);
 
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
@@ -63,15 +65,21 @@ function Performance() {
             floatingFilter: true,
         },
         {
-            headerName: "Project Name",
-            field: "projectName",
+            headerName: "Topic Name",
+            field: "topicName",
             filter: true,
             flex: 1,
             floatingFilter: true,
         },
         {
-            headerName: "Grade",
-            field: "attendanceGrade",
+            headerName: "Marks before Intervention",
+            field: "beforeInterventionMark",
+            filter: true,
+            floatingFilter: true,
+        },
+        {
+            headerName: "Marks After Intervention",
+            field: "afterInterventionMark",
             filter: true,
             floatingFilter: true,
         },
@@ -101,50 +109,48 @@ function Performance() {
     const getPerformanceData = async () => {
         try {
             const data = (await apiServices.getPerformanceList())?.data?.data?.performances
-            setPerfomaceData(data);
+            const rData = data?.map((item) => ({
+                ...item,
+                studentName:studentData?.find((data)=>(item?.studentId==data?.id))?.name,
+                topicName:topicData?.find((data)=>(item?.topicId==data?.id))?.name,
+            }))
+            setPerfomaceData(rData);
         } catch (err) {
             setError(err.message);
             throw err;
         }
     }
 
+    const getTopicData = async () => {
+        try {
+            const res = (await apiServices.getAllTopicList())?.data?.data?.topics;
+            if (res && res.length > 0) {
+                setTopicData(res)
+            }
+        } catch (err) {
+            console.log("Error", err);
+        }
+    }
+
+    const getStudentData = async () => {
+        try {
+            const res = (await apiServices.getStudentList())?.data?.data?.students;
+            if (res && res.length > 0) {
+                setStudentData(res)
+            }
+        } catch (err) {
+            console.log("Error", err);
+        }
+    }
+
     useEffect(() => {
+        getTopicData();
+        getStudentData();
+    }, []);
+
+    useEffect(()=>{
         getPerformanceData();
-    }, [])
-
-    const rowData = [
-        {
-            id: 1,
-            studentName: "John Doe",
-            projectName: "Science Project",
-            attendanceGrade: "A",
-        },
-        {
-            id: 2,
-            studentName: "Jane Smith",
-            projectName: "Math Research",
-            attendanceGrade: "B",
-        },
-        {
-            id: 3,
-            studentName: "Mike Johnson",
-            projectName: "History Analysis",
-            attendanceGrade: "A-",
-        },
-        {
-            id: 4,
-            studentName: "Emily Davis",
-            projectName: "Art Project",
-            attendanceGrade: "B+",
-        },
-        {
-            id: 5,
-            studentName: "David Wilson",
-            projectName: "Chemistry Experiment",
-            attendanceGrade: "A",
-        },
-    ];
-
+    },[studentData,topicData])
     return (
         <div className="project-page">
             <div className="header">

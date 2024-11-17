@@ -10,8 +10,9 @@ function EditPerformance() {
   const { errors, setError, clearError } = useError();
   const [performanceData, setPerformanceData] = useState({
     studentId: '',
-    projectId: '',
-    attendanceGrade: ""
+    topicId: '',
+    beforeInterventionMark: "",
+    afterInterventionMark: "", 
   })
   const getPerformanceData = async () => {
     try {
@@ -19,8 +20,9 @@ function EditPerformance() {
       if (res) {
         setPerformanceData({
           studentId: res?.data?.data?.studentId,
-          projectId: res?.data?.data?.projectId,
-          attendanceGrade: res?.data?.data?.attendanceGrade,
+          topicId: res?.data?.data?.topicId,
+          beforeInterventionMark: res?.data?.data?.beforeInterventionMark,
+          afterInterventionMark: res?.data?.data?.afterInterventionMark,
         })
       }
 

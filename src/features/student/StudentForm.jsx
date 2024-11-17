@@ -44,13 +44,11 @@ function StudentForm({
                 email: formData?.emailId,
             }
             const res = await handleSubmit(postData);
-            console.log("000000000000",res)
             if (res?.status) {
                 setShowModal(true);
                 clearError();
                 navigate("/student")
             } else if (res?.messages) {
-                console.log("hhhhhhhhhhhhhhhhh")
                 setError(res?.messages.map((msg) => msg.message));
             } else {
                 // setError("An unexpected error occurred.");
@@ -127,7 +125,7 @@ function StudentForm({
                         required
                     />
                     <div>
-                        <label htmlFor="dateOfBirth">Date of Birth</label>
+                        <label htmlFor="dateOfBirth">Date of Birth<span className='required'> *</span></label>
                         <input
                             type="date"
                             id="dateOfBirth"

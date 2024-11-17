@@ -97,7 +97,6 @@ function ProjectCoordinatorForm({
                         name="address"
                         value={formData.address}
                         onChange={handleInputChange}
-                        required
                     />
                 </div>
                 <Button
