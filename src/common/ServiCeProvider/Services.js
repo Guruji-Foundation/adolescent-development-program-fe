@@ -6,8 +6,8 @@ import {
   PERFORMANCE,
   STUDENTS,
   STUDENT,
+  PROJECT_COORDINATOR,
   TOPIC,
-  PROJECT_COORDINATOR
 } from "./APIURLs";
 
 const apiServiceBased = HttpInterceptor();
@@ -44,8 +44,10 @@ export default {
   //Teacher api methods
 
   //get all teacher list
-  getAllTeacherList: async () => {
-    return apiServiceBased.get(TEACHER);
+  getAllTeacherList: async (schoolId) => {
+    if (schoolId) {
+      return apiServiceBased.get(`${TEACHER}?schoolId=${schoolId}`);
+    } else return apiServiceBased.get(TEACHER);
   },
 
   //fetch one Teacher
@@ -126,18 +128,35 @@ export default {
     return apiServiceBased.put(`${PROJECT}/${id}`, projectData);
   },
 
-  allocateProjectToStudent: async (studentId, projectId) => {
-    return apiServiceBased.post(`${PROJECT}/${projectId}/students/allocate`, {
-      studentIds: [Number(studentId)],
-    });
-  },
-  deAllocateProjectToStudent: async (studentId, projectId) => {
+  allocateProjectToStudent: async (schoolId, projectId, studentId) => {
     return apiServiceBased.post(
-      `${PROJECT}/${projectId}/students/de-allocate`,
+      `${PROJECT}/${projectId}/schools/students/assign`,
       {
+        schoolId: schoolId,
         studentIds: [Number(studentId)],
       }
     );
+  },
+  deAllocateProjectToStudent: async (schoolId, projectId, studentId) => {
+    console.log("form serviec");
+    console.log(projectId + " " + schoolId + " " + studentId);
+    return apiServiceBased.post(
+      `${PROJECT}/${projectId}/schools/students/un-assign`,
+      {
+        schoolId: schoolId,
+        studentIds: [Number(studentId)],
+      }
+    );
+  },
+
+  assignProjectToSchool: async (projectId, assignProjectData) => {
+    return apiServiceBased.post(
+      `${PROJECT}/${projectId}/schools/assign`,
+      assignProjectData
+    );
+  },
+  getProjectBySchool: async (schoolId) => {
+    return apiServiceBased.get(`${PROJECT}/schools?schoolId=${schoolId}`);
   },
   //---------------------------
 
@@ -152,7 +171,15 @@ export default {
     console.log("form service student " + schoolId + " Prject " + projectId);
     if (schoolId)
       return apiServiceBased.get(
-        `${STUDENT}${PROJECT}?schoolId=${schoolId}&projectId=${projectId}`
+        `${STUDENT}${PROJECT}/unassigned-students?schoolId=${schoolId}&projectId=${projectId}`
+      );
+    return apiServiceBased.get(STUDENT);
+  },
+  getAllAllocatedStudents: async (schoolId, projectId) => {
+    console.log("form service student " + schoolId + " Prject " + projectId);
+    if (schoolId)
+      return apiServiceBased.get(
+        `${STUDENT}${PROJECT}/assigned-students?schoolId=${schoolId}&projectId=${projectId}`
       );
     return apiServiceBased.get(STUDENT);
   },
@@ -175,18 +202,17 @@ export default {
   deletePerformance: async (id) => {
     return apiServiceBased.delete(`${PERFORMANCE}/${id}`);
   },
-  
+
   //Student
   getStudentList: () => {
     return apiServiceBased.get(`${STUDENTS}`);
   },
 
-  addStudent:(data)=>{
+  addStudent: (data) => {
     return apiServiceBased.post(STUDENTS, data);
-
   },
 
-  deleteStudent:(id)=>{
+  deleteStudent: (id) => {
     return apiServiceBased.delete(`${STUDENTS}/${id}`);
   },
 
@@ -194,8 +220,8 @@ export default {
     return apiServiceBased.put(`${STUDENTS}/${id}`, data);
   },
 
-  getStudentDetailsById:(id)=>{
-    return apiServiceBased.get(`${STUDENTS}/${id}`)
+  getStudentDetailsById: (id) => {
+    return apiServiceBased.get(`${STUDENTS}/${id}`);
   },
 
   //PROJECT COORDINATOR
@@ -204,15 +230,15 @@ export default {
   },
 
   deleteCoOrdinator: async (id) => {
-    return apiServiceBased.delete(`${PROJECT_COORDINATOR }/${id}`);
+    return apiServiceBased.delete(`${PROJECT_COORDINATOR}/${id}`);
   },
 
-  addProjectCoordinator:(data)=>{
+  addProjectCoordinator: (data) => {
     return apiServiceBased.post(PROJECT_COORDINATOR, data);
   },
 
-  getCoordinatorDetailsById:(id)=>{
-    return apiServiceBased.get(`${PROJECT_COORDINATOR}/${id}`)
+  getCoordinatorDetailsById: (id) => {
+    return apiServiceBased.get(`${PROJECT_COORDINATOR}/${id}`);
   },
 
   editCoordinatorDetails: (id, data) => {

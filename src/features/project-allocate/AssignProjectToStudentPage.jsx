@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import "./ProjectAllocationPage.css";
+import "./AssignProjectToStudent.css";
 import "../../CSS/Main.css";
 
 import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
@@ -16,7 +16,7 @@ import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
 
-const ProjectAllocationPage = () => {
+const AssignProjectToStudentPage = () => {
   const [loading, setLoading] = useState(true);
   const { errors, setError, clearError } = useError();
 
@@ -73,7 +73,7 @@ const ProjectAllocationPage = () => {
   };
 
   // Fetch allocated students
-  const getAllAllocatedStudents = async () => {
+  const getAllUnAssignedStudents = async () => {
     if (selectedProjectId && selectedSchoolId) {
       try {
         setLoading(true);
@@ -94,11 +94,15 @@ const ProjectAllocationPage = () => {
 
   // Fetch unallocated students
 
-  const getAllUnAssginStudent = async () => {
+  const getAllAssginedStudents = async () => {
     if (selectedProjectId && selectedSchoolId) {
       try {
-        const res = (await apiServices.fetchProject(selectedProjectId))?.data
-          ?.data?.students;
+        const res = (
+          await apiServices.getAllAllocatedStudents(
+            selectedSchoolId,
+            selectedProjectId
+          )
+        )?.data?.data?.students;
         setUnAssignStudents(res);
       } catch (err) {
         setError(err.message);
@@ -109,6 +113,7 @@ const ProjectAllocationPage = () => {
   useEffect(() => {
     getSchooList();
   }, []);
+  console.log(selectedSchoolId + " " + selectedProjectId);
 
   useEffect(() => {
     if (selectedSchoolId) {
@@ -118,8 +123,8 @@ const ProjectAllocationPage = () => {
 
   useEffect(() => {
     if (selectedSchoolId && selectedProjectId) {
-      getAllAllocatedStudents();
-      getAllUnAssginStudent();
+      getAllUnAssignedStudents();
+      getAllAssginedStudents();
     }
   }, [selectedSchoolId, selectedProjectId]);
 
@@ -137,13 +142,17 @@ const ProjectAllocationPage = () => {
   // Assign student to project
   const handleAssign = async (id) => {
     try {
-      await apiServices.allocateProjectToStudent(id, selectedProjectId);
+      await apiServices.allocateProjectToStudent(
+        selectedSchoolId,
+        selectedProjectId,
+        id
+      );
       setAssignFlag(true);
       setIsModalVisible(true);
 
       // Refresh unassigned and assigned students data
-      await getAllAllocatedStudents();
-      await getAllUnAssginStudent();
+      await getAllAssginedStudents();
+      await getAllUnAssignedStudents();
     } catch (error) {
       setError(error.message);
     }
@@ -152,13 +161,17 @@ const ProjectAllocationPage = () => {
   // Unassign student from project
   const handleUnAssign = async (id) => {
     try {
-      await apiServices.deAllocateProjectToStudent(id, selectedProjectId);
+      await apiServices.deAllocateProjectToStudent(
+        selectedSchoolId,
+        selectedProjectId,
+        id
+      );
       setAssignFlag(false);
       setIsModalVisible(true);
 
       // Refresh assigned and unassigned students data
-      await getAllUnAssginStudent();
-      await getAllAllocatedStudents();
+      await getAllAssginedStudents();
+      await getAllUnAssignedStudents();
     } catch (error) {
       setError(error.message);
     }
@@ -232,7 +245,7 @@ const ProjectAllocationPage = () => {
     <div className="teacher-page">
       <div className="header">
         <div className="heading-container">
-          <h2 className="teacher-heading">Allocate Student to Project</h2>
+          <h2 className="teacher-heading">Assign Project To Student</h2>
         </div>
       </div>
       <div className="header">
@@ -258,7 +271,7 @@ const ProjectAllocationPage = () => {
 
       <div className="header">
         <div className="heading-container">
-          <h2 className="teacher-heading">Allocated Student to Project</h2>
+          <h2 className="teacher-heading">Assigned Student</h2>
         </div>
       </div>
       <div className="ag-theme-quartz" style={{ height: "500px" }}>
@@ -275,4 +288,4 @@ const ProjectAllocationPage = () => {
   );
 };
 
-export default ProjectAllocationPage;
+export default AssignProjectToStudentPage;
