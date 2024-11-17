@@ -7,6 +7,7 @@ function AddPerformance() {
   const handelAddPerformance = async (formData) => {
     try {
       const res = await apiServices.savePerformance(formData);
+      return res;
     } catch (err) {
       console.log("Error in adding performance",err)
     }

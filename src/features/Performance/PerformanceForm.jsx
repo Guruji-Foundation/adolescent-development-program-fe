@@ -13,10 +13,10 @@ function PerformanceForm({
     handleSubmit,
     heading,
     message,
-    editInitialData=null
+    editInitialData = null
 }) {
     const { errors, setError, clearError } = useError();
-    const [projectDropDownList, setProjectDropDownList] = useState([]);
+    const [topicDropDownList, setTopicDropDownList] = useState([]);
     const [studentDropDownList, setStudentDropDownList] = useState([])
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
@@ -25,11 +25,11 @@ function PerformanceForm({
         e.preventDefault()
         try {
             const res = await handleSubmit(formData);
-            if (res?.data?.status) {
+            if (res?.status) {
                 setShowModal(true);
                 clearError();
-            } else if (res?.data?.messages) {
-                setError(res?.data?.messages.map((msg) => msg.message));
+            } else if (res?.messages) {
+                setError(res?.messages.map((msg) => msg.message));
             } else {
                 setError("An unexpected error occurred.");
             }
@@ -40,8 +40,9 @@ function PerformanceForm({
 
     const [formData, setFormData] = useState({
         studentId: '',
-        projectId: '',
-        attendanceGrade: ""
+        topicId: '',
+        beforeInterventionMark: "",
+        afterInterventionMark:"",
     })
 
     const handleInputChange = (e) => {
@@ -52,14 +53,14 @@ function PerformanceForm({
         });
     };
 
-    const getProjectDropDownData = async () => {
+    const getTopicDropDownData = async () => {
         try {
-            const res = (await apiServices.getAllProjectList())?.data?.data?.projects;
+            const res = (await apiServices.getAllTopicList())?.data?.data?.topics;
             if (res && res.length > 0) {
-                setProjectDropDownList(res)
+                setTopicDropDownList(res)
             }
         } catch (err) {
-            console.log("Error",err);
+            console.log("Error", err);
         }
     }
 
@@ -70,25 +71,25 @@ function PerformanceForm({
                 setStudentDropDownList(res)
             }
         } catch (err) {
-            console.log("Error",err);
+            console.log("Error", err);
         }
     }
 
     useEffect(() => {
-        getProjectDropDownData();
+        getTopicDropDownData();
         getStudentDropDownList();
     }, [])
 
-    useState(()=>{
-        if(editInitialData!=null){
+    useState(() => {
+        if (editInitialData != null) {
             setFormData(editInitialData)
         }
-    },[editInitialData])
+    }, [editInitialData])
 
     const handleClose = () => {
         navigate("/performance")
     }
-    
+
     return (
         <div className="form-container">
             <h2>{heading}</h2>
@@ -107,25 +108,32 @@ function PerformanceForm({
                         required
                     />
                     <SelectInput
-                        label="Project Name"
-                        value={formData.projectId || ''}
+                        label="Topic Name"
+                        value={formData.topicId || ''}
                         onChange={(e) => {
                             setFormData({
                                 ...formData,
-                                projectId: Number(e?.target?.value)
+                                topicId: Number(e?.target?.value)
                             })
                         }}
-                        options={projectDropDownList}
+                        options={topicDropDownList}
                         required
                     />
                     <TextInput
-                        label="Grade For Performance"
-                        name="attendanceGrade"
-                        value={formData.attendanceGrade}
+                        label="Marks before activity"
+                        name="beforeInterventionMark"
+                        value={formData.beforeInterventionMark}
                         onChange={handleInputChange}
                         required
                     />
 
+                    <TextInput
+                        label="Marks After activity"
+                        name="afterInterventionMark"
+                        value={formData.afterInterventionMark}
+                        onChange={handleInputChange}
+                        required
+                    />
                 </div>
                 <Button
                     type="submit"

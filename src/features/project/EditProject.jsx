@@ -15,19 +15,14 @@ const EditProject = () => {
   const [projectData, setProjectData] = useState({
     name: "",
     description: "",
-    startDate: "",
-    endDate: "",
-    actualStartDate: "",
-    actualEndDate: "",
     status: "",
-    schoolId: NaN,
+    projectCoordinatorIds: [],
   });
   const navigate = useNavigate();
   const { id } = useParams();
   const { errors, setError, clearError } = useError();
 
   useEffect(() => {
-    console.log(id);
     if (id) {
       apiServices
         .fetchProject(Number(id))
@@ -37,12 +32,9 @@ const EditProject = () => {
             setProjectData({
               name: res?.name,
               description: res?.description,
-              startDate: res?.startDate,
-              endDate: res?.endDate,
-              actualStartDate: res?.actualStartDate,
-              actualEndDate: res?.actualEndDate,
               status: res?.status,
-              schoolId: res?.school?.id,
+              projectCoordinatorIds: res?.projectCoordinators,
+              topics: res?.topics,
             });
           }
         })

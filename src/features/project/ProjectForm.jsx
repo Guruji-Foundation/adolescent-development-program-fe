@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 import "../../CSS/Main.css";
 import "./ProjectForm.css";
-
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
 import NumberInput from "../../common/FormInput/NumberInput";
 import TextInput from "../../common/FormInput/TextInput";
@@ -11,9 +11,11 @@ import Button from "../../common/FormInput/Button";
 import useError from "../../hooks/useError";
 import SelectInput from "../../common/FormInput/SelectInput";
 import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
-
+import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import apiServices from "../../common/ServiCeProvider/Services";
 import DateInput from "../../common/FormInput/DateInput";
+import AddTopicWithProject from "./AddTopicWithProject";
+import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 
 const ProjectForm = ({
   handleSubmit,
@@ -22,76 +24,83 @@ const ProjectForm = ({
   handleCloseModal,
   projectDataDefault,
 }) => {
+
   const [projectData, setProjectData] = useState({
     name: projectDataDefault?.name,
     description: projectDataDefault?.description,
-    startDate: projectDataDefault?.startDate,
-    endDate: projectDataDefault?.endDate,
-    actualStartDate: projectDataDefault?.actualStartDate,
-    actualEndDate: projectDataDefault?.actualEndDate,
     status: projectDataDefault?.status,
-    schoolId: projectDataDefault?.schoolId,
+    projectCoordinatorId: projectDataDefault?.projectCoordinatorIds?.[0]?.id,
   });
 
-  const [schools, setSchools] = useState([]);
+  const [coordinatorList, setCoordinatorList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { errors, setError, clearError } = useError();
+  const [showAddTopicModal, setShowAddTopicModal] = useState(false);
+  const [topicDataArray, setTopicDataArray] = useState([]);
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
+  const [selectedTopicId, setSelectedTopicId] = useState(-1);
+  const [editTopicData, setEditTopicData] = useState(null);
 
-  const status = [
-    { id: 1, name: "Started" },
-    { id: 2, name: "In-Progress" },
-    { id: 3, name: "Completed" },
-  ];
   useEffect(() => {
     apiServices
-      .getAllSchoolList()
+      .getProjectCoOrdinatorList()
       .then((res) => {
-        res = res?.data?.data?.schools;
-        // console.log(res);
+        res = res?.data?.data?.projectCoordinators;
         if (res && res.length > 0) {
-          setSchools(res);
+          setCoordinatorList(res);
         } else {
-          setSchools([]);
+          setCoordinatorList([]);
         }
         setLoading(false);
       })
       .catch((error) => {
-        setError("Error fetching school data.");
-        console.error("Error fetching school data:", error);
+        setError("Error fetching Coordiantor data.");
+        console.error("Error fetching Coordiantor data:", error);
         setLoading(false);
       });
   }, []);
 
   useEffect(() => {
-    setProjectData(projectDataDefault);
+    setProjectData({
+      name: projectDataDefault?.name,
+      description: projectDataDefault?.description,
+      status: projectDataDefault?.status,
+      projectCoordinatorId: projectDataDefault?.projectCoordinatorIds?.[0]?.id,
+    });
+    setTopicDataArray(projectDataDefault?.topics)
   }, [projectDataDefault]);
 
   const handleSubmitButton = async (e) => {
     e.preventDefault();
-    if (projectData.schoolId != null && projectData.schoolId) {
-      try {
-        const res = await handleSubmit(projectData);
-        if (res?.data?.status) {
-          setShowModal(true);
-          clearError();
-        } else if (res?.data?.messages) {
-          setError(res?.data?.messages.map((msg) => msg.message));
-        } else {
-          setError("An unexpected error occurred.");
-        }
-      } catch (err) {
-        setError(err.message || "Error submitting the form.");
+    try {
+      const postData = {
+        name: projectData?.name,
+        description: projectData?.description,
+        status: projectData?.status,
+        projectCoordinatorIds: [projectData?.projectCoordinatorId],
+        createOrUpdateTopicRequests: topicDataArray
       }
+      const res = await handleSubmit(postData);
+      if (res?.data?.status) {
+        setShowModal(true);
+        clearError();
+      } else if (res?.data?.messages) {
+        setError(res?.data?.messages.map((msg) => msg.message));
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    } catch (err) {
+      setError(err.message || "Error submitting the form.");
     }
   };
+
   const handleClose = () => {
     setShowModal(false);
     handleCloseModal();
   };
 
   const handleInputChange = (e) => {
-    // console.log(e.target.name + " " + e.target.value);
     setProjectData({
       ...projectData,
       [e.target.name]: e.target.value,
@@ -101,16 +110,56 @@ const ProjectForm = ({
   const handleSchoolChange = (e) => {
     setProjectData({
       ...projectData,
-      schoolId: Number(e.target.value),
+      projectCoordinatorId: Number(e.target.value),
     });
   };
+  const handleDeleteTopic = () => {
+    setTopicDataArray((prevArray) =>
+      prevArray.filter((item) => item?.id !== selectedTopicId)
+    );
+    setSelectedTopicId(-1)
+    setIsShowDeleteModal(false);
+  }
+  const columnDefs = [
+    {
+      headerName: "Topic Name",
+      field: "name",
+      filter: true,
+      floatingFilter: true,
+      flex: 1,
+    },
+    {
+      headerName: "Description",
+      field: "description",
+      filter: true,
+      floatingFilter: true,
+      flex: 1,
+    },
+    {
+      headerName: "Actions",
+      cellRenderer: (params) => {
+        return (
+          <div>
+            <button
+              type="button"
+              onClick={() => { setEditTopicData(params?.data); setShowAddTopicModal(true) }}
+              className="action-button edit-button"
+            >
+              <FaEdit />
+            </button>
+            <button
+              type="button"
+              onClick={() => { setSelectedTopicId(params?.data?.id); setIsShowDeleteModal(true) }}
+              className="action-button delete-button"
+            >
+              <FaTrashAlt />
+            </button>
+          </div >
+        );
+      },
+    },
+  ]
 
-  const getCurrentDate = () => {
-    const today = new Date();
-    return today.toISOString().split("T")[0];
-  };
-
-  // console.log(schools);
 
   return (
     <div className="form-container">
@@ -133,49 +182,6 @@ const ProjectForm = ({
             onChange={handleInputChange}
             required
           />
-          <DateInput
-            label="Start Date"
-            name="startDate"
-            value={projectData.startDate}
-            onChange={handleInputChange}
-            required
-            min={getCurrentDate()}
-            max={undefined}
-          />
-
-          <DateInput
-            label="End Date"
-            name="endDate"
-            value={projectData.endDate}
-            onChange={handleInputChange}
-            required
-            min={getCurrentDate()}
-            max={undefined}
-          />
-          <DateInput
-            label="Actual Start Date"
-            name="actualStartDate"
-            value={projectData.actualStartDate}
-            onChange={handleInputChange}
-            min={getCurrentDate()}
-            max={undefined}
-          />
-          <DateInput
-            label="Actual End Date"
-            name="actualEndDate"
-            value={projectData.actualEndDate}
-            onChange={handleInputChange}
-            min={getCurrentDate()}
-            max={undefined}
-          />
-          {/* <SelectInput
-            label="Status"
-            value={projectData.status || ""}
-            onChange={handleInputChange}
-            options={status}
-            required
-          /> */}
-
           <TextInput
             label="Status"
             name="status"
@@ -184,21 +190,50 @@ const ProjectForm = ({
             required
           />
           <SelectInput
-            label="School Details"
-            value={projectData.schoolId || ""}
+            label="Project Coordinator"
+            value={projectData.projectCoordinatorId || ""}
             onChange={handleSchoolChange}
-            options={schools}
+            options={coordinatorList}
             required
           />
         </div>
+        <button
+          type="button"
+          onClick={() => { setShowAddTopicModal(true) }}
+          style={{ border: "none", backgroundColor: "inherit", color: "dodgerblue", fontWeight: "600" }}
+        >
+          + Add Topic
+        </button>
+        {
+          topicDataArray?.length > 0 && <div className="ag-theme-quartz">
+            <AgGridTable
+              rowData={topicDataArray}
+              columnDefs={columnDefs}
+              domLayout={"autoHeight"}
+            />
+          </div>
+        }
         <Button
           type="submit"
           label="Submit"
           className="g-button submit-button"
         />
       </form>
-      {errors.length > 0 && <ErrorMessage errors={errors} />}
+      {errors?.length > 0 && <ErrorMessage errors={errors} />}
       {showModal && <SuccessModal data={message} onClose={handleClose} />}
+      {
+        showAddTopicModal && <AddTopicWithProject onClose={() => { setEditTopicData(null); setShowAddTopicModal(false) }} topicDataArray={topicDataArray} setTopicDataArray={setTopicDataArray} editTopicData={editTopicData} />
+      }
+      {
+        isShowDeleteModal && (
+          <ConfirmationModal
+            title="Confirm Deletion"
+            message="Do you really want to delete this Topic? Corresponding Performance of Student will also be Deleted."
+            onConfirm={handleDeleteTopic}
+            onCancel={() => { setSelectedTopicId(-1); setIsShowDeleteModal(false) }}
+          />
+        )
+      }
     </div>
   );
 };

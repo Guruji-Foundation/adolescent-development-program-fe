@@ -1,5 +1,5 @@
 import react from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +22,15 @@ const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
 
   const navigate = useNavigate();
+  const getDataPath = useCallback((data) => data.name, []);
+  const autoGroupColumnDef = useMemo(() => {
+    return {
+      headerName: "Project/Topic Name",
+      cellRendererParams: {
+        suppressCount: true,
+      },
+    };
+  }, []);
 
   const handleEdit = (id) => {
     navigate(`/edit-project/${id}`);
@@ -63,7 +72,6 @@ const ProjectPage = () => {
       setLoading(true);
       const res = (await apiServices.getAllProjectList(null))?.data?.data
         ?.projects;
-      // console.log(res);
       setProjects(res);
       setLoading(false);
     } catch (err) {
@@ -78,6 +86,7 @@ const ProjectPage = () => {
   if (loading) {
     return <LoadingSpinner />;
   }
+
   if (errors.length > 0) {
     clearError();
     return <ErrorMessage errors={errors} />;
@@ -100,6 +109,7 @@ const ProjectPage = () => {
       field: "description",
       filter: true,
       floatingFilter: true,
+      flex:1,
     },
     {
       headerName: "Status",
@@ -107,43 +117,6 @@ const ProjectPage = () => {
       filter: true,
       floatingFilter: true,
     },
-    {
-      headerName: "Start Date",
-      field: "startDate",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "End Date",
-      field: "endDate",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Actual Start Date",
-      field: "actualStartDate",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Actual End Date",
-      field: "actualEndDate",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "School Name",
-      field: "school.name",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "School Address",
-      field: "school.address",
-      filter: true,
-      floatingFilter: true,
-    },
-
     {
       headerName: "Actions",
       cellRenderer: (params) => {
@@ -181,8 +154,15 @@ const ProjectPage = () => {
           Create New
         </button>
       </div>
-      <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable rowData={projects} columnDefs={columnDefs} />
+      <div className="ag-theme-quartz" style={{ height: "60vh" }}>
+        <AgGridTable
+          rowData={projects}
+          columnDefs={columnDefs}
+          treeData={true}
+          groupDefaultExpanded={-1}
+          getDataPath={getDataPath}
+          autoGroupColumnDef={autoGroupColumnDef}
+        />
       </div>
       {isModalVisible && (
         <ConfirmationModal
