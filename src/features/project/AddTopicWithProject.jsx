@@ -4,7 +4,7 @@ import TextInput from "../../common/FormInput/TextInput";
 function AddTopicWithProject({
     onClose,
     setTopicDataArray,
-    editTopicData
+    editTopicData,
 }) {
 
     const [topicData, setTopicData] = useState({

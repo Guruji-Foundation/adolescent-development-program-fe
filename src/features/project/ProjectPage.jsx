@@ -170,7 +170,7 @@ const ProjectPage = () => {
       {isModalVisible && (
         <ConfirmationModal
           title="Confirm Deletion"
-          message="Do you really want to delete this Teacher?"
+          message="Do you really want to delete this Project? Corresponding School data will also be deleted" 
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
         />
