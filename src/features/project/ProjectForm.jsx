@@ -22,7 +22,7 @@ const ProjectForm = ({
   message,
   heading,
   handleCloseModal,
-  projectDataDefault,
+  projectDataDefault=null,
 }) => {
 
   const [projectData, setProjectData] = useState({
@@ -32,6 +32,7 @@ const ProjectForm = ({
     projectCoordinatorId: projectDataDefault?.projectCoordinatorIds?.[0]?.id,
   });
 
+  console.log("88888",projectDataDefault)
   const [coordinatorList, setCoordinatorList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -62,13 +63,15 @@ const ProjectForm = ({
   }, []);
 
   useEffect(() => {
-    setProjectData({
-      name: projectDataDefault?.name,
-      description: projectDataDefault?.description,
-      status: projectDataDefault?.status,
-      projectCoordinatorId: projectDataDefault?.projectCoordinatorIds?.[0]?.id,
-    });
-    setTopicDataArray(projectDataDefault?.topics)
+    if(projectDataDefault){
+      setProjectData({
+        name: projectDataDefault?.name,
+        description: projectDataDefault?.description,
+        status: projectDataDefault?.status,
+        projectCoordinatorId: projectDataDefault?.projectCoordinatorIds?.[0]?.id,
+      });
+      setTopicDataArray(projectDataDefault?.topics)
+    }
   }, [projectDataDefault]);
 
   const handleSubmitButton = async (e) => {

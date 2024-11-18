@@ -42,7 +42,7 @@ const CreateProject = () => {
         message={message}
         heading={heading}
         handleCloseModal={handleCloseModal}
-        projectDataDefault={projectData}
+        // projectDataDefault={projectData}
         handleSubmit={handleSubmit}
       />
     </div>
