@@ -12,8 +12,8 @@ function Performance() {
     const handelAddPerformance = () => {
         navigate("/add-performance");
     }
-    const [selectedPerformanceId, setSelectedPerformanceId] = useState(null); // State to store the selected school for deletion
-    const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
+    const [selectedPerformanceId, setSelectedPerformanceId] = useState(null); 
+    const [isModalVisible, setIsModalVisible] = useState(false); 
     const [performanceData, setPerfomaceData] = useState([]);
     const { errors, setError, clearError } = useError();
     const [studentData, setStudentData] = useState([]);
@@ -50,12 +50,6 @@ function Performance() {
             headercheckboxSelection: true,
             checkboxSelection: false,
             width: 50,
-        },
-        {
-            headerName: "Sr.No",
-            field: "id",
-            filter: true,
-            floatingFilter: true,
         },
         {
             headerName: "Student",

@@ -80,7 +80,7 @@ function PerformanceForm({
         getStudentDropDownList();
     }, [])
 
-    useState(() => {
+    useEffect(() => {
         if (editInitialData != null) {
             setFormData(editInitialData)
         }
