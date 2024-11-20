@@ -25,8 +25,8 @@ function Performance() {
     const [selectedSchool, setSelectedSchool] = useState(null);
     const [selectedProject, setSelectedProject] = useState(null);
     const [columDefsWithTopic, setColumDefsWithTopic] = useState([])
-    const [rowDataWithTpoic,setRowDataWithTopic]=useState([])
-    
+    const [rowDataWithTpoic, setRowDataWithTopic] = useState([])
+
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
         setIsModalVisible(true);
@@ -96,12 +96,12 @@ function Performance() {
                         >
                             <FaEdit />
                         </button>
-                        <button
+                        {/* <button
                             onClick={() => handleDelete(params?.data?.id)}
                             className="action-button delete-button"
                         >
                             <FaTrashAlt />
-                        </button>
+                        </button> */}
                     </div>
                 );
             },
@@ -123,9 +123,9 @@ function Performance() {
         }
     }
 
-    const getTopicData = async () => {
+    const getTopicData = async (selectedProjectId) => {
         try {
-            const res = (await apiServices.getAllTopicList(selectedProject))?.data?.data?.topics;
+            const res = (await apiServices.getAllTopicList(selectedProjectId))?.data?.data?.topics;
             if (res && res.length > 0) {
                 setTopicData(res)
             }
@@ -146,7 +146,7 @@ function Performance() {
     }
 
     useEffect(() => {
-        getTopicData();
+        getTopicData(null);
         getStudentData();
     }, []);
 
@@ -187,17 +187,17 @@ function Performance() {
 
     const getPerformanceDetailsBasedOnProjectAndSchool = async () => {
         try {
-            const response = await apiServices.getPerformanceListBySchoolAndProject(selectedSchool,selectedProject);
+            const response = await apiServices.getPerformanceListBySchoolAndProject(selectedSchool, selectedProject);
             const rowData2 = response?.data?.data?.studentPerformances?.map((student) => {
                 const row = {
                     studentName: student.studentName
                 };
-    
+
                 student.topics.forEach((topic) => {
                     row[`${topic.topicId}_beforeInterventionMark`] = topic.beforeInterventionMark;
                     row[`${topic.topicId}_afterInterventionMark`] = topic.afterInterventionMark;
                 });
-    
+
                 return row;
             });
             setRowDataWithTopic(rowData2)
@@ -208,7 +208,7 @@ function Performance() {
 
     useEffect(() => {
         if (selectedProject && selectedSchool) {
-            getTopicData();
+            getTopicData(selectedProject);
             getPerformanceDetailsBasedOnProjectAndSchool();
         }
     }, [selectedProject, selectedSchool])
@@ -219,11 +219,11 @@ function Performance() {
                 headerName: item?.name,
                 children: [
                     {
-                        headerName:"Pre Marks",
+                        headerName: "Pre Marks",
                         field: `${item?.id}_beforeInterventionMark`,
                     },
                     {
-                        headerName:"Post Marks",
+                        headerName: "Post Marks",
                         field: `${item?.id}_afterInterventionMark`
                     }
                 ]
@@ -233,7 +233,7 @@ function Performance() {
                 field: "studentName",
                 flex: 1,
                 minWidth: 300,
-                pinned:"left"
+                pinned: "left"
             }, ...columnDefs2])
         }
     }, [topicData])
@@ -245,12 +245,12 @@ function Performance() {
                     <h2 className="project-heading">Performance</h2>
                     <p className="subheading">Performance List of Students</p>
                 </div>
-                <button
+                {/* <button
                     className="g-button create-new-button"
                     onClick={handelAddPerformance}
                 >
                     Create New
-                </button>
+                </button> */}
             </div>
 
             <div className='header'>
@@ -267,7 +267,9 @@ function Performance() {
                     onChange={(e) => { setSelectedSchool(e.target.value) }}
                 />
                 <ImCross className="action-button delete-button" onClick={() => {
-                    setSelectedProject(null); setSelectedSchool(null)
+                    setSelectedProject(null);
+                    setSelectedSchool(null);
+                    getTopicData(null);
                 }} />
             </div>
 
