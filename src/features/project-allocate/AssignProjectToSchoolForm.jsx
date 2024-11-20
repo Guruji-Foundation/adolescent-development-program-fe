@@ -13,17 +13,18 @@ import DateInput from "../../common/FormInput/DateInput";
 
 import apiServices from "../../common/ServiCeProvider/Services";
 
-const TopicsForm = ({
+const AssignProjectToSchoolForm = ({
   handleSubmit,
   message,
   heading,
   handleCloseModal,
+  isEdit,
   projectAssignToSchoolDataDefault,
 }) => {
   const [assignProject, setAssignProject] = useState({
-    schoolId: NaN,
-    teacherId: NaN,
-    projectId: NaN,
+    schoolId: null,
+    teacherId: null,
+    projectId: null,
     startDate: "",
     endDate: "",
     actualStartDate: "",
@@ -46,19 +47,17 @@ const TopicsForm = ({
         setError(error.message);
       }
     };
-    const getAllSchoolList = async () => {
-      try {
-        const res = await apiServices.getAllSchoolList();
-        setSchools(res?.data?.data?.schools);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
 
     getAllProjectList();
-    getAllSchoolList();
   }, []);
-
+  const getAllSchoolList = async (projectId) => {
+    try {
+      const res = await apiServices.getUnassignedSchoolByProjectId(projectId);
+      setSchools(res?.data?.data?.schools);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
   const getAllTeacherList = async (schoolId) => {
     try {
       console.log("form get all teacher list = " + schoolId);
@@ -69,18 +68,27 @@ const TopicsForm = ({
     }
   };
   useEffect(() => {
-    setAssignProject({
-      schoolId: projectAssignToSchoolDataDefault?.schoolId,
-      teacherId: projectAssignToSchoolDataDefault?.teacherId,
-      projectId: projectAssignToSchoolDataDefault?.projectId,
-      startDate: projectAssignToSchoolDataDefault?.startDate,
-      endDate: projectAssignToSchoolDataDefault?.endDate,
-      actualStartDate: projectAssignToSchoolDataDefault?.actualStartDate,
-      actualEndDate: projectAssignToSchoolDataDefault?.actualEndDate,
-    });
+    if (projectAssignToSchoolDataDefault != null) {
+      setAssignProject({
+        schoolId: projectAssignToSchoolDataDefault?.school?.id,
+        teacherId: projectAssignToSchoolDataDefault?.teacher?.id,
+        projectId: projectAssignToSchoolDataDefault?.project?.id,
+        startDate: projectAssignToSchoolDataDefault?.startDate,
+        endDate: projectAssignToSchoolDataDefault?.endDate,
+        actualStartDate: projectAssignToSchoolDataDefault?.actualStartDate,
+        actualEndDate: projectAssignToSchoolDataDefault?.actualEndDate,
+      });
+      if (projectAssignToSchoolDataDefault?.project)
+        setProjects([projectAssignToSchoolDataDefault?.project]);
+      if (projectAssignToSchoolDataDefault?.school)
+        setSchools([projectAssignToSchoolDataDefault?.school]);
+      getAllTeacherList(projectAssignToSchoolDataDefault?.school?.id);
+    }
+
     // console.log("hello form useeffect");
   }, [projectAssignToSchoolDataDefault]);
 
+  console.log(assignProject);
   const [showModal, setShowModal] = useState(false);
   const { errors, setError, clearError } = useError();
 
@@ -92,6 +100,9 @@ const TopicsForm = ({
     if (e.target.name == "schoolId") {
       getAllTeacherList(e.target.value);
     }
+    if (e.target.name == "projectId") {
+      getAllSchoolList(e.target.value);
+    }
     // console.log(e.target.name);
   };
   const handleInputChange = (e) => {
@@ -102,11 +113,11 @@ const TopicsForm = ({
     });
   };
 
-  console.log(teachers);
+  // console.log(teachers);
   //submit button
   const handleSubmitButton = async (e) => {
     e.preventDefault();
-
+    console.log("hello from submit");
     try {
       const reqData = {
         schoolId: assignProject?.schoolId,
@@ -155,6 +166,7 @@ const TopicsForm = ({
             selectsomthingtext={"Select Project"}
             name={"projectId"}
             required
+            disabled={isEdit}
           />
           <SelectInput
             label="Schools"
@@ -164,6 +176,7 @@ const TopicsForm = ({
             selectsomthingtext={"Select School"}
             name={"schoolId"}
             required
+            disabled={isEdit}
           />
           <SelectInput
             label="Teachers"
@@ -179,8 +192,8 @@ const TopicsForm = ({
             name="startDate"
             value={assignProject.startDate}
             onChange={handleInputChange}
-            required
-            min={getCurrentDate()}
+            // required
+            min={undefined}
             max={undefined}
           />
 
@@ -189,8 +202,8 @@ const TopicsForm = ({
             name="endDate"
             value={assignProject.endDate}
             onChange={handleInputChange}
-            required
-            min={getCurrentDate()}
+            // required
+            min={undefined}
             max={undefined}
           />
           <DateInput
@@ -198,7 +211,7 @@ const TopicsForm = ({
             name="actualStartDate"
             value={assignProject.actualStartDate}
             onChange={handleInputChange}
-            min={getCurrentDate()}
+            min={undefined}
             max={undefined}
           />
           <DateInput
@@ -206,7 +219,7 @@ const TopicsForm = ({
             name="actualEndDate"
             value={assignProject.actualEndDate}
             onChange={handleInputChange}
-            min={getCurrentDate()}
+            min={undefined}
             max={undefined}
           />
         </div>
@@ -225,4 +238,4 @@ const TopicsForm = ({
   );
 };
 
-export default TopicsForm;
+export default AssignProjectToSchoolForm;

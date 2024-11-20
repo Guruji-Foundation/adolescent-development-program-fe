@@ -4,41 +4,41 @@ import { useParams, useNavigate } from "react-router-dom";
 import apiServices from "../../common/ServiCeProvider/Services";
 import useError from "../../hooks/useError";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
-import TopicsForm from "./AssignProjectToSchoolForm";
+import AssignProjectToSchoolForm from "./AssignProjectToSchoolForm";
 
 const EditTopic = () => {
   const [assignProject, setAssignProject] = useState({});
-  const [topics, setTopics] = useState([]);
 
   const navigate = useNavigate();
   const { errors, setError, clearError } = useError();
-  const { id } = useParams();
+  const { schoolId, projectId } = useParams();
   const message = {
     heading: "Project Assign Edited Sccussfully!",
     description: "You have Edited Project Assing",
   };
 
   const heading = "Edit Assign Project";
-
   useEffect(() => {
-    if (id) {
+    if (schoolId && projectId) {
       apiServices
-        .fetchTopic(Number(id))
+        .fetchProjectByProjectIdAndSchoolId(schoolId, projectId)
         .then((res) => {
-          if (res) {
-            // console.log(res?.data?.data);
-            setTopics(res?.data?.data);
-          }
+          setAssignProject(res?.data?.data);
         })
         .catch((error) => {
           setError(error.message);
         });
     }
-  }, [id]);
+  }, [schoolId, projectId]);
 
-  const handleSubmit = async (topicData) => {
+  const handleSubmit = async (projectId, assignProject) => {
+    console.log("Hello form hadnl sub")
     try {
-      const response = await apiServices.updateTopic(Number(id), topicData);
+      const response = await apiServices.updateProjectByProjectIdAndSchoolId(
+        assignProject?.schoolId,
+        projectId,
+        assignProject
+      );
       return response;
     } catch (error) {
       setError(error.message);
@@ -51,12 +51,13 @@ const EditTopic = () => {
 
   return (
     <div>
-      <TopicsForm
+      <AssignProjectToSchoolForm
         handleSubmit={handleSubmit}
         message={message}
         heading={heading}
         handleCloseModal={handleCloseModal}
-        topicDataDefault={topics}
+        projectAssignToSchoolDataDefault={assignProject}
+        isEdit={true}
       />
       {errors.length > 0 && <ErrorMessage errors={errors} />}
     </div>

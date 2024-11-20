@@ -7,16 +7,23 @@ const SelectInput = ({
   onChange,
   options,
   selectsomthingtext,
+  isFilter = false,
   required = false,
-  disabled=false
+  disabled = false,
 }) => {
   return (
     <div className="form-field">
       <label htmlFor="selectinput" className={required ? "required" : ""}>
         {label}
       </label>
-      <select value={value} name={name} onChange={onChange} required={required} disabled={disabled}>
-        <option value="" disabled>
+      <select
+        value={value}
+        name={name}
+        onChange={onChange}
+        required={required}
+        disabled={disabled}
+      >
+        <option value={isFilter ? "null" : ""} disabled={!isFilter}>
           {selectsomthingtext ? selectsomthingtext : "Select Something"}
         </option>
         {options.map((option) => (
