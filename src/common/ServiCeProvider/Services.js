@@ -39,6 +39,10 @@ export default {
   updateSchool: async (id, schoolData) => {
     return apiServiceBased.put(`${SCHOOL}/${id}`, schoolData);
   },
+
+  getSchoolByProjectId: async(projectId)=>{
+    return apiServiceBased.get(`${SCHOOL}/projects/un-assign?projectId=${projectId}`);
+  },
   //---------------------------
 
   //Teacher api methods
