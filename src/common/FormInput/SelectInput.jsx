@@ -6,11 +6,10 @@ const SelectInput = ({
   name,
   onChange,
   options,
-  disabled,
   selectsomthingtext,
   isFilter = false,
   required = false,
-  disabled=false
+  disabled = false,
 }) => {
   return (
     <div className="form-field">
@@ -24,7 +23,7 @@ const SelectInput = ({
         required={required}
         disabled={disabled}
       >
-        <option value={isFilter ? "null" : ""}  disabled={!isFilter}>
+        <option value={isFilter ? "null" : ""} disabled={!isFilter}>
           {selectsomthingtext ? selectsomthingtext : "Select Something"}
         </option>
         {options.map((option) => (
