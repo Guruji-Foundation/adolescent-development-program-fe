@@ -171,11 +171,12 @@ function Performance() {
                 console.error("Error fetching school data:", error);
             });
 
+        getSchoolData();
     }, []);
 
     const getSchoolData = async () => {
         try {
-            const res = (await apiServices.getSchoolByProjectId(selectedProject))?.data?.data?.schools;
+            const res = (await apiServices.getAllSchoolList())?.data?.data?.schools;
             if (res && res.length > 0) {
                 setSchoolList(res);
             }
@@ -183,12 +184,6 @@ function Performance() {
             console.log("Error", err);
         }
     }
-
-    useEffect(() => {
-        if (selectedProject) {
-            getSchoolData();
-        }
-    }, [selectedProject])
 
     const getPerformanceDetailsBasedOnProjectAndSchool = async () => {
         try {
