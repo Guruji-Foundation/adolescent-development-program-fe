@@ -8,13 +8,14 @@ const SelectInput = ({
   options,
   selectsomthingtext,
   required = false,
+  disabled=false
 }) => {
   return (
     <div className="form-field">
       <label htmlFor="selectinput" className={required ? "required" : ""}>
         {label}
       </label>
-      <select value={value} name={name} onChange={onChange} required={required}>
+      <select value={value} name={name} onChange={onChange} required={required} disabled={disabled}>
         <option value="" disabled>
           {selectsomthingtext ? selectsomthingtext : "Select Something"}
         </option>

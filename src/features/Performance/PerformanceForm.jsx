@@ -42,7 +42,7 @@ function PerformanceForm({
         studentId: '',
         topicId: '',
         beforeInterventionMark: "",
-        afterInterventionMark:"",
+        afterInterventionMark: "",
     })
 
     const handleInputChange = (e) => {
@@ -106,6 +106,8 @@ function PerformanceForm({
                         }}
                         options={studentDropDownList}
                         required
+                        disabled={true}
+
                     />
                     <SelectInput
                         label="Topic Name"
@@ -118,6 +120,7 @@ function PerformanceForm({
                         }}
                         options={topicDropDownList}
                         required
+                        disabled={true}
                     />
                     <TextInput
                         label="Marks before activity"
