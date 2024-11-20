@@ -209,6 +209,10 @@ export default {
     return apiServiceBased.get(`${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`);
   },
 
+  saveAllPerformanceTable: (schoolId, projectId, data) => {
+    return apiServiceBased.put(`${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`, data);
+  },
+
   //Student
   getStudentList: () => {
     return apiServiceBased.get(`${STUDENTS}`);

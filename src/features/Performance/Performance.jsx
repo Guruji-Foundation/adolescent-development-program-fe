@@ -8,6 +8,7 @@ import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/Conf
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import useError from "../../hooks/useError";
 import SelectInput from "../../common/FormInput/SelectInput";
+import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
 
 function Performance() {
     const navigate = useNavigate();
@@ -26,6 +27,8 @@ function Performance() {
     const [selectedProject, setSelectedProject] = useState(null);
     const [columDefsWithTopic, setColumDefsWithTopic] = useState([])
     const [rowDataWithTpoic, setRowDataWithTopic] = useState([])
+    const [editedData, setEditedData] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
@@ -190,7 +193,8 @@ function Performance() {
             const response = await apiServices.getPerformanceListBySchoolAndProject(selectedSchool, selectedProject);
             const rowData2 = response?.data?.data?.studentPerformances?.map((student) => {
                 const row = {
-                    studentName: student.studentName
+                    studentName: student.studentName,
+                    studentId: student.studentId,
                 };
 
                 student.topics.forEach((topic) => {
@@ -221,10 +225,12 @@ function Performance() {
                     {
                         headerName: "Pre Marks",
                         field: `${item?.id}_beforeInterventionMark`,
+                        editable: true,
                     },
                     {
                         headerName: "Post Marks",
-                        field: `${item?.id}_afterInterventionMark`
+                        field: `${item?.id}_afterInterventionMark`,
+                        editable: true,
                     }
                 ]
             }))
@@ -238,6 +244,68 @@ function Performance() {
         }
     }, [topicData])
 
+    const handleCellValueChange = (params) => {
+        const updatedRow = params.data;
+        setEditedData((prev) => {
+            const existingIndex = prev.findIndex((row) => row.studentName === updatedRow.studentName);
+            if (existingIndex > -1) {
+                // Update existing student data
+                const updated = [...prev];
+                updated[existingIndex] = updatedRow;
+                return updated;
+            } else {
+                // Add new student data
+                return [...prev, updatedRow];
+            }
+        });
+    };
+
+    const prepareDataForPost = () => {
+        if (editedData?.length == 0) return null;
+        const studentPerformances = editedData.map((student) => {
+            const topics = Object.entries(student)
+                .filter(([key]) => key.includes("_beforeInterventionMark") || key.includes("_afterInterventionMark"))
+                .reduce((acc, [key, value]) => {
+                    const [topicId, field] = key.split("_");
+
+                    let topic = acc.find((t) => t.topicId === Number(topicId));
+                    if (!topic) {
+                        topic = { topicId: Number(topicId), beforeInterventionMark: 0, afterInterventionMark: 0 };
+                        acc.push(topic);
+                    }
+
+                    topic[field] = value;
+                    return acc;
+                }, []);
+
+            return {
+                studentId: student.studentId || 0,
+                studentName: student.studentName,
+                topics,
+            };
+        });
+        return { studentPerformances };
+    };
+
+
+    const saveAllPerformances = async () => {
+        try {
+            const postData = prepareDataForPost();
+            if (postData) {
+                const res = await apiServices.saveAllPerformanceTable(selectedSchool, selectedProject, postData);
+                if (res?.data?.status) {
+                    setEditedData([]);
+                    setShowModal(true)
+                }
+            }
+            else {
+                return;
+            }
+
+        } catch (err) {
+            throw err;
+        }
+    }
     return (
         <div className="project-page">
             <div className="header">
@@ -245,12 +313,12 @@ function Performance() {
                     <h2 className="project-heading">Performance</h2>
                     <p className="subheading">Performance List of Students</p>
                 </div>
-                {/* <button
+                <button
                     className="g-button create-new-button"
-                    onClick={handelAddPerformance}
+                    onClick={() => { saveAllPerformances() }}
                 >
-                    Create New
-                </button> */}
+                    Save
+                </button>
             </div>
 
             <div className='header'>
@@ -278,8 +346,14 @@ function Performance() {
                     <AgGridTable rowData={performanceData} columnDefs={columnDefs} />
                 </div>
             ) : (
-                <div className="ag-theme-quartz" style={{ height: "500px" }}>
-                    <AgGridTable rowData={rowDataWithTpoic} columnDefs={columDefsWithTopic} />
+                <div>
+                    <div className="ag-theme-quartz" style={{ height: "500px" }}>
+                        <AgGridTable
+                            rowData={rowDataWithTpoic}
+                            columnDefs={columDefsWithTopic}
+                            onCellValueChanged={handleCellValueChange}
+                        />
+                    </div>
                 </div>
             )}
 
@@ -291,6 +365,7 @@ function Performance() {
                     onCancel={cancelDelete}
                 />
             )}
+            {showModal && <SuccessModal data={{description:"Performance Updated Successfully!!"}} onClose={()=>{setShowModal(false)}} />}
         </div>
     )
 }
