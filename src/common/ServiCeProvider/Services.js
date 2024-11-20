@@ -183,6 +183,8 @@ export default {
       );
     return apiServiceBased.get(STUDENT);
   },
+
+  //performance
   getPerformanceList: () => {
     return apiServiceBased.get(`${PERFORMANCE}`);
   },
@@ -201,6 +203,10 @@ export default {
 
   deletePerformance: async (id) => {
     return apiServiceBased.delete(`${PERFORMANCE}/${id}`);
+  },
+
+  getPerformanceListBySchoolAndProject: (schoolId, projectId) => {
+    return apiServiceBased.get(`${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`);
   },
 
   //Student
