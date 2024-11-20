@@ -39,10 +39,6 @@ export default {
   updateSchool: async (id, schoolData) => {
     return apiServiceBased.put(`${SCHOOL}/${id}`, schoolData);
   },
-
-  getSchoolByProjectId: async(projectId)=>{
-    return apiServiceBased.get(`${SCHOOL}/projects/un-assign?projectId=${projectId}`);
-  },
   //---------------------------
 
   //Teacher api methods
@@ -160,40 +156,7 @@ export default {
     );
   },
   getProjectBySchool: async (schoolId) => {
-    console.log(schoolId);
-    if (schoolId != null && schoolId && schoolId != "null")
-      return apiServiceBased.get(`${PROJECT}/schools?schoolId=${schoolId}`);
-    else return apiServiceBased.get(`${PROJECT}/schools`);
-  },
-
-  getUnassignedSchoolByProjectId: async (projectId) => {
-    return apiServiceBased.get(
-      `${SCHOOL}${PROJECT}/un-assign?projectId=${projectId}`
-    );
-  },
-
-  fetchProjectByProjectIdAndSchoolId: async (schoolId, projectId) => {
-    if (schoolId && projectId) {
-      return apiServiceBased.get(
-        `${PROJECT}/${projectId}/schools?schoolId=${schoolId}`
-      );
-    }
-  },
-  updateProjectByProjectIdAndSchoolId: (
-    schoolId,
-    projectId,
-    assignProjectData
-  ) => {
-    if (schoolId && projectId) {
-      return apiServiceBased.put(
-        `${PROJECT}/${projectId}/schools?schoolId=${schoolId}`,
-        assignProjectData
-      );
-    }
-  },
-
-  unassignProjectByProjectIdAndSchoolId: async (schoolId, projectId) => {
-    return apiServiceBased.delete( `${PROJECT}/${projectId}/schools?schoolId=${schoolId}`);
+    return apiServiceBased.get(`${PROJECT}/schools?schoolId=${schoolId}`);
   },
   //---------------------------
 
@@ -243,9 +206,7 @@ export default {
   },
 
   getPerformanceListBySchoolAndProject: (schoolId, projectId) => {
-    return apiServiceBased.get(
-      `${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`
-    );
+    return apiServiceBased.get(`${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`);
   },
 
   //Student
