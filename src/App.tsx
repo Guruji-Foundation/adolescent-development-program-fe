@@ -69,7 +69,7 @@ const App: React.FC = () => {
               element={<AssignProjectToSchool />}
             />
             <Route
-              path="/project/:id/school/assign"
+              path="/project/:projectId/school/:schoolId/assign"
               element={<EditAssignProjectToSchool />}
             />
             {/* performance routes */}

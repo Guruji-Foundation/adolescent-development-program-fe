@@ -250,18 +250,20 @@ const AssignProjectToStudentPage = () => {
       </div>
       <div className="header">
         <SelectInput
-          label="Select School"
           value={selectedSchoolId || ""}
           options={schools}
+          selectsomthingtext={"Select School"}
           onChange={handleSchoolChange}
-          required
+          isFilter="false"
+          // required
         />
         <SelectInput
-          label="Select Project"
           value={selectedProjectId || ""}
           onChange={handleProjectChange}
           options={projects}
-          required
+          selectsomthingtext={"Select Project"}
+          isFilter={false}
+          // required
         />
       </div>
 

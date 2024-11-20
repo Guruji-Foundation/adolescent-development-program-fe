@@ -40,7 +40,8 @@ const AssignProjectToSchool = () => {
         message={message}
         heading={heading}
         handleCloseModal={handleCloseModal}
-        projectAssignToSchoolDataDefault={assignProject}
+        projectAssignToSchoolDataDefault={null}
+        isEdit={false}
       />
     </div>
   );

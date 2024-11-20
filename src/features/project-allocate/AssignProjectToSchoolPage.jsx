@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 import "./AssignProjectToStudent.css";
 import "../../CSS/Main.css";
+import { FaEdit } from "react-icons/fa";
 
-import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
+import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import useError from "../../hooks/useError";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
@@ -25,19 +26,15 @@ const AssignProjectToSchoolPage = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
 
+  const [selectedProjectToDelete, setSelectedProjectToDelete] = useState(null);
+
   const [students, setStudents] = useState([]);
   const [unAssignStudents, setUnAssignStudents] = useState([]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [assignFlag, setAssignFlag] = useState(true);
-  const AssignModelData = {
-    heading: "Success!",
-    description: "You Have Successfully Assigned Project to Student",
-  };
-  const UnAssignModelData = {
-    heading: "Success!",
-    description: "You Have Successfully Unassigned Project from Student",
-  };
+  const title = "Unassigned Project!";
+  const message = "Do you really want to unassinged project from school.";
   const navigate = useNavigate();
 
   // Fetch list of schools on initial render
@@ -70,6 +67,7 @@ const AssignProjectToSchoolPage = () => {
 
   useEffect(() => {
     getSchooList();
+    getAllAssignProject();
   }, []);
 
   useEffect(() => {
@@ -80,6 +78,7 @@ const AssignProjectToSchoolPage = () => {
   }, [selectedSchoolId]);
 
   const handleSchoolChange = (e) => {
+    console.log(e.target.value);
     setSelectedSchoolId(e.target.value);
   };
 
@@ -94,6 +93,49 @@ const AssignProjectToSchoolPage = () => {
   const handleCreateNew = () => {
     navigate("/project/school/assign");
   };
+
+  const handleEdit = (params) => {
+    console.log(params);
+    navigate(`/project/${params.project.id}/school/${params.school.id}/assign`);
+  };
+
+  const handleDelete = (params) => {
+    clearError();
+    setSelectedProjectToDelete(params);
+    setIsModalVisible(true);
+  };
+  console.log("h999");
+  console.log(projects.project);
+  const confirmDelete = () => {
+    if (selectedProjectToDelete !== null) {
+      apiServices
+        .unassignProjectByProjectIdAndSchoolId(
+          selectedProjectToDelete.school.id,
+          selectedProjectToDelete.project.id
+        )
+        .then(() => {
+          console.log("from delete");
+          console.log(selectedProjectToDelete.project.id);
+          const updatedAssignProject = projects.filter(
+            (project) =>
+              project?.project?.id !== selectedProjectToDelete?.project?.id ||
+              project?.school?.id !== selectedProjectToDelete?.school?.id
+          );
+          setProjects(updatedAssignProject);
+          setSelectedProjectToDelete(null);
+          setIsModalVisible(false);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    }
+  };
+
+  const cancelDelete = () => {
+    setSelectedProjectToDelete(null);
+    setIsModalVisible(false);
+  };
+
   if (errors.length > 0) return <ErrorMessage errors={errors} />;
 
   const columDefs = [
@@ -141,18 +183,29 @@ const AssignProjectToSchoolPage = () => {
       filter: true,
       floatingFilter: true,
     },
-    // {
-    //   headerName: "Actions",
-    //   field: "actions",
-    //   cellRenderer: (params) => (
-    //     <button
-    //       onClick={() => handleAssign(params?.data?.id)}
-    //       className="action-button edit-button"
-    //     >
-    //       Assign
-    //     </button>
-    //   ),
-    // },
+    {
+      headerName: "Actions",
+      filter: true,
+      floatingFilter: true,
+      cellRenderer: (params) => {
+        return (
+          <div>
+            <button
+              onClick={() => handleEdit(params?.data)}
+              className="action-button edit-button"
+            >
+              <FaEdit />
+            </button>
+            <button
+              onClick={() => handleDelete(params?.data)}
+              className="action-button delete-button"
+            >
+              Unassign
+            </button>
+          </div>
+        );
+      },
+    },
   ];
 
   return (
@@ -171,12 +224,13 @@ const AssignProjectToSchoolPage = () => {
 
       <div className="header">
         <SelectInput
-          label="Select School"
+          // label="Select School"
           value={selectedSchoolId || ""}
           options={schools}
           onChange={handleSchoolChange}
-          selectsomthingtext={"Select School"}
-          required
+          selectsomthingtext={"All School"}
+          isFilter={true}
+          // required
         />
       </div>
 
@@ -185,9 +239,11 @@ const AssignProjectToSchoolPage = () => {
       </div>
 
       {isModalVisible && (
-        <SuccessModal
-          data={assignFlag ? AssignModelData : UnAssignModelData}
-          onClose={handleClose}
+        <ConfirmationModal
+          title={title}
+          message={message}
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
         />
       )}
     </div>
