@@ -45,6 +45,7 @@ const StudentPage = () => {
         parentName: data?.parent?.name,
         parentOccupation: data?.parent?.occupation,
         parentPhoneNumber: data?.parent?.phoneNumber,
+        schoolName:data?.schoolDetails?.name,
       }))
       setRowData(rData);
     } catch (err) {
@@ -69,6 +70,12 @@ const StudentPage = () => {
     {
       headerName: "Name",
       field: "name",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      headerName: "School Name",
+      field: "schoolName",
       filter: true,
       floatingFilter: true,
     },
