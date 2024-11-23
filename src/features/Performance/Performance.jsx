@@ -342,9 +342,13 @@ function Performance() {
             </div>
 
             {!(selectedSchool && selectedProject) ? (
-                <div className="ag-theme-quartz" style={{ height: "500px" }}>
-                    <AgGridTable rowData={performanceData} columnDefs={columnDefs} />
-                </div>
+                // <div className="ag-theme-quartz" style={{ height: "500px" }}>
+                //     <AgGridTable rowData={performanceData} columnDefs={columnDefs} />
+                // </div>
+                <>
+                    <h2 className="project-heading">Please select relevant options to view Performance of Student</h2>
+                
+                </>
             ) : (
                 <div>
                     <div className="ag-theme-quartz" style={{ height: "500px" }}>
