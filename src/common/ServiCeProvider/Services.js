@@ -251,8 +251,8 @@ export default {
   },
 
   //Student
-  getStudentList: () => {
-    return apiServiceBased.get(`${STUDENTS}`);
+  getStudentList: (selectedSchool) => {
+    return apiServiceBased.get(`${STUDENTS}?schoolId=${selectedSchool?selectedSchool:""}`);
   },
 
   addStudent: (data) => {
