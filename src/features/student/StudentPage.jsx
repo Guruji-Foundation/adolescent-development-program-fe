@@ -7,10 +7,15 @@ import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import apiServices from "../../common/ServiCeProvider/Services";
+import SelectInput from "../../common/FormInput/SelectInput";
+import { ImCross } from "react-icons/im"
 
 const StudentPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
   const [selectedStudentId, setSelectedStudentId] = useState(null);
+  const [schoolList, setSchoolList] = useState([]);
+  const [selectedSchool, setSelectedSchool] = useState(null);
+
   const navigate = useNavigate();
 
   const cancelDelete = () => {
@@ -32,9 +37,10 @@ const StudentPage = () => {
   }
 
   const [rowData, setRowData] = useState([])
-  const getAllSchools = async () => {
+
+  const getAllStudents = async () => {
     try {
-      const data = ((await apiServices.getStudentList())?.data?.data?.students)
+      const data = ((await apiServices.getStudentList(selectedSchool))?.data?.data?.students)
       let rData = data?.map((data) => ({
         id: data?.id,
         name: data?.name,
@@ -45,7 +51,7 @@ const StudentPage = () => {
         parentName: data?.parent?.name,
         parentOccupation: data?.parent?.occupation,
         parentPhoneNumber: data?.parent?.phoneNumber,
-        schoolName:data?.schoolDetails?.name,
+        schoolName: data?.schoolDetails?.name,
       }))
       setRowData(rData);
     } catch (err) {
@@ -53,15 +59,28 @@ const StudentPage = () => {
     }
   }
 
-  useState(() => {
-    getAllSchools()
+  const getAllSchool = async () => {
+    try {
+      const data = (await apiServices.getAllSchoolList())?.data?.data?.schools;
+      setSchoolList(data);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  useEffect(() => {
+    getAllSchool();
   }, [])
+
+  useEffect(() => {
+    getAllStudents()
+  }, [selectedSchool])
 
   const confirmDelete = async () => {
     try {
       const res = await apiServices.deleteStudent(selectedStudentId)
       setIsModalVisible(false);
-      getAllSchools()
+      getAllStudents()
     } catch (err) {
       console.log("Error in delete", err)
     }
@@ -156,6 +175,18 @@ const StudentPage = () => {
       >
         Create New
       </button>
+    </div>
+    <div className='header'>
+      <SelectInput
+        label="Select School"
+        value={selectedSchool || ""}
+        options={schoolList}
+        onChange={(e) => { setSelectedSchool(e.target.value) }}
+      />
+      <ImCross className="action-button delete-button" 
+      onClick={() => {
+       setSelectedSchool(null)
+      }} />
     </div>
 
     <div className="ag-theme-quartz" style={{ height: "500px" }}>
