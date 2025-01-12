@@ -18,24 +18,21 @@ export default {
     // return apiServiceBased.post(`${AUTH}/register`, formData);
   },
   login: async (formData) => {
-    if (
-      formData.email == "rajeshpokharkar81@gmail.com" &&
-      formData.password == "1234"
-    ) {
+    if (formData.email == "admin@gmail.com" && formData.password == "1234") {
       return {
         message: "Login Successfully",
         token: "admin",
       };
     } else if (
-      formData.email == "akshaypokharkar51@gmail.com" &&
+      formData.email == "projectcoordinator@gmail.com" &&
       formData.password == "1234"
     ) {
       return {
         message: "Login Successfully",
-        token: "gef-coordinator",
+        token: "project-coordinator",
       };
     } else if (
-      formData.email == "rajeshpokharkar1124@gmail.com" &&
+      formData.email == "schoolcoordinator@gmail.com" &&
       formData.password == "1234"
     ) {
       return {
@@ -52,19 +49,19 @@ export default {
     const tokenvalue = localStorage.getItem("token");
     if (tokenvalue === "admin") {
       return {
-        email: "rajeshpokharkar81@gmail.com",
+        email: "admin@gmail.com",
         role: "admin",
         name: "Rajesh Pokharkar",
       };
-    } else if (tokenvalue == "gef-coordinator") {
+    } else if (tokenvalue == "project-coordinator") {
       return {
-        email: "akshaypokharkar51@gmail.com",
+        email: "projectcoordinator@gmail.com",
         role: "project-coordinator",
         name: "Akshay Pokharkar",
       };
     } else if (tokenvalue == "school-coordinator") {
       return {
-        email: "rajeshpokharkar1124@gmail.com",
+        email: "schoolcoordinator@gmail.com",
         role: "school-coordinator",
         name: "Rajesh Pokharkar",
       };
