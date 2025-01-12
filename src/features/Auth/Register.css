@@ -1,0 +1,89 @@
+/* Style for the password container */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Style for input fields */
+.form-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input.error {
+  border-color: #ff4d4f; /* Red border for errors */
+}
+
+.form-input:focus {
+  border-color: #007bff; /* Blue border on focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Style for submit button */
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.submit-btn:active {
+  transform: scale(0.98); /* Slightly smaller on click */
+}
+
+/* Style for password visibility toggle button */
+.show-password-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+.show-password-btn:hover {
+  color: #0056b3; /* Darker blue on hover */
+}
+
+/* Center the "Create an Account?" section */
+.sign-in-link {
+  text-align: center; /* Center align the text */
+  margin-top: 15px; /* Add some space above */
+}
+
+.sign-in-link p {
+  font-size: 14px; /* Adjust font size */
+  color: #555; /* Subtle color for the text */
+}
+
+.sign-in-link .link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.sign-in-link .link:hover {
+  text-decoration: underline; /* Underline on hover */
+  color: #0056b3; /* Darker blue on hover */
+}

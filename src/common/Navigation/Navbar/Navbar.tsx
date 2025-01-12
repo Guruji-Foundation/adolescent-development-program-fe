@@ -2,8 +2,18 @@
 
 import React from "react";
 import "./Navbar.css";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 const Navbar: React.FC = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+    // console.log("logout form system");
+  };
   return (
     <nav className="navbar">
       <div className="navbar-brand">
@@ -12,14 +22,30 @@ const Navbar: React.FC = () => {
       </div>
       <ul className="navbar-links">
         <li>
-          <a href="/">Home</a>
+          <Link to="/">Home</Link>
         </li>
         <li>
-          <a href="/about">About Us</a>
+          <Link to="/about">About Us</Link>
         </li>
         <li>
-          <a href="/contact">Contact</a>
+          <Link to="/contact">Contact</Link>
         </li>
+        {!user?.email ? (
+          <>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            {/* <li>
+              <Link to="/register">Register</Link>
+            </li> */}
+          </>
+        ) : (
+          <li>
+            <Link to="" onClick={handleLogout}>
+              logout
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   );
