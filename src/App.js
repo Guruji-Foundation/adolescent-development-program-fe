@@ -1,55 +1,79 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+//navigation import
 import Sidebar from "./common/Navigation/Sidebar/Sidebar";
 import Navbar from "./common/Navigation/Navbar/Navbar";
+
+//school feature import
 import SchoolPage from "./features/school/SchoolPage";
 import CreateSchool from "./features/school/CreateSchool";
-import TeacherPage from "./features/teacher/TeacherPage";
 import StudentPage from "./features/student/StudentPage";
 import EditSchool from "./features/school/EditSchool";
+
+//teacher feature import
 import CreateTeacher from "./features/teacher/CreateTeacher";
 import EditTeacher from "./features/teacher/EditTeacher";
 import CreateProject from "./features/project/CreateProject";
+import TeacherPage from "./features/teacher/TeacherPage";
 
-import "./App.css"; // Global styles
+//project feature import
 import ProjectPage from "./features/project/ProjectPage";
 import EditProject from "./features/project/EditProject";
-import HomePage from "./features/homepage";
 
+//performance feature import
 import Performance from "./features/Performance/Performance";
 import AddPerformance from "./features/Performance/AddPerformance";
 import EditPerformance from "./features/Performance/EditPerformance";
+
+//topic feature import
 import TopicsPage from "./features/topics/TopicsPage";
 import CreateTopic from "./features/topics/CreateTopic";
 import EditTopic from "./features/topics/EditTopic";
+
+//student feature import
 import AddStudentForm from "./features/student/AddStudentForm";
 import EditStudentForm from "./features/student/EditStudentForm";
+
+//project coordinator feature import
 import ProjectCordinator from "./features/ProjectCoordinator/ProjectCordinator";
 import AddProjectCoordinator from "./features/ProjectCoordinator/AddProjectCoordinator";
 import EditProjectCoordinator from "./features/ProjectCoordinator/EditProjectCoordinator";
-import AssignProjectToSchoolPage from "./features/project-allocate/AssignProjectToSchoolPage";
+
+//Assign Project feature import
 import AssignProjectToSchool from "./features/project-allocate/AssignProjectToSchool";
 import EditAssignProjectToSchool from "./features/project-allocate/EditAssignProjectToSchool";
 import ProjectAssign from "./features/project-allocate/ProjectAssign";
+
+//school coordinator feature import
 import SchoolCordinator from "./features/schoolCoordinator/SchoolCordinator";
 import AddSchoolCoordinator from "./features/schoolCoordinator/AddSchoolCoordinator";
 import EditSchoolCoordinator from "./features/schoolCoordinator/EditSchoolCoordinator";
-import Login from "./features/Auth/Login";
-import ProtectedRoute from "./common/ProtectedRoute";
-import AccessDenied from "./Pages/AccessDenied";
 
-const App: React.FC = () => {
+//pages import
+import Login from "./features/Auth/Login";
+import AccessDenied from "./Pages/AccessDenied";
+import HomePage from "./Pages/homepage";
+
+//routes restriction feature import
+import ProtectedRoute from "./common/ProtectedRoute";
+
+//css files
+import "./App.css"; // Global styles
+
+const App = () => {
   return (
     <Router>
-      <Navbar /> {/* Ensure the Navbar is placed at the top */}
+      <Navbar />
       <div className="app-layout">
-        <Sidebar /> {/* Sidebar goes here */}
+        <Sidebar />
         <div className="main-content">
           <Routes>
+            {/* school routes */}
             <Route
               path="/school"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <SchoolPage />
                 </ProtectedRoute>
               }
@@ -57,7 +81,7 @@ const App: React.FC = () => {
             <Route
               path="/create-school"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <CreateSchool />
                 </ProtectedRoute>
               }
@@ -65,7 +89,7 @@ const App: React.FC = () => {
             <Route
               path="/edit-school/:id"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <EditSchool />
                 </ProtectedRoute>
               }
@@ -75,7 +99,7 @@ const App: React.FC = () => {
               path="/teacher"
               element={
                 <ProtectedRoute
-                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                  roles={["admin", "project-coordinator", "school-coordinator"]}
                 >
                   <TeacherPage />
                 </ProtectedRoute>
@@ -85,7 +109,7 @@ const App: React.FC = () => {
               path="/create-teacher"
               element={
                 <ProtectedRoute
-                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                  roles={["admin", "project-coordinator", "school-coordinator"]}
                 >
                   <CreateTeacher />
                 </ProtectedRoute>
@@ -95,28 +119,18 @@ const App: React.FC = () => {
               path="/edit-teacher/:id"
               element={
                 <ProtectedRoute
-                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                  roles={["admin", "project-coordinator", "school-coordinator"]}
                 >
                   <EditTeacher />
                 </ProtectedRoute>
               }
             />
-            {/* Student Route */}
-            <Route
-              path="/student"
-              element={
-                <ProtectedRoute
-                  roles={["admin", "gef-coordinator", "school-coordinator"]}
-                >
-                  <StudentPage />
-                </ProtectedRoute>
-              }
-            />
+
             {/* Project Route */}
             <Route
               path="/projects"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <ProjectPage />
                 </ProtectedRoute>
               }
@@ -124,7 +138,7 @@ const App: React.FC = () => {
             <Route
               path="/create-project"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <CreateProject />
                 </ProtectedRoute>
               }
@@ -132,16 +146,16 @@ const App: React.FC = () => {
             <Route
               path="/edit-project/:id"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <EditProject />
                 </ProtectedRoute>
               }
             />
-            {/* Project Route */}
+            {/* Topic Route */}
             <Route
               path="/topics"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <TopicsPage />
                 </ProtectedRoute>
               }
@@ -149,7 +163,7 @@ const App: React.FC = () => {
             <Route
               path="/create-topic"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <CreateTopic />
                 </ProtectedRoute>
               }
@@ -157,7 +171,7 @@ const App: React.FC = () => {
             <Route
               path="/edit-topic/:id"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <EditTopic />
                 </ProtectedRoute>
               }
@@ -166,19 +180,15 @@ const App: React.FC = () => {
             <Route
               path="/project-assign"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <ProjectAssign />
                 </ProtectedRoute>
               }
             />
-            {/* <Route
-              path="/project-assign-school"
-              element={<AssignProjectToSchoolPage />}
-            /> */}
             <Route
               path="/project/school/assign"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <AssignProjectToSchool />
                 </ProtectedRoute>
               }
@@ -186,7 +196,7 @@ const App: React.FC = () => {
             <Route
               path="/project/:projectId/school/:schoolId/assign"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <EditAssignProjectToSchool />
                 </ProtectedRoute>
               }
@@ -196,7 +206,7 @@ const App: React.FC = () => {
               path="/performance"
               element={
                 <ProtectedRoute
-                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                  roles={["admin", "project-coordinator", "school-coordinator"]}
                 >
                   <Performance />
                 </ProtectedRoute>
@@ -206,7 +216,7 @@ const App: React.FC = () => {
               path="/add-performance"
               element={
                 <ProtectedRoute
-                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                  roles={["admin", "project-coordinator", "school-coordinator"]}
                 >
                   <AddPerformance />
                 </ProtectedRoute>
@@ -216,21 +226,30 @@ const App: React.FC = () => {
               path="/edit-performance/:id"
               element={
                 <ProtectedRoute
-                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                  roles={["admin", "project-coordinator", "school-coordinator"]}
                 >
                   <EditPerformance />
                 </ProtectedRoute>
               }
             />
-            {/* Home Page Route */}
-            <Route path="/" element={<HomePage />} /> {/* Default route */}
+            {/* student routes */}
             <Route
               path="/add-student"
               element={
                 <ProtectedRoute
-                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                  roles={["admin", "project-coordinator", "school-coordinator"]}
                 >
                   <AddStudentForm />{" "}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "project-coordinator", "school-coordinator"]}
+                >
+                  <StudentPage />
                 </ProtectedRoute>
               }
             />
@@ -238,7 +257,7 @@ const App: React.FC = () => {
               path="/edit-student/:id"
               element={
                 <ProtectedRoute
-                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                  roles={["admin", "project-coordinator", "school-coordinator"]}
                 >
                   <EditStudentForm />{" "}
                 </ProtectedRoute>
@@ -273,7 +292,7 @@ const App: React.FC = () => {
             <Route
               path="/school-coordinator"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <SchoolCordinator />
                 </ProtectedRoute>
               }
@@ -281,7 +300,7 @@ const App: React.FC = () => {
             <Route
               path="/add-school-coordinator"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <AddSchoolCoordinator />
                 </ProtectedRoute>
               }
@@ -289,13 +308,15 @@ const App: React.FC = () => {
             <Route
               path="/edit-school-coordinator/:id"
               element={
-                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <EditSchoolCoordinator />
                 </ProtectedRoute>
               }
             />
+            {/* pages */}
             <Route path="/accessdenied" element={<AccessDenied />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/" element={<HomePage />} />
           </Routes>
         </div>
       </div>

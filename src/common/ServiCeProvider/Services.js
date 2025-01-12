@@ -59,14 +59,14 @@ export default {
     } else if (tokenvalue == "gef-coordinator") {
       return {
         email: "akshaypokharkar51@gmail.com",
-        role: "gef-coordinator",
+        role: "project-coordinator",
         name: "Akshay Pokharkar",
       };
     } else if (tokenvalue == "school-coordinator") {
       return {
         email: "rajeshpokharkar1124@gmail.com",
         role: "school-coordinator",
-        name: "Akshay Pokharkar",
+        name: "Rajesh Pokharkar",
       };
     }
 
@@ -306,12 +306,17 @@ export default {
   },
 
   saveAllPerformanceTable: (schoolId, projectId, data) => {
-    return apiServiceBased.put(`${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`, data);
+    return apiServiceBased.put(
+      `${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`,
+      data
+    );
   },
 
   //Student
   getStudentList: (selectedSchool) => {
-    return apiServiceBased.get(`${STUDENTS}?schoolId=${selectedSchool?selectedSchool:""}`);
+    return apiServiceBased.get(
+      `${STUDENTS}?schoolId=${selectedSchool ? selectedSchool : ""}`
+    );
   },
 
   addStudent: (data) => {
