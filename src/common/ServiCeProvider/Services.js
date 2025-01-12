@@ -13,6 +13,65 @@ import {
 const apiServiceBased = HttpInterceptor();
 
 export default {
+  register: async (formData) => {
+    return { message: "Registered Successfully" };
+    // return apiServiceBased.post(`${AUTH}/register`, formData);
+  },
+  login: async (formData) => {
+    if (
+      formData.email == "rajeshpokharkar81@gmail.com" &&
+      formData.password == "1234"
+    ) {
+      return {
+        message: "Login Successfully",
+        token: "admin",
+      };
+    } else if (
+      formData.email == "akshaypokharkar51@gmail.com" &&
+      formData.password == "1234"
+    ) {
+      return {
+        message: "Login Successfully",
+        token: "gef-coordinator",
+      };
+    } else if (
+      formData.email == "rajeshpokharkar1124@gmail.com" &&
+      formData.password == "1234"
+    ) {
+      return {
+        message: "Login Successfully",
+        token: "school-coordinator",
+      };
+    } else {
+      return new Error("Login Failed");
+    }
+
+    // return apiServiceBased.post(`${AUTH}/login`, formData);
+  },
+  getProfile: async () => {
+    const tokenvalue = localStorage.getItem("token");
+    if (tokenvalue === "admin") {
+      return {
+        email: "rajeshpokharkar81@gmail.com",
+        role: "admin",
+        name: "Rajesh Pokharkar",
+      };
+    } else if (tokenvalue == "gef-coordinator") {
+      return {
+        email: "akshaypokharkar51@gmail.com",
+        role: "gef-coordinator",
+        name: "Akshay Pokharkar",
+      };
+    } else if (tokenvalue == "school-coordinator") {
+      return {
+        email: "rajeshpokharkar1124@gmail.com",
+        role: "school-coordinator",
+        name: "Akshay Pokharkar",
+      };
+    }
+
+    // return apiServiceBased.get(`${AUTH}/profile`);
+  },
   //school api methods
 
   //get all school list
@@ -289,6 +348,27 @@ export default {
   },
 
   editCoordinatorDetails: (id, data) => {
+    return apiServiceBased.put(`${PROJECT_COORDINATOR}/${id}`, data);
+  },
+
+  //school corordinatro
+  getSchoolCoOrdinatorList: () => {
+    return apiServiceBased.get(`${PROJECT_COORDINATOR}`);
+  },
+
+  deleteSchoolCoOrdinator: async (id) => {
+    return apiServiceBased.delete(`${PROJECT_COORDINATOR}/${id}`);
+  },
+
+  addSchoolCoordinator: (data) => {
+    return apiServiceBased.post(PROJECT_COORDINATOR, data);
+  },
+
+  getSchoolCoordinatorDetailsById: (id) => {
+    return apiServiceBased.get(`${PROJECT_COORDINATOR}/${id}`);
+  },
+
+  editSchoolCoordinatorDetails: (id, data) => {
     return apiServiceBased.put(`${PROJECT_COORDINATOR}/${id}`, data);
   },
 };

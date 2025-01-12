@@ -31,6 +31,12 @@ import AssignProjectToSchoolPage from "./features/project-allocate/AssignProject
 import AssignProjectToSchool from "./features/project-allocate/AssignProjectToSchool";
 import EditAssignProjectToSchool from "./features/project-allocate/EditAssignProjectToSchool";
 import ProjectAssign from "./features/project-allocate/ProjectAssign";
+import SchoolCordinator from "./features/schoolCoordinator/SchoolCordinator";
+import AddSchoolCoordinator from "./features/schoolCoordinator/AddSchoolCoordinator";
+import EditSchoolCoordinator from "./features/schoolCoordinator/EditSchoolCoordinator";
+import Login from "./features/Auth/Login";
+import ProtectedRoute from "./common/ProtectedRoute";
+import AccessDenied from "./Pages/AccessDenied";
 
 const App: React.FC = () => {
   return (
@@ -40,59 +46,256 @@ const App: React.FC = () => {
         <Sidebar /> {/* Sidebar goes here */}
         <div className="main-content">
           <Routes>
-            {/* School Route */}
-            <Route path="/school" element={<SchoolPage />} />
-            <Route path="/create-school" element={<CreateSchool />} />
-            <Route path="/edit-school/:id" element={<EditSchool />} />
+            <Route
+              path="/school"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <SchoolPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-school"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <CreateSchool />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit-school/:id"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <EditSchool />
+                </ProtectedRoute>
+              }
+            />
             {/* Teacher Route */}
-            <Route path="/teacher" element={<TeacherPage />} />
-            <Route path="/create-teacher" element={<CreateTeacher />} />
-            <Route path="/edit-teacher/:id" element={<EditTeacher />} />
+            <Route
+              path="/teacher"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                >
+                  <TeacherPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-teacher"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                >
+                  <CreateTeacher />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit-teacher/:id"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                >
+                  <EditTeacher />
+                </ProtectedRoute>
+              }
+            />
             {/* Student Route */}
-            <Route path="/student" element={<StudentPage />} />
+            <Route
+              path="/student"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                >
+                  <StudentPage />
+                </ProtectedRoute>
+              }
+            />
             {/* Project Route */}
-            <Route path="/projects" element={<ProjectPage />} />
-            <Route path="/create-project" element={<CreateProject />} />
-            <Route path="/edit-project/:id" element={<EditProject />} />
+            <Route
+              path="/projects"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <ProjectPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-project"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <CreateProject />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit-project/:id"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <EditProject />
+                </ProtectedRoute>
+              }
+            />
             {/* Project Route */}
-            <Route path="/topics" element={<TopicsPage />} />
-            <Route path="/create-topic" element={<CreateTopic />} />
-            <Route path="/edit-topic/:id" element={<EditTopic />} />
+            <Route
+              path="/topics"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <TopicsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-topic"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <CreateTopic />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit-topic/:id"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <EditTopic />
+                </ProtectedRoute>
+              }
+            />
             {/* Project Allocation */}
-            <Route path="/project-assign" element={<ProjectAssign />} />
+            <Route
+              path="/project-assign"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <ProjectAssign />
+                </ProtectedRoute>
+              }
+            />
             {/* <Route
               path="/project-assign-school"
               element={<AssignProjectToSchoolPage />}
             /> */}
             <Route
               path="/project/school/assign"
-              element={<AssignProjectToSchool />}
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <AssignProjectToSchool />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/project/:projectId/school/:schoolId/assign"
-              element={<EditAssignProjectToSchool />}
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <EditAssignProjectToSchool />
+                </ProtectedRoute>
+              }
             />
             {/* performance routes */}
-            <Route path="/performance" element={<Performance />} />
-            <Route path="/add-performance" element={<AddPerformance />} />
-            <Route path="/edit-performance/:id" element={<EditPerformance />} />
+            <Route
+              path="/performance"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                >
+                  <Performance />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/add-performance"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                >
+                  <AddPerformance />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit-performance/:id"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                >
+                  <EditPerformance />
+                </ProtectedRoute>
+              }
+            />
             {/* Home Page Route */}
             <Route path="/" element={<HomePage />} /> {/* Default route */}
-            <Route path="/add-student" element={<AddStudentForm />} />
-            <Route path="/edit-student/:id" element={<EditStudentForm />} />
+            <Route
+              path="/add-student"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                >
+                  <AddStudentForm />{" "}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit-student/:id"
+              element={
+                <ProtectedRoute
+                  roles={["admin", "gef-coordinator", "school-coordinator"]}
+                >
+                  <EditStudentForm />{" "}
+                </ProtectedRoute>
+              }
+            />
             {/* project coordinator */}
             <Route
               path="/project-coordinator"
-              element={<ProjectCordinator />}
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <ProjectCordinator />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/add-coordinator"
-              element={<AddProjectCoordinator />}
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AddProjectCoordinator />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/edit-coordinator/:id"
-              element={<EditProjectCoordinator />}
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <EditProjectCoordinator />
+                </ProtectedRoute>
+              }
             />
+            {/* School coordinator */}
+            <Route
+              path="/school-coordinator"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <SchoolCordinator />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/add-school-coordinator"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <AddSchoolCoordinator />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit-school-coordinator/:id"
+              element={
+                <ProtectedRoute roles={["admin", "gef-coordinator"]}>
+                  <EditSchoolCoordinator />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/accessdenied" element={<AccessDenied />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
       </div>
