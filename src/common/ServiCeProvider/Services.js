@@ -13,6 +13,62 @@ import {
 const apiServiceBased = HttpInterceptor();
 
 export default {
+  register: async (formData) => {
+    return { message: "Registered Successfully" };
+    // return apiServiceBased.post(`${AUTH}/register`, formData);
+  },
+  login: async (formData) => {
+    if (formData.email == "admin@gmail.com" && formData.password == "1234") {
+      return {
+        message: "Login Successfully",
+        token: "admin",
+      };
+    } else if (
+      formData.email == "projectcoordinator@gmail.com" &&
+      formData.password == "1234"
+    ) {
+      return {
+        message: "Login Successfully",
+        token: "project-coordinator",
+      };
+    } else if (
+      formData.email == "schoolcoordinator@gmail.com" &&
+      formData.password == "1234"
+    ) {
+      return {
+        message: "Login Successfully",
+        token: "school-coordinator",
+      };
+    } else {
+      return new Error("Login Failed");
+    }
+
+    // return apiServiceBased.post(`${AUTH}/login`, formData);
+  },
+  getProfile: async () => {
+    const tokenvalue = localStorage.getItem("token");
+    if (tokenvalue === "admin") {
+      return {
+        email: "admin@gmail.com",
+        role: "admin",
+        name: "Rajesh Pokharkar",
+      };
+    } else if (tokenvalue == "project-coordinator") {
+      return {
+        email: "projectcoordinator@gmail.com",
+        role: "project-coordinator",
+        name: "Akshay Pokharkar",
+      };
+    } else if (tokenvalue == "school-coordinator") {
+      return {
+        email: "schoolcoordinator@gmail.com",
+        role: "school-coordinator",
+        name: "Rajesh Pokharkar",
+      };
+    }
+
+    // return apiServiceBased.get(`${AUTH}/profile`);
+  },
   //school api methods
 
   //get all school list
@@ -264,6 +320,9 @@ export default {
 
   //Student
   getStudentList: (selectedSchool) => {
+    return apiServiceBased.get(
+      `${STUDENTS}?schoolId=${selectedSchool ? selectedSchool : ""}`
+    );
     return apiServiceBased.get(`${STUDENTS}?schoolId=${selectedSchool ? selectedSchool : ""}`);
   },
 
@@ -301,6 +360,27 @@ export default {
   },
 
   editCoordinatorDetails: (id, data) => {
+    return apiServiceBased.put(`${PROJECT_COORDINATOR}/${id}`, data);
+  },
+
+  //school corordinatro
+  getSchoolCoOrdinatorList: () => {
+    return apiServiceBased.get(`${PROJECT_COORDINATOR}`);
+  },
+
+  deleteSchoolCoOrdinator: async (id) => {
+    return apiServiceBased.delete(`${PROJECT_COORDINATOR}/${id}`);
+  },
+
+  addSchoolCoordinator: (data) => {
+    return apiServiceBased.post(PROJECT_COORDINATOR, data);
+  },
+
+  getSchoolCoordinatorDetailsById: (id) => {
+    return apiServiceBased.get(`${PROJECT_COORDINATOR}/${id}`);
+  },
+
+  editSchoolCoordinatorDetails: (id, data) => {
     return apiServiceBased.put(`${PROJECT_COORDINATOR}/${id}`, data);
   },
 };

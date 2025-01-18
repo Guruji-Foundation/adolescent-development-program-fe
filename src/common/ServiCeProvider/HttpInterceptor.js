@@ -12,7 +12,7 @@ const HttpInterceptor = () => {
   // };
 
   const defaultHeaders = () => {
-    const authToken = localStorage.getItem("authtoken");
+    const authToken = localStorage.getItem("token");
     const headers = {
       "Content-Type": "application/json",
       Accept: "application/json",

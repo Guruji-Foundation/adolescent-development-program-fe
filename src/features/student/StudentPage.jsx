@@ -35,13 +35,14 @@ const StudentPage = () => {
 
   const handelAddStudent = () => {
     navigate("/add-student");
-  }
+  };
 
-  const [rowData, setRowData] = useState([])
+  const [rowData, setRowData] = useState([]);
 
   const getAllStudents = async () => {
     try {
-      const data = ((await apiServices.getStudentList(selectedSchool))?.data?.data?.students)
+      const data = (await apiServices.getStudentList(selectedSchool))?.data
+        ?.data?.students;
       let rData = data?.map((data) => ({
         id: data?.id,
         name: data?.name,
@@ -53,12 +54,12 @@ const StudentPage = () => {
         parentOccupation: data?.parent?.occupation,
         parentPhoneNumber: data?.parent?.phoneNumber,
         schoolName: data?.schoolDetails?.name,
-      }))
+      }));
       setRowData(rData);
     } catch (err) {
-      console.log("Error in get Student", err)
+      console.log("Error in get Student", err);
     }
-  }
+  };
 
   const getAllSchool = async () => {
     try {
@@ -67,25 +68,25 @@ const StudentPage = () => {
     } catch (err) {
       throw err;
     }
-  }
+  };
 
   useEffect(() => {
     getAllSchool();
-  }, [])
+  }, []);
 
   useEffect(() => {
-    getAllStudents()
-  }, [selectedSchool])
+    getAllStudents();
+  }, [selectedSchool]);
 
   const confirmDelete = async () => {
     try {
-      const res = await apiServices.deleteStudent(selectedStudentId)
+      const res = await apiServices.deleteStudent(selectedStudentId);
       setIsModalVisible(false);
-      getAllStudents()
+      getAllStudents();
     } catch (err) {
-      console.log("Error in delete", err)
+      console.log("Error in delete", err);
     }
-  }
+  };
   const columnDefs = [
     {
       headerName: "Name",
@@ -242,19 +243,20 @@ const extractFilenameFromHeaderString = (rawString) => {
       </div>
     </div>
 
-    <div className="ag-theme-quartz" style={{ height: "500px" }}>
-      <AgGridTable rowData={rowData} columnDefs={columnDefs} />
-    </div>
+      <div className="ag-theme-quartz" style={{ height: "500px" }}>
+        <AgGridTable rowData={rowData} columnDefs={columnDefs} />
+      </div>
 
-    {isModalVisible && (
-      <ConfirmationModal
-        title="Confirm Deletion"
-        message="Do you really want to delete this Teacher?"
-        onConfirm={confirmDelete}
-        onCancel={cancelDelete}
-      />
-    )}
-  </div>);
+      {isModalVisible && (
+        <ConfirmationModal
+          title="Confirm Deletion"
+          message="Do you really want to delete this Student?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
+    </div>
+  );
 };
 
 export default StudentPage;
