@@ -1,122 +1,158 @@
 /* General Styling */
-body, html {
-    font-family: 'Poppins', sans-serif;
-    color: hsl(220, 6%, 40%);
-    line-height: 1.6;
+body,
+html {
+  font-family: "Poppins", sans-serif;
+  color: hsl(220, 6%, 40%);
+  line-height: 1.6;
 }
 
 .student-page {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* Header Section */
 .student-page .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 /* Column Layout for Headings */
 .student-page .heading-container {
-    display: flex;
-    flex-direction: column; /* Stack the headings vertically */
+  display: flex;
+  flex-direction: column; /* Stack the headings vertically */
 }
 
 .student-page .student-heading {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: hsl(210, 25.3%, 32.5%);
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: hsl(210, 25.3%, 32.5%);
 }
 
 .student-page .subheading {
-    font-size: 1.1rem;
-    color: rgba(0, 7, 20, 0.62);
+  font-size: 1.1rem;
+  color: rgba(0, 7, 20, 0.62);
 }
 
 .create-new-button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .create-new-button:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 /* Table Section */
 .student-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    margin-top: 20px;
-    border-radius: 8px;
-    overflow: hidden;
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.student-table th, .student-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #e5e7eb;
+.student-table th,
+.student-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .student-table th {
-    background-color: #f9f9fb;
-    color: hsl(220, 6%, 40%);
-    font-weight: 600;
+  background-color: #f9f9fb;
+  color: hsl(220, 6%, 40%);
+  font-weight: 600;
 }
 
 .student-table td {
-    color: hsl(220, 6%, 40%);
+  color: hsl(220, 6%, 40%);
 }
 
 .student-table tr:last-child td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .student-table tr:hover {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 /* Action Buttons */
 .action-button {
-    background-color: #f9f9fb;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-    margin-left: 8px;
+  background-color: #f9f9fb;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  margin-left: 8px;
 }
 
 .action-button:hover {
-    background-color: #e9ecef;
+  background-color: #e9ecef;
 }
 
 .edit-button {
-    color: #007bff;
+  color: #007bff;
 }
 
 .delete-button {
-    color: #dc3545;
+  color: #dc3545;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .student-page {
-        padding: 10px;
-    }
+  .student-page {
+    padding: 10px;
+  }
 
-    .student-table th, .student-table td {
-        padding: 8px 10px;
-    }
+  .student-table th,
+  .student-table td {
+    padding: 8px 10px;
+  }
+}
+
+.download-button,
+.custom-file-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.download-button:hover,
+.custom-file-input:hover {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.upload-icon,
+.download-icon {
+  font-size: 20px;
+  color: #666;
+}
+
+.file-upload-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
 }

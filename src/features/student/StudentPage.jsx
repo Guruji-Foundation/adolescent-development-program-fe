@@ -8,7 +8,8 @@ import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/Conf
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
-import { ImCross, ImDownload2 } from "react-icons/im";
+import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im";
+import { MdFileDownload, MdFileUpload } from "react-icons/md";
 import axios from "axios";
 
 const StudentPage = () => {
@@ -16,6 +17,8 @@ const StudentPage = () => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [schoolList, setSchoolList] = useState([]);
   const [selectedSchool, setSelectedSchool] = useState(null);
+  const [file, setFile] = useState(null);
+  const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -87,6 +90,77 @@ const StudentPage = () => {
       console.log("Error in delete", err);
     }
   };
+
+  const handleDownloadTemplateClick = async () => {
+    // try {
+    //   const requestBody = {
+    //     schoolId: Number(selectedSchool),
+    //     projectId: Number(selectedProject),
+    //     topicIds: [Number(selectedTopics)],
+    //   };
+    //   // const response = await apiServices.downloadPerformanceTemplate(requestBody);
+    //   const response = await axios.post(
+    //     `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`,
+    //     requestBody, // Adjust the endpoint
+    //     {
+    //       responseType: "blob", // Ensure the response is treated as a binary blob
+    //     }
+    //   );
+    //   const contentDisposition = response.headers["content-disposition"] || "";
+    //   // const filename = extractFilenameFromHeaderString(contentDisposition);
+    //   console.log(typeof response.data);
+    //   // Trigger download
+    //   downloadCsvData(response.data, "Performace");
+    // } catch (error) {
+    //   throw error;
+    // }
+  };
+
+  const uploadFile = async (file) => {
+    // // Form the data
+    // const formData = new FormData();
+    // formData.append("file", file);
+    // try {
+    //   const response = await axios.post(
+    //     "https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/upload",
+    //     formData,
+    //     {
+    //       headers: {
+    //         "sec-ch-ua-platform": '"Windows"',
+    //         Referer:
+    //           "https://adolescent-development-program-be-new-245843264012.us-central1.run.app/swagger-ui/index.html",
+    //         "User-Agent":
+    //           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+    //         accept: "application/json",
+    //         "sec-ch-ua":
+    //           '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
+    //         "sec-ch-ua-mobile": "?0",
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     }
+    //   );
+    //   if (response?.status) {
+    //     setFile(null);
+    //     setShowUploadSuccessModal(true);
+    //   }
+    //   console.log("File uploaded successfully:", response.data);
+    // } catch (error) {
+    //   console.error("Error uploading file:", error.response || error);
+    // }
+  };
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleUpload = () => {
+    if (file) {
+      uploadFile(file);
+    } else {
+      alert("Please select a file to upload.");
+    }
+  };
+
   const columnDefs = [
     {
       headerName: "Name",
@@ -222,6 +296,37 @@ const StudentPage = () => {
           Create New
         </button>
       </div>
+
+      <div className="file-upload-container">
+        <label className="download-button" onClick={downloadStudentList}>
+          <MdFileDownload className="upload-icon" />
+          <span>Download Student Template</span>
+        </label>
+        <label htmlFor="fileInput" className="download-button">
+          <MdFileUpload className="upload-icon" />
+          <span>{file ? file.name : "Upload Student"}</span>
+        </label>
+        <input
+          id="fileInput"
+          type="file"
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+        />
+        {file && (
+          <div className="upload-container">
+            <label className="download-button" onClick={handleUpload}>
+              <MdFileUpload className="upload-icon" />
+              <span>Upload Student Data</span>
+            </label>
+          </div>
+        )}
+
+        <label className="download-button" onClick={downloadStudentList}>
+          <MdFileDownload className="upload-icon" />
+          <span>Download Student Data</span>
+        </label>
+      </div>
+
       <div className="header">
         <SelectInput
           label="Select School"
@@ -238,11 +343,6 @@ const StudentPage = () => {
             setSelectedSchool(null);
           }}
         />
-
-        <div onClick={downloadStudentList}>
-          <ImDownload2 size={20} />
-          &nbsp;DownLoad Student List
-        </div>
       </div>
 
       <div className="ag-theme-quartz" style={{ height: "500px" }}>
