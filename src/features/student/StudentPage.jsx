@@ -8,7 +8,8 @@ import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/Conf
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
-import { ImCross, ImDownload2 } from "react-icons/im"
+import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im";
+import { MdFileDownload, MdFileUpload } from "react-icons/md";
 import axios from "axios";
 
 const StudentPage = () => {
@@ -16,6 +17,8 @@ const StudentPage = () => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [schoolList, setSchoolList] = useState([]);
   const [selectedSchool, setSelectedSchool] = useState(null);
+  const [file, setFile] = useState(null);
+  const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -87,6 +90,77 @@ const StudentPage = () => {
       console.log("Error in delete", err);
     }
   };
+
+  const handleDownloadTemplateClick = async () => {
+    // try {
+    //   const requestBody = {
+    //     schoolId: Number(selectedSchool),
+    //     projectId: Number(selectedProject),
+    //     topicIds: [Number(selectedTopics)],
+    //   };
+    //   // const response = await apiServices.downloadPerformanceTemplate(requestBody);
+    //   const response = await axios.post(
+    //     `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`,
+    //     requestBody, // Adjust the endpoint
+    //     {
+    //       responseType: "blob", // Ensure the response is treated as a binary blob
+    //     }
+    //   );
+    //   const contentDisposition = response.headers["content-disposition"] || "";
+    //   // const filename = extractFilenameFromHeaderString(contentDisposition);
+    //   console.log(typeof response.data);
+    //   // Trigger download
+    //   downloadCsvData(response.data, "Performace");
+    // } catch (error) {
+    //   throw error;
+    // }
+  };
+
+  const uploadFile = async (file) => {
+    // // Form the data
+    // const formData = new FormData();
+    // formData.append("file", file);
+    // try {
+    //   const response = await axios.post(
+    //     "https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/upload",
+    //     formData,
+    //     {
+    //       headers: {
+    //         "sec-ch-ua-platform": '"Windows"',
+    //         Referer:
+    //           "https://adolescent-development-program-be-new-245843264012.us-central1.run.app/swagger-ui/index.html",
+    //         "User-Agent":
+    //           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+    //         accept: "application/json",
+    //         "sec-ch-ua":
+    //           '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
+    //         "sec-ch-ua-mobile": "?0",
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     }
+    //   );
+    //   if (response?.status) {
+    //     setFile(null);
+    //     setShowUploadSuccessModal(true);
+    //   }
+    //   console.log("File uploaded successfully:", response.data);
+    // } catch (error) {
+    //   console.error("Error uploading file:", error.response || error);
+    // }
+  };
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleUpload = () => {
+    if (file) {
+      uploadFile(file);
+    } else {
+      alert("Please select a file to upload.");
+    }
+  };
+
   const columnDefs = [
     {
       headerName: "Name",
@@ -165,83 +239,111 @@ const StudentPage = () => {
     },
   ];
 
-
   const downloadCsvData = (data, filename) => {
     const fileBlob = new Blob([data], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
     const fileUrl = window.URL.createObjectURL(fileBlob);
-    const link = document.createElement('a');
-  
+    const link = document.createElement("a");
+
     link.href = fileUrl;
-    link.setAttribute('download', filename);
+    link.setAttribute("download", filename);
     document.body.appendChild(link);
-  
+
     link.click();
     document.body.removeChild(link);
   };
-  
- 
-const extractFilenameFromHeaderString = (rawString) => {
-  if (!rawString) return 'download.xlsx'; // Default filename if header is missing
 
-  const filenameMatch = rawString.match(/filename="([^"]+)"/);
-  return filenameMatch ? filenameMatch[1] : 'download.xlsx';
-};
-  
+  const extractFilenameFromHeaderString = (rawString) => {
+    if (!rawString) return "download.xlsx"; // Default filename if header is missing
+
+    const filenameMatch = rawString.match(/filename="([^"]+)"/);
+    return filenameMatch ? filenameMatch[1] : "download.xlsx";
+  };
+
   const downloadStudentList = async () => {
     try {
       // Make an API call to fetch CSV data
       const response = await axios.get(
         `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/download?schoolId=${selectedSchool}`, // Adjust the endpoint
         {
-          responseType: 'blob', // Ensure the response is treated as a binary blob
+          responseType: "blob", // Ensure the response is treated as a binary blob
         }
       );
-  
+
       // Extract filename from headers
-      const contentDisposition = response.headers['content-disposition'] || '';
+      const contentDisposition = response.headers["content-disposition"] || "";
       const filename = extractFilenameFromHeaderString(contentDisposition);
-  
+
       // Trigger download
       downloadCsvData(response.data, filename);
     } catch (err) {
-      console.error('Error downloading student list:', err.message || err);
+      console.error("Error downloading student list:", err.message || err);
       throw err; // Optionally re-throw the error for higher-level handling
     }
   };
 
-  return (<div className="project-page">
-    <div className="header">
-      <div className="heading-container">
-        <h2 className="project-heading">Student</h2>
-        <p className="subheading">List of Students</p>
+  return (
+    <div className="project-page">
+      <div className="header">
+        <div className="heading-container">
+          <h2 className="project-heading">Student</h2>
+        </div>
+        <button
+          className="g-button create-new-button"
+          onClick={handelAddStudent}
+        >
+          Create New
+        </button>
       </div>
-      <button
-        className="g-button create-new-button"
-        onClick={handelAddStudent}
-      >
-        Create New
-      </button>
-    </div>
-    <div className='header'>
-      <SelectInput
-        label="Select School"
-        value={selectedSchool || ""}
-        options={schoolList}
-        onChange={(e) => { setSelectedSchool(e.target.value) }}
-      />
 
-      <ImCross className="action-button delete-button"
-        onClick={() => {
-          setSelectedSchool(null)
-        }} />
+      <div className="file-upload-container">
+        <label className="download-button" onClick={downloadStudentList}>
+          <MdFileDownload className="upload-icon" />
+          <span>Download Student Template</span>
+        </label>
+        <label htmlFor="fileInput" className="download-button">
+          <MdFileUpload className="upload-icon" />
+          <span>{file ? file.name : "Upload Student"}</span>
+        </label>
+        <input
+          id="fileInput"
+          type="file"
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+        />
+        {file && (
+          <div className="upload-container">
+            <label className="download-button" onClick={handleUpload}>
+              <MdFileUpload className="upload-icon" />
+              <span>Upload Student Data</span>
+            </label>
+          </div>
+        )}
 
-      <div onClick={downloadStudentList}>
-        <ImDownload2 size={20} />
-        &nbsp;DownLoad Student List
+        <label className="download-button" onClick={downloadStudentList}>
+          <MdFileDownload className="upload-icon" />
+          <span>Download Student Data</span>
+        </label>
       </div>
-    </div>
+
+      <div className="header">
+        <SelectInput
+          label="Select School"
+          value={selectedSchool || ""}
+          options={schoolList}
+          onChange={(e) => {
+            setSelectedSchool(e.target.value);
+          }}
+        />
+
+        <ImCross
+          className="action-button delete-button"
+          onClick={() => {
+            setSelectedSchool(null);
+          }}
+        />
+      </div>
 
       <div className="ag-theme-quartz" style={{ height: "500px" }}>
         <AgGridTable rowData={rowData} columnDefs={columnDefs} />

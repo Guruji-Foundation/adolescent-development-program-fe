@@ -168,7 +168,6 @@ function SchoolPage() {
       <div className="header">
         <div className="heading-container">
           <h2 className="school-heading">School</h2>
-          <p className="subheading">List of Schools</p>
         </div>
         <button
           className="g-button create-new-button"
