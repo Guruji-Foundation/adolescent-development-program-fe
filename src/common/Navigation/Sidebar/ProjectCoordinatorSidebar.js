@@ -118,7 +118,7 @@ const ProjectCoordinatorSidebar = () => {
               <Link
                 to="/project-assign"
                 className={`menu-item ${
-                  isActive("/projects-assign") ? "active" : ""
+                  isActive("/project-assign") ? "active" : ""
                 }`}
               >
                 <AiOutlineUserAdd className="icon" /> {/* Projects icon */}
