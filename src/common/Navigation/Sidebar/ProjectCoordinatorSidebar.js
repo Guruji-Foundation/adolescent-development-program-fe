@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import "./Sidebar.css"; // Import custom styles
-// import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
+import Tooltip from "../../FeedbackComponents/Tooltip/ToolTip";
+
+import "./Sidebar.css";
 import { MdCastForEducation, MdAssignment, MdTopic } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
@@ -14,14 +15,14 @@ import {
   FaChartBar,
   FaCentercode,
 } from "react-icons/fa"; // Import icons from react-icons
-import ToolTip from "../../FeedbackComponents/Tooltip/ToolTip";
 import { useAuth } from "../../../context/AuthContext";
 
-const Sidebar: React.FC = () => {
+const ProjectCoordinatorSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isProjectsSubmenuOpen, setIsProjectsSubmenuOpen] = useState(false);
   const location = useLocation(); // Get current location
   const { user } = useAuth();
+
   const toggleProjectsSubmenu = () => {
     setIsProjectsSubmenuOpen(!isProjectsSubmenuOpen);
   };
@@ -30,18 +31,17 @@ const Sidebar: React.FC = () => {
     setIsCollapsed(!isCollapsed);
   };
 
-  // Helper function to check if the route is active
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path) => location.pathname === path;
 
   const returnFun = () => {
-    if (user?.email) {
+    if (user?.email && user?.role === "project-coordinator") {
       return (
         <div className={isCollapsed ? "sidebar collapsed" : "sidebar"}>
           {/* User Info and Button Wrapper */}
           <div className="user-info-wrapper">
             {/* User Info Section */}
             <div className="user-info">
-              <p>Welcome!</p>
+              <p>Welcome Project Coordinator</p>
               <h1>{user?.name}</h1>
             </div>
 
@@ -92,17 +92,6 @@ const Sidebar: React.FC = () => {
               >
                 <FaCentercode className="icon" />
                 {!isCollapsed && <span>School coordinator</span>}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/project-coordinator"
-                className={`menu-item ${
-                  isActive("/project-coordinator") ? "active" : ""
-                }`}
-              >
-                <FaCentercode className="icon" />
-                {!isCollapsed && <span>Project coordinator</span>}
               </Link>
             </li>
 
@@ -158,4 +147,4 @@ const Sidebar: React.FC = () => {
   return returnFun();
 };
 
-export default Sidebar;
+export default ProjectCoordinatorSidebar;
