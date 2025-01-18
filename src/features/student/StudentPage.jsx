@@ -92,65 +92,70 @@ const StudentPage = () => {
   };
 
   const handleDownloadTemplateClick = async () => {
-    // try {
-    //   const requestBody = {
-    //     schoolId: Number(selectedSchool),
-    //     projectId: Number(selectedProject),
-    //     topicIds: [Number(selectedTopics)],
-    //   };
-    //   // const response = await apiServices.downloadPerformanceTemplate(requestBody);
-    //   const response = await axios.post(
-    //     `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`,
-    //     requestBody, // Adjust the endpoint
-    //     {
-    //       responseType: "blob", // Ensure the response is treated as a binary blob
-    //     }
-    //   );
-    //   const contentDisposition = response.headers["content-disposition"] || "";
-    //   // const filename = extractFilenameFromHeaderString(contentDisposition);
-    //   console.log(typeof response.data);
-    //   // Trigger download
-    //   downloadCsvData(response.data, "Performace");
-    // } catch (error) {
-    //   throw error;
-    // }
+    try {
+      const response = await axios.get(
+        `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/download-template`,
+        {
+          responseType: "blob",
+          headers: {
+            "Content-Type": "application/json",
+            // Add any authentication headers if needed
+            // 'Authorization': 'Bearer your-token'
+          },
+          // Removed withCredentials: true since it's causing CORS issues
+        }
+      );
+
+      downloadCsvData(response.data, "student_template.xlsx");
+    } catch (error) {
+      console.error("Error downloading template:", error);
+      // Add proper error handling here
+    }
   };
 
   const uploadFile = async (file) => {
-    // // Form the data
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // try {
-    //   const response = await axios.post(
-    //     "https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/upload",
-    //     formData,
-    //     {
-    //       headers: {
-    //         "sec-ch-ua-platform": '"Windows"',
-    //         Referer:
-    //           "https://adolescent-development-program-be-new-245843264012.us-central1.run.app/swagger-ui/index.html",
-    //         "User-Agent":
-    //           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-    //         accept: "application/json",
-    //         "sec-ch-ua":
-    //           '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
-    //         "sec-ch-ua-mobile": "?0",
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     }
-    //   );
-    //   if (response?.status) {
-    //     setFile(null);
-    //     setShowUploadSuccessModal(true);
-    //   }
-    //   console.log("File uploaded successfully:", response.data);
-    // } catch (error) {
-    //   console.error("Error uploading file:", error.response || error);
-    // }
+    if (!selectedSchool) {
+      alert("Please select a school");
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const response = await axios.post(
+        `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/upload?schoolId=${selectedSchool}`,
+        formData,
+        {
+          headers: {
+            "sec-ch-ua-platform": '"Windows"',
+            Referer:
+              "https://adolescent-development-program-be-new-245843264012.us-central1.run.app/swagger-ui/index.html",
+            "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+            accept: "application/json",
+            "sec-ch-ua":
+              '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
+            "sec-ch-ua-mobile": "?0",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (response?.status) {
+        setFile(null);
+        setShowUploadSuccessModal(true);
+        await getAllStudents();
+      }
+      console.log("File uploaded successfully:", response.data);
+    } catch (error) {
+      console.error("Error uploading file:", error.response || error);
+    }
   };
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
+    // Reset input value to allow selecting the same file again
+    event.target.value = "";
   };
 
   const handleUpload = () => {
@@ -195,7 +200,7 @@ const StudentPage = () => {
       field: "name",
       minWidth: 180,
       flex: 1.2,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="name-cell">
           <span>{params.value}</span>
         </div>
@@ -206,7 +211,7 @@ const StudentPage = () => {
       field: "schoolName",
       minWidth: 180,
       flex: 1.2,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="school-cell">
           <span className="school-badge">{params.value}</span>
         </div>
@@ -217,12 +222,12 @@ const StudentPage = () => {
       field: "dob",
       minWidth: 130,
       flex: 1,
-      cellRenderer: params => {
+      cellRenderer: (params) => {
         const date = new Date(params.value);
-        return date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
         });
       },
     },
@@ -231,7 +236,7 @@ const StudentPage = () => {
       field: "email",
       minWidth: 200,
       flex: 1.5,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="email-cell">
           <span>{params.value}</span>
         </div>
@@ -242,7 +247,7 @@ const StudentPage = () => {
       field: "phoneNumber",
       minWidth: 150,
       flex: 1,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="phone-cell">
           <span>{params.value}</span>
         </div>
@@ -253,7 +258,7 @@ const StudentPage = () => {
       field: "address",
       minWidth: 200,
       flex: 1.5,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="address-cell" title={params.value}>
           {params.value}
         </div>
@@ -284,7 +289,7 @@ const StudentPage = () => {
       sortable: false,
       minWidth: 120,
       maxWidth: 120,
-      pinned: 'right',
+      pinned: "right",
       suppressSizeToFit: true,
     },
   ];
@@ -312,10 +317,16 @@ const StudentPage = () => {
   };
 
   const downloadStudentList = async () => {
+    if (!selectedSchool) {
+      alert("Please select a school");
+      return;
+    }
+    // console.log("Hello");
     try {
       // Make an API call to fetch CSV data
+      let url = `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/download?schoolId=${selectedSchool}`;
       const response = await axios.get(
-        `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/download?schoolId=${selectedSchool}`, // Adjust the endpoint
+        url, // Adjust the endpoint
         {
           responseType: "blob", // Ensure the response is treated as a binary blob
         }
@@ -335,53 +346,98 @@ const StudentPage = () => {
 
   const renderFileUploadSection = () => (
     <div className="file-upload-container">
-      <div className="school-selector-group">
-        <div className="select-wrapper">
-          <SelectInput
-            label="Select School"
-            value={selectedSchool || ""}
-            options={schoolList}
-            onChange={(e) => setSelectedSchool(e.target.value)}
-            placeholder="Choose a school..."
-          />
+      <div className="control-group">
+        <div className="school-selector-group">
+          <div className="select-wrapper">
+            <SelectInput
+              label="Select School"
+              value={selectedSchool || ""}
+              options={schoolList}
+              onChange={(e) => setSelectedSchool(e.target.value)}
+              placeholder="Select a school"
+            />
+          </div>
+          {selectedSchool && (
+            <button
+              className="clear-school-button"
+              onClick={() => setSelectedSchool(null)}
+              title="Clear selection"
+            >
+              <ImCross className="clear-icon" />
+            </button>
+          )}
         </div>
-        {selectedSchool && (
-          <button 
-            className="clear-school-button" 
-            onClick={() => setSelectedSchool(null)}
-            title="Clear selection"
-          >
-            <ImCross className="clear-icon" />
-          </button>
-        )}
-      </div>
 
-      <div className="buttons-group">
-        <label className="download-button" onClick={downloadStudentList} title="Download Template">
-          <MdFileDownload className="upload-icon" />
-          <span>Download Student Template</span>
-        </label>
-        <label htmlFor="fileInput" className="download-button" title="Select File">
-          <MdFileUpload className="upload-icon" />
-          <span>{file ? file.name : "Upload Student"}</span>
-        </label>
-        <input
-          id="fileInput"
-          type="file"
-          accept=".xlsx,.xls,.csv"
-          onChange={handleFileChange}
-          style={{ display: "none" }}
-        />
-        {file && (
-          <label className="download-button" onClick={handleUpload} title="Upload Data">
-            <MdFileUpload className="upload-icon" />
-            <span>Upload Student Data</span>
-          </label>
-        )}
-        <label className="download-button" onClick={downloadStudentList} title="Download Data">
-          <MdFileDownload className="upload-icon" />
-          <span>Download Student Data</span>
-        </label>
+        <div className="buttons-group">
+          <div className="button-wrapper">
+            <label
+              className="download-button"
+              onClick={handleDownloadTemplateClick}
+              title="Download Template"
+            >
+              <MdFileDownload className="upload-icon" />
+              <span>Download Student Template</span>
+            </label>
+          </div>
+
+          <div className="button-wrapper">
+            <div
+              className={`unified-upload-container ${file ? "has-file" : ""}`}
+            >
+              {!file ? (
+                <>
+                  <label
+                    htmlFor="fileInput"
+                    className="upload-button"
+                    title="Select File"
+                  >
+                    <MdFileUpload className="upload-icon" />
+                    <span>Upload Student</span>
+                  </label>
+                  <input
+                    id="fileInput"
+                    type="file"
+                    accept=".xlsx,.xls,.csv"
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                  />
+                </>
+              ) : (
+                <>
+                  <button
+                    className="upload-button upload-action"
+                    onClick={handleUpload}
+                    title="Upload Data"
+                  >
+                    <MdFileUpload className="upload-icon" />
+                    <span>Upload</span>
+                  </button>
+                  <div className="selected-file-info">
+                    <span className="file-name">{file.name}</span>
+                    <button
+                      className="remove-file"
+                      onClick={() => setFile(null)}
+                      title="Remove file"
+                    >
+                      <ImCross className="cancel-icon" />
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="button-wrapper">
+            <label
+              className="download-button"
+              onClick={downloadStudentList}
+              title="Download Data"
+            >
+              <MdFileDownload className="upload-icon" />
+              <span>Download Student Data</span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -403,9 +459,12 @@ const StudentPage = () => {
 
       {renderFileUploadSection()}
 
-      <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
-        <AgGridTable 
-          rowData={rowData} 
+      <div
+        className="ag-theme-quartz"
+        style={{ height: "500px", width: "100%" }}
+      >
+        <AgGridTable
+          rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           pagination={true}
