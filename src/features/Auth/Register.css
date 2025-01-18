@@ -1,89 +1,157 @@
-/* Style for the password container */
-.password-container {
-  position: relative;
+/* Form */
+form {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
+  max-width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-/* Style for input fields */
+/* Form Heading */
+.form-heading {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Input Fields */
 .form-input {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
+  padding: 12px 15px;
+  border: 1px solid #dde1e7;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
   outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.form-input.error {
-  border-color: #ff4d4f; /* Red border for errors */
 }
 
 .form-input:focus {
-  border-color: #007bff; /* Blue border on focus */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
 }
 
-/* Style for submit button */
-.submit-btn {
-  width: 100%;
-  padding: 10px;
-  margin-top: 20px;
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+.form-input.error {
+  border-color: #e74c3c;
 }
 
-.submit-btn:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+/* Password Container */
+.password-container {
+  position: relative;
 }
 
-.submit-btn:active {
-  transform: scale(0.98); /* Slightly smaller on click */
-}
-
-/* Style for password visibility toggle button */
+/* Show Password Button */
 .show-password-btn {
   position: absolute;
-  top: 50%;
   right: 10px;
+  top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: #007bff;
+  color: #666;
   cursor: pointer;
-  font-size: 14px;
-  padding: 0;
+  font-size: 13px;
+  padding: 5px;
 }
 
 .show-password-btn:hover {
-  color: #0056b3; /* Darker blue on hover */
+  color: #4a90e2;
 }
 
-/* Center the "Create an Account?" section */
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: #357abd;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+/* Error Messages */
+.error-text {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.general-error {
+  background: #fdeaea;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Sign In Link */
 .sign-in-link {
-  text-align: center; /* Center align the text */
-  margin-top: 15px; /* Add some space above */
+  text-align: center;
+  margin-top: 20px;
 }
 
 .sign-in-link p {
-  font-size: 14px; /* Adjust font size */
-  color: #555; /* Subtle color for the text */
+  color: #666;
+  font-size: 14px;
 }
 
-.sign-in-link .link {
-  color: #007bff;
+.link {
+  color: #4a90e2;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 500;
 }
 
-.sign-in-link .link:hover {
-  text-decoration: underline; /* Underline on hover */
-  color: #0056b3; /* Darker blue on hover */
+.link:hover {
+  text-decoration: underline;
+}
+
+/* Loading Spinner Overlay */
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  form {
+    padding: 20px;
+    width: 90%;
+  }
+  
+  .form-heading {
+    font-size: 24px;
+  }
+  
+  .submit-btn {
+    font-size: 14px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
 }

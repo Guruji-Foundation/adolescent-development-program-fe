@@ -23,12 +23,6 @@ const Navbar: React.FC = () => {
         </div>
 
         <div className="navbar-right">
-          <div className="navbar-actions">
-            <button className="icon-button" title="Notifications">
-              <BsBell />
-              <span className="notification-badge">2</span>
-            </button>
-          </div>
           
           <div className="user-profile">
             {user?.email ? (

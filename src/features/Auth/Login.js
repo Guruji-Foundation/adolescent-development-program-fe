@@ -97,57 +97,47 @@ const Login = () => {
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <h2 className="form-heading">Login</h2>
-        {errors && <p className="error-text general-error">{errors}</p>}
+    <form onSubmit={handleSubmit}>
+      <h2 className="form-heading">Login</h2>
+      {errors && <p className="error-text general-error">{errors}</p>}
 
-        <div className="form-group">
+      <div className="form-group">
+        <input
+          type="email"
+          name="email"
+          placeholder="E-mail Address"
+          value={formData?.email}
+          onChange={handleInputChange}
+          className={`form-input ${errors?.email ? "error" : ""}`}
+        />
+        {errors?.email && <p className="error-text">{errors?.email}</p>}
+      </div>
+      <div className="form-group">
+        <div className="password-container">
           <input
-            type="email"
-            name="email"
-            placeholder="E-mail Address"
-            value={formData?.email}
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            value={formData?.password}
             onChange={handleInputChange}
-            className={`form-input ${errors?.email ? "error" : ""}`}
+            className={`form-input ${errors?.password ? "error" : ""}`}
           />
-          {errors?.email && <p className="error-text">{errors?.email}</p>}
+          <button
+            type="button"
+            className="show-password-btn"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
         </div>
-        <div className="form-group">
-          <div className="password-container">
-            <input
-              type={showPassword ? "text" : "password"} // Toggle password visibility
-              name="password"
-              placeholder="Password"
-              value={formData?.password}
-              onChange={handleInputChange}
-              className={`form-input ${errors?.password ? "error" : ""}`}
-            />
-            <button
-              type="button"
-              className="show-password-btn"
-              onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
-          </div>
-          {errors?.password && <p className="error-text">{errors?.password}</p>}
-        </div>
+        {errors?.password && <p className="error-text">{errors?.password}</p>}
+      </div>
 
-        <button type="submit" className="submit-btn">
-          Login
-        </button>
-        {/* <div className="sign-in-link">
-          <p>
-            Create an Account?{" "}
-            <Link to="/register" className="link">
-              Register
-            </Link>
-          </p>
-        </div> */}
-      </form>
+      <button type="submit" className="submit-btn">
+        Login
+      </button>
       {loadingModel && <LoadingSpinner />}
-    </div>
+    </form>
   );
 };
 
