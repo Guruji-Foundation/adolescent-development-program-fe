@@ -147,7 +147,6 @@ function SchoolCordinator() {
       <div className="header">
         <div className="heading-container">
           <h2 className="project-heading">School Coordinator</h2>
-          <p className="subheading">List of School Coordinators</p>
         </div>
         <button
           className="g-button create-new-button"

@@ -151,7 +151,6 @@ const TeacherPage = () => {
       <div className="header">
         <div className="heading-container">
           <h2 className="teacher-heading">Teachers</h2>
-          <p className="subheading">List of Teachers</p>
         </div>
         <button
           onClick={handleCreateNew}

@@ -11,7 +11,7 @@ import useError from "../../hooks/useError";
 function ProjectCordinator() {
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
   const [selectedId, setSelectedId] = useState(0);
-  const [rowData, setRowData] = useState([])
+  const [rowData, setRowData] = useState([]);
   const handleEdit = (id) => {
     navigate(`/edit-coordinator/${id}`);
   };
@@ -85,7 +85,8 @@ function ProjectCordinator() {
   const getCoOrdinatorList = async () => {
     try {
       setLoading(true);
-      const data = (await apiServices.getProjectCoOrdinatorList())?.data?.data?.projectCoordinators;
+      const data = (await apiServices.getProjectCoOrdinatorList())?.data?.data
+        ?.projectCoordinators;
       const rowData = data?.map((item) => ({
         id: item?.id,
         name: item?.name,
@@ -113,13 +114,11 @@ function ProjectCordinator() {
   const confirmDelete = async () => {
     try {
       if (selectedId !== 0) {
-        const res = await apiServices.deleteCoOrdinator(selectedId)
+        const res = await apiServices.deleteCoOrdinator(selectedId);
         if (res?.data?.status) {
           getCoOrdinatorList();
-        }
-        else {
+        } else {
           setError(res?.data?.message);
-
         }
         setIsModalVisible(false);
       }
@@ -140,15 +139,14 @@ function ProjectCordinator() {
   }
 
   const handleAddCoordinator = () => {
-    navigate("/add-coordinator")
-  }
+    navigate("/add-coordinator");
+  };
 
   return (
     <div className="project-page">
       <div className="header">
         <div className="heading-container">
           <h2 className="project-heading">Project Coordinator</h2>
-          <p className="subheading">List of Project Coordinators</p>
         </div>
         <button
           className="g-button create-new-button"
@@ -159,10 +157,7 @@ function ProjectCordinator() {
       </div>
 
       <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable
-          rowData={rowData}
-          columnDefs={columnDefs}
-        />
+        <AgGridTable rowData={rowData} columnDefs={columnDefs} />
       </div>
 
       {isModalVisible && (
@@ -174,7 +169,7 @@ function ProjectCordinator() {
         />
       )}
     </div>
-  )
+  );
 }
 
-export default ProjectCordinator
+export default ProjectCordinator;
