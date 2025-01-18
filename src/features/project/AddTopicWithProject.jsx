@@ -69,6 +69,7 @@ function AddTopicWithProject({
                                 value={topicData.description}
                                 onChange={handleInputChange}
                                 required
+                                isTextArea
                             />
                         </div>
                         <div className="modal-actions">

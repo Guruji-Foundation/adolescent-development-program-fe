@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react'
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import apiServices from "../../common/ServiCeProvider/Services";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { ImCross } from "react-icons/im"
+import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im"
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import useError from "../../hooks/useError";
 import SelectInput from "../../common/FormInput/SelectInput";
 import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
+import axios from 'axios';
+import "../../CSS/Main.css"
 
 function Performance() {
     const navigate = useNavigate();
@@ -29,6 +31,9 @@ function Performance() {
     const [rowDataWithTpoic, setRowDataWithTopic] = useState([])
     const [editedData, setEditedData] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [selectedTopics, setSelectedTopics] = useState(null);
+    const [file, setFile] = useState(null);
+    const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
 
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
@@ -287,7 +292,6 @@ function Performance() {
         return { studentPerformances };
     };
 
-
     const saveAllPerformances = async () => {
         try {
             const postData = prepareDataForPost();
@@ -306,12 +310,108 @@ function Performance() {
             throw err;
         }
     }
+
+
+    const downloadCsvData = (data, filename) => {
+        const fileBlob = new Blob([data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        const fileUrl = window.URL.createObjectURL(fileBlob);
+        const link = document.createElement('a');
+
+        link.href = fileUrl;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+
+        link.click();
+        document.body.removeChild(link);
+    };
+
+
+    const extractFilenameFromHeaderString = (rawString) => {
+        if (!rawString) return 'download.xlsx'; // Default filename if header is missing
+
+        const filenameMatch = rawString.match(/filename="([^"]+)"/);
+        return filenameMatch ? filenameMatch[1] : 'download.xlsx';
+    };
+
+    const handleDownloadTemplateClick = async () => {
+        try {
+            const requestBody = {
+                schoolId: Number(selectedSchool),
+                projectId: Number(selectedProject),
+                topicIds: [
+                    Number(selectedTopics)
+                ]
+            }
+            // const response = await apiServices.downloadPerformanceTemplate(requestBody);
+            const response = await axios.post(
+                `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`, requestBody, // Adjust the endpoint
+                {
+                    responseType: 'blob', // Ensure the response is treated as a binary blob
+                }
+            );
+            const contentDisposition = response.headers['content-disposition'] || '';
+            // const filename = extractFilenameFromHeaderString(contentDisposition);
+            console.log(typeof response.data);
+            // Trigger download
+            downloadCsvData(response.data, "Performace");
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    const uploadFile = async (file) => {
+        // Form the data
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await axios.post(
+                'https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/upload',
+                formData,
+                {
+                    headers: {
+                        'sec-ch-ua-platform': '"Windows"',
+                        'Referer': 'https://adolescent-development-program-be-new-245843264012.us-central1.run.app/swagger-ui/index.html',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
+                        'accept': 'application/json',
+                        'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
+                        'sec-ch-ua-mobile': '?0',
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (response?.status) {
+                setFile(null);
+                setShowUploadSuccessModal(true)
+            }
+            console.log('File uploaded successfully:', response.data);
+        } catch (error) {
+            console.error('Error uploading file:', error.response || error);
+        }
+    };
+
+
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+    };
+
+    const handleUpload = () => {
+        if (file) {
+            uploadFile(file);
+        } else {
+            alert('Please select a file to upload.');
+        }
+    };
+
     return (
         <div className="project-page">
             <div className="header">
                 <div className="heading-container">
                     <h2 className="project-heading">Performance</h2>
-                    <p className="subheading">Performance List of Students</p>
+                    {/* <p className="subheading">Performance List of Students</p> */}
                 </div>
                 <button
                     className="g-button create-new-button"
@@ -320,8 +420,41 @@ function Performance() {
                     Save
                 </button>
             </div>
+            {/* <div>
+                <input type="file" onChange={handleFileChange} />
+                {file && (<><ImUpload2 onClick={handleUpload} /> Upload Marks</>)}
+            </div> */}
+            <div className="file-upload-container">
+                <label htmlFor="fileInput" className="custom-file-input">
+                    {file ? file.name : "Upload marks/performance"}
+                </label>
+                <input
+                    id="fileInput"
+                    type="file"
+                    onChange={handleFileChange}
+                    style={{ display: "none" }} // Hide the default file input
+                />
+                {file && (
+                    <div className="upload-container">
+                        <div>
+                            <ImUpload2 className="upload-icon" onClick={handleUpload} />
+                        </div>
+                        <div>
+                            <span onClick={handleUpload}>Upload Marks</span>
 
-            <div className='header'>
+                        </div>
+                    </div>
+                )}
+            </div>
+            {
+                selectedTopics && selectedSchool && selectedProject && (<div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div></div>
+                    <div onClick={handleDownloadTemplateClick}>
+                        <ImDownload2 /> Download Template
+                    </div>
+                </div>)
+            }
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                 <SelectInput
                     label="Select Project"
                     value={selectedProject || ""}
@@ -334,9 +467,16 @@ function Performance() {
                     options={schoolList}
                     onChange={(e) => { setSelectedSchool(e.target.value) }}
                 />
+                <SelectInput
+                    label="Select Topic"
+                    value={selectedTopics || ""}
+                    options={topicData}
+                    onChange={(e) => { setSelectedTopics(e.target.value) }}
+                />
                 <ImCross className="action-button delete-button" onClick={() => {
                     setSelectedProject(null);
                     setSelectedSchool(null);
+                    setSelectedTopics(null);
                     getTopicData(null);
                 }} />
             </div>
@@ -347,7 +487,7 @@ function Performance() {
                 // </div>
                 <>
                     <h2 className="project-heading">Please select relevant options to view Performance of Student</h2>
-                
+
                 </>
             ) : (
                 <div>
@@ -369,7 +509,10 @@ function Performance() {
                     onCancel={cancelDelete}
                 />
             )}
-            {showModal && <SuccessModal data={{description:"Performance Updated Successfully!!"}} onClose={()=>{setShowModal(false)}} />}
+            {showModal && <SuccessModal data={{ description: "Performance Updated Successfully!!" }} onClose={() => { setShowModal(false) }} />}
+
+            {showUploadSuccessModal && <SuccessModal data={{ description: "Performance Updated Successfully!!" }} onClose={() => { setShowUploadSuccessModal(false) }} />}
+
         </div>
     )
 }

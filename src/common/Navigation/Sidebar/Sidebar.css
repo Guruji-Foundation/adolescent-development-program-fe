@@ -14,14 +14,17 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
-  position: fixed;
+  /* position: fixed; */
   transition: width 0.3s ease;
   /* box-shadow: 2px 0 5px rgba(0,0,0,0.1); */
   border-right: 1px solid #3d78d8; /* Faint blue right border */
+  overflow: visible; 
+  position: relative;
 }
 
 .sidebar.collapsed {
   width: 80px;
+  overflow: visible; 
 }
 
 /* Toggle Button */
@@ -173,4 +176,11 @@
 /* Adjust icon color for active state */
 .sidebar-menu li a.active i {
   color: hsl(216, 71%, 23%); /* Icon color for active state */
+}
+
+.icon-wrapper{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }

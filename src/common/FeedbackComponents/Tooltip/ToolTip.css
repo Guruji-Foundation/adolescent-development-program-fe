@@ -1,34 +1,17 @@
 /* Tooltip.css */
-.tooltip {
-  position: relative;
+.tooltip-trigger {
   display: inline-block;
+  position: relative;
 }
 
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: auto; /* Allow the width to adjust to content */
-  max-width: 120px; /* Maximum width for longer texts */
-  background-color: rgba(0, 0, 0, 0.85); /* Slightly darker background */
-  color: #ffffff; /* White text */
-  text-align: center;
-  border-radius: 4px; /* Rounded corners */
-  padding: 8px; /* Padding for a neat look */
+.tooltiptext {
   position: absolute;
-  z-index: 1;
-  bottom: calc(100% + 5px); /* Position above the icon with a small gap */
-  left: 50%;
-  transform: translateX(-50%); /* Center horizontally */
-  opacity: 0; /* Hidden by default */
-  transition: opacity 0.3s ease; /* Smooth transition */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif; /* Font stack */
-  font-size: 12px; /* Font size */
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* Shadow effect */
-  pointer-events: none; /* Prevent interaction when hidden */
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible; /* Show on hover */
-  opacity: 1; /* Make visible */
-  pointer-events: auto; /* Enable interaction when shown */
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 12px;
+  z-index: 1000;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }

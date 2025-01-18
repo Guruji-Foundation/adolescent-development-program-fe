@@ -32,3 +32,62 @@
   background-color: #c91515;
 }
 
+.file-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: -20px;
+  margin-bottom: 10px;
+}
+
+/* Custom file input label */
+.custom-file-input {
+  display: inline-block;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #999;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px; /* Adjust based on your layout */
+}
+
+.custom-file-input:hover {
+  border-color: #aaa;
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+/* Style for the upload icon */
+.upload-icon {
+  font-size: 20px;
+  color: #2c2e2c; /* Orange color */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-icon:hover {
+  color: #e64a19; /* Darker orange */
+  transform: scale(1.1);
+}
+
+.upload-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  font-weight: 600;
+  gap:10px
+}
+
+.upload-container span:hover {
+  text-decoration: underline;
+}
