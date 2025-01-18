@@ -36,6 +36,8 @@ function Performance() {
     const [selectedTopics, setSelectedTopics] = useState(null);
     const [file, setFile] = useState(null);
     const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadError, setUploadError] = useState(null);
 
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
@@ -364,7 +366,9 @@ function Performance() {
     }
 
     const uploadFile = async (file) => {
-        // Form the data
+        setIsUploading(true);
+        setUploadError(null);
+        
         const formData = new FormData();
         formData.append('file', file);
 
@@ -374,30 +378,35 @@ function Performance() {
                 formData,
                 {
                     headers: {
-                        'sec-ch-ua-platform': '"Windows"',
-                        'Referer': 'https://adolescent-development-program-be-new-245843264012.us-central1.run.app/swagger-ui/index.html',
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
-                        'accept': 'application/json',
-                        'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
-                        'sec-ch-ua-mobile': '?0',
                         'Content-Type': 'multipart/form-data',
                     },
                 }
             );
 
-            if (response?.status) {
+            if (response?.data?.status) {
                 setFile(null);
-                setShowUploadSuccessModal(true)
+                setShowUploadSuccessModal(true);
+                getPerformanceDetailsBasedOnProjectAndSchool();
+            } else {
+                setUploadError('Upload failed. Please try again.');
             }
-            console.log('File uploaded successfully:', response.data);
         } catch (error) {
-            console.error('Error uploading file:', error.response || error);
+            console.error('Error uploading file:', error);
+            setUploadError(error.response?.data?.message || 'Error uploading file. Please try again.');
+        } finally {
+            setIsUploading(false);
         }
     };
 
 
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
+    const handleFileChange = async (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+            await uploadFile(selectedFile);
+            // Reset the file input value after upload
+            event.target.value = '';
+        }
     };
 
     const handleUpload = () => {
@@ -460,13 +469,21 @@ function Performance() {
                 {selectedTopics && selectedSchool && selectedProject && (
                     <div className="template-buttons-row">
                         <div className="template-buttons-group">
-                            <button className="download-button" onClick={handleDownloadTemplateClick} title="Download Template">
+                            <button 
+                                className="download-button" 
+                                onClick={handleDownloadTemplateClick} 
+                                title="Download Template"
+                            >
                                 <MdFileDownload className="upload-icon" />
                                 <span>Download Performance Template</span>
                             </button>
-                            <label htmlFor="fileInput" className="download-button" title="Select File">
+                            <label 
+                                htmlFor="fileInput" 
+                                className={`download-button ${isUploading ? 'disabled' : ''}`}
+                                title="Select File"
+                            >
                                 <MdFileUpload className="upload-icon" />
-                                <span>Upload Performance Template</span>
+                                <span>{isUploading ? 'Uploading...' : 'Upload Performance Template'}</span>
                             </label>
                         </div>
                         <input
@@ -475,13 +492,11 @@ function Performance() {
                             accept=".xlsx,.xls,.csv"
                             onChange={handleFileChange}
                             style={{ display: "none" }}
+                            disabled={isUploading}
                         />
-                        {file && (
-                            <div className="template-buttons-group">
-                                <button className="download-button" onClick={handleUpload} title="Upload Data">
-                                    <MdFileUpload className="upload-icon" />
-                                    <span>Upload Performance Data</span>
-                                </button>
+                        {uploadError && (
+                            <div className="error-message">
+                                {uploadError}
                             </div>
                         )}
                     </div>
@@ -553,16 +568,20 @@ function Performance() {
                 />
             )}
             {showModal && (
-                <SuccessModal 
-                    data={{ description: "Performance Updated Successfully!" }} 
-                    onClose={() => setShowModal(false)} 
-                />
+                <div className="modal-container">
+                    <SuccessModal 
+                        data={{ description: "Performance Updated Successfully!" }} 
+                        onClose={() => setShowModal(false)} 
+                    />
+                </div>
             )}
             {showUploadSuccessModal && (
-                <SuccessModal 
-                    data={{ description: "Performance Updated Successfully!" }} 
-                    onClose={() => setShowUploadSuccessModal(false)} 
-                />
+                <div className="modal-container">
+                    <SuccessModal 
+                        data={{ description: "Performance data uploaded successfully!" }} 
+                        onClose={() => setShowUploadSuccessModal(false)} 
+                    />
+                </div>
             )}
         </div>
     );

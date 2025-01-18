@@ -34,3 +34,63 @@
     background-color: #004bb5;
   }
   
+  .success-modal-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .success-modal-content {
+    background: #ffffff;
+    padding: 24px 32px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-left: 6px solid #4CAF50;
+    min-width: 400px;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  .success-icon {
+    color: #4CAF50;
+    font-size: 32px;
+    flex-shrink: 0;
+  }
+  
+  .success-message {
+    margin: 0;
+    color: #333333;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  
+  @keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+  }
+  
+  .success-modal-overlay.closing {
+    animation: fadeOut 0.3s ease-in forwards;
+  }
+  

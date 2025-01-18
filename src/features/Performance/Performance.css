@@ -159,3 +159,38 @@
     gap: 12px;
     margin: 12px 0;
 }
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+}
+
+.error-message {
+    color: #dc3545;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.download-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Ensure the project page has a relative position for proper modal positioning */
+.project-page {
+    position: relative;
+    min-height: 100vh;
+}
