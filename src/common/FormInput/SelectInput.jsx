@@ -1,34 +1,17 @@
 import React from "react";
 
-const SelectInput = ({
-  label,
-  value,
-  name,
-  onChange,
-  options,
-  selectsomthingtext,
-  isFilter = false,
-  required = false,
-  disabled = false,
-}) => {
+const SelectInput = ({ label, value, options, onChange, placeholder }) => {
   return (
-    <div className="form-field">
-      <label htmlFor="selectinput" className={required ? "required" : ""}>
-        {label}
-      </label>
-      <select
-        value={value}
-        name={name}
+    <div className="select-input">
+      <select 
+        value={value} 
         onChange={onChange}
-        required={required}
-        disabled={disabled}
+        style={{ width: '100%' }}
       >
-        <option value={isFilter ? "null" : ""} disabled={!isFilter}>
-          {selectsomthingtext ? selectsomthingtext : "Select Something"}
-        </option>
+        <option value="">{placeholder || "Select..."}</option>
         {options.map((option) => (
-          <option key={option?.id} value={option?.id}>
-            {option?.name}
+          <option key={option.id} value={option.id}>
+            {option.name}
           </option>
         ))}
       </select>

@@ -161,81 +161,131 @@ const StudentPage = () => {
     }
   };
 
+  const renderActionButtons = (params) => (
+    <div className="action-buttons">
+      <button
+        onClick={() => handleEdit(params?.data?.id)}
+        className="action-button edit-button"
+        title="Edit Student"
+      >
+        <FaEdit />
+      </button>
+      <button
+        onClick={() => handleDelete(params?.data?.id)}
+        className="action-button delete-button"
+        title="Delete Student"
+      >
+        <FaTrashAlt />
+      </button>
+    </div>
+  );
+
+  const defaultColDef = {
+    sortable: true,
+    filter: true,
+    floatingFilter: true,
+    resizable: true,
+    suppressSizeToFit: true,
+    flex: 1,
+  };
+
   const columnDefs = [
     {
       headerName: "Name",
       field: "name",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 180,
+      flex: 1.2,
+      cellRenderer: params => (
+        <div className="name-cell">
+          <span>{params.value}</span>
+        </div>
+      ),
     },
     {
       headerName: "School Name",
       field: "schoolName",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 180,
+      flex: 1.2,
+      cellRenderer: params => (
+        <div className="school-cell">
+          <span className="school-badge">{params.value}</span>
+        </div>
+      ),
     },
     {
       headerName: "Date of Birth",
       field: "dob",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Address",
-      field: "address",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Phone Number",
-      field: "phoneNumber",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 130,
+      flex: 1,
+      cellRenderer: params => {
+        const date = new Date(params.value);
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      },
     },
     {
       headerName: "Email",
       field: "email",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 200,
+      flex: 1.5,
+      cellRenderer: params => (
+        <div className="email-cell">
+          <span>{params.value}</span>
+        </div>
+      ),
+    },
+    {
+      headerName: "Phone",
+      field: "phoneNumber",
+      minWidth: 150,
+      flex: 1,
+      cellRenderer: params => (
+        <div className="phone-cell">
+          <span>{params.value}</span>
+        </div>
+      ),
+    },
+    {
+      headerName: "Address",
+      field: "address",
+      minWidth: 200,
+      flex: 1.5,
+      cellRenderer: params => (
+        <div className="address-cell" title={params.value}>
+          {params.value}
+        </div>
+      ),
     },
     {
       headerName: "Parent Name",
       field: "parentName",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 180,
+      flex: 1.2,
     },
     {
       headerName: "Parent Occupation",
       field: "parentOccupation",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 180,
+      flex: 1.2,
     },
     {
-      headerName: "Parent Phone Number",
+      headerName: "Parent Phone",
       field: "parentPhoneNumber",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 150,
+      flex: 1,
     },
     {
       headerName: "Actions",
-      cellRenderer: (params) => {
-        return (
-          <div>
-            <button
-              onClick={() => handleEdit(params?.data?.id)}
-              className="action-button edit-button"
-            >
-              <FaEdit />
-            </button>
-            <button
-              onClick={() => handleDelete(params?.data?.id)}
-              className="action-button delete-button"
-            >
-              <FaTrashAlt />
-            </button>
-          </div>
-        );
-      },
+      cellRenderer: renderActionButtons,
+      filter: false,
+      sortable: false,
+      minWidth: 120,
+      maxWidth: 120,
+      pinned: 'right',
+      suppressSizeToFit: true,
     },
   ];
 
@@ -283,70 +333,97 @@ const StudentPage = () => {
     }
   };
 
-  return (
-    <div className="project-page">
-      <div className="header">
-        <div className="heading-container">
-          <h2 className="project-heading">Student</h2>
+  const renderFileUploadSection = () => (
+    <div className="file-upload-container">
+      <div className="school-selector-group">
+        <div className="select-wrapper">
+          <SelectInput
+            label="Select School"
+            value={selectedSchool || ""}
+            options={schoolList}
+            onChange={(e) => setSelectedSchool(e.target.value)}
+            placeholder="Choose a school..."
+          />
         </div>
-        <button
-          className="g-button create-new-button"
-          onClick={handelAddStudent}
-        >
-          Create New
-        </button>
+        {selectedSchool && (
+          <button 
+            className="clear-school-button" 
+            onClick={() => setSelectedSchool(null)}
+            title="Clear selection"
+          >
+            <ImCross className="clear-icon" />
+          </button>
+        )}
       </div>
 
-      <div className="file-upload-container">
-        <label className="download-button" onClick={downloadStudentList}>
+      <div className="buttons-group">
+        <label className="download-button" onClick={downloadStudentList} title="Download Template">
           <MdFileDownload className="upload-icon" />
           <span>Download Student Template</span>
         </label>
-        <label htmlFor="fileInput" className="download-button">
+        <label htmlFor="fileInput" className="download-button" title="Select File">
           <MdFileUpload className="upload-icon" />
           <span>{file ? file.name : "Upload Student"}</span>
         </label>
         <input
           id="fileInput"
           type="file"
+          accept=".xlsx,.xls,.csv"
           onChange={handleFileChange}
           style={{ display: "none" }}
         />
         {file && (
-          <div className="upload-container">
-            <label className="download-button" onClick={handleUpload}>
-              <MdFileUpload className="upload-icon" />
-              <span>Upload Student Data</span>
-            </label>
-          </div>
+          <label className="download-button" onClick={handleUpload} title="Upload Data">
+            <MdFileUpload className="upload-icon" />
+            <span>Upload Student Data</span>
+          </label>
         )}
-
-        <label className="download-button" onClick={downloadStudentList}>
+        <label className="download-button" onClick={downloadStudentList} title="Download Data">
           <MdFileDownload className="upload-icon" />
           <span>Download Student Data</span>
         </label>
       </div>
+    </div>
+  );
 
+  return (
+    <div className="project-page">
       <div className="header">
-        <SelectInput
-          label="Select School"
-          value={selectedSchool || ""}
-          options={schoolList}
-          onChange={(e) => {
-            setSelectedSchool(e.target.value);
-          }}
-        />
-
-        <ImCross
-          className="action-button delete-button"
-          onClick={() => {
-            setSelectedSchool(null);
-          }}
-        />
+        <div className="heading-container">
+          <h2 className="project-heading">Student Management</h2>
+        </div>
+        <button
+          className="create-new-button"
+          onClick={handelAddStudent}
+          title="Add New Student"
+        >
+          Create New
+        </button>
       </div>
 
-      <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable rowData={rowData} columnDefs={columnDefs} />
+      {renderFileUploadSection()}
+
+      <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
+        <AgGridTable 
+          rowData={rowData} 
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          pagination={true}
+          paginationPageSize={10}
+          rowHeight={48}
+          headerHeight={48}
+          animateRows={true}
+          enableCellTextSelection={true}
+          suppressMovableColumns={true}
+          suppressDragLeaveHidesColumns={true}
+          onGridSizeChanged={(params) => {
+            params.api.sizeColumnsToFit();
+          }}
+          onFirstDataRendered={(params) => {
+            params.api.sizeColumnsToFit();
+          }}
+          className="custom-ag-table"
+        />
       </div>
 
       {isModalVisible && (
