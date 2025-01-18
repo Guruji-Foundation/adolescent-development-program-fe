@@ -3,19 +3,29 @@ import "./ConfirmationModal.css"; // Optional: create CSS for modal
 import "../../../CSS/Main.css";
 
 
-const ConfirmationModal = ({ title, message, onConfirm, onCancel }) => {
+const ConfirmationModal = ({
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  confirmText = "Confirm",
+  cancelText = "Cancel",
+  showCancelButton = true
+}) => {
   return (
-    <div className="modal-backdrop">
+    <div className="modal-overlay">
       <div className="modal-content">
-        <h3>{title}</h3>
+        <h2>{title}</h2>
         <p>{message}</p>
-        <div className="modal-actions">
-          <button className="r-button confirm-button" onClick={onConfirm}>
-            Confirm
+        <div className="modal-buttons">
+          <button className="confirm-button" onClick={onConfirm}>
+            {confirmText}
           </button>
-          <button className="g-button cancel-button" onClick={onCancel}>
-            Cancel
-          </button>
+          {showCancelButton && (
+            <button className="cancel-button" onClick={onCancel}>
+              {cancelText}
+            </button>
+          )}
         </div>
       </div>
     </div>

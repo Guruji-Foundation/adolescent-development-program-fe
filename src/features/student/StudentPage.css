@@ -51,30 +51,22 @@ html {
 }
 
 .file-upload-container {
-  display: flex;
-  align-items: center;
   margin: 24px 0;
-  gap: 24px;
-  background-color: white;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-              0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  flex-wrap: wrap;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .school-selector-group {
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 300px;
-  max-width: 500px;
-  position: relative;
+  gap: 10px;
 }
 
 .select-wrapper {
   flex: 1;
-  position: relative;
 }
 
 .select-input {
@@ -153,31 +145,20 @@ html {
 }
 
 .clear-school-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  border: 1px solid #e2e8f0;
-  background-color: white;
+  padding: 8px;
+  background: none;
+  border: none;
   cursor: pointer;
+  color: #6c757d;
   transition: all 0.2s ease;
-  padding: 0;
-  color: #64748b;
-  flex-shrink: 0;
 }
 
 .clear-school-button:hover {
-  background-color: #f1f5f9;
-  color: #ef4444;
-  border-color: #ef4444;
-  transform: translateY(-1px);
+  color: #dc3545;
 }
 
 .clear-icon {
-  width: 10px;
-  height: 10px;
+  font-size: 12px;
 }
 
 .buttons-group {
@@ -274,11 +255,36 @@ html {
 }
 
 .action-button {
-  padding: 8px;
-  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  color: #495057;
   transition: all 0.2s ease;
+  font-weight: 500;
+  min-width: 160px;
+  justify-content: center;
+}
+
+.action-button:hover {
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+.button-icon {
+  font-size: 18px;
+  color: #4a90e2;
 }
 
 .edit-button {
@@ -470,4 +476,164 @@ html {
 .select-input select,
 .select-input select option {
   text-align: left;
+}
+
+.action-buttons-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Custom styles for the select input */
+.select-wrapper select {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #495057;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.select-wrapper select:focus {
+  border-color: #4a90e2;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+/* Style for disabled state */
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f1f3f5;
+}
+
+/* Add hover effect for the entire container */
+.file-upload-container:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-buttons-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .action-button {
+    width: 100%;
+  }
+}
+
+/* Table Action Buttons Styling */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.action-button.edit-button,
+.action-button.delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.action-button.edit-button {
+  color: #4a90e2;
+}
+
+.action-button.delete-button {
+  color: #dc3545;
+}
+
+.action-button.edit-button:hover {
+  background-color: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.action-button.delete-button:hover {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.action-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Ensure the cell content is visible */
+.ag-theme-quartz .ag-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  overflow: visible !important;
+}
+
+/* Style for the action column */
+.ag-theme-quartz .ag-cell[col-id="actions"] {
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Remove default AG Grid cell styling that might interfere */
+.ag-theme-quartz .ag-cell-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure buttons stay visible on row hover */
+.ag-theme-quartz .ag-row:hover .action-buttons {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Add hover effect to table rows */
+.ag-theme-quartz .ag-row:hover {
+  background-color: #f8f9fa !important;
+}
+
+/* Add tooltip styles */
+[title] {
+  position: relative;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-buttons {
+    gap: 4px;
+  }
+  
+  .action-button.edit-button,
+  .action-button.delete-button {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .action-button svg {
+    width: 14px;
+    height: 14px;
+  }
 }
