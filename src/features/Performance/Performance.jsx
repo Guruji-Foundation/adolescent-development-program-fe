@@ -11,6 +11,8 @@ import SelectInput from "../../common/FormInput/SelectInput";
 import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
 import axios from 'axios';
 import "../../CSS/Main.css"
+import { MdFileDownload, MdFileUpload } from "react-icons/md";
+import './Performance.css';
 
 function Performance() {
     const navigate = useNavigate();
@@ -406,115 +408,164 @@ function Performance() {
         }
     };
 
+    const renderFileUploadSection = () => (
+        <div className="file-upload-container">
+            <div className="selection-and-template-container">
+                {/* First Row: Selection Inputs */}
+                <div className="school-selector-group">
+                    <div className="select-wrapper">
+                        <SelectInput
+                            label="Select Project"
+                            value={selectedProject || ""}
+                            options={projectsList}
+                            onChange={(e) => setSelectedProject(e.target.value)}
+                            placeholder="Choose a project..."
+                        />
+                    </div>
+                    <div className="select-wrapper">
+                        <SelectInput
+                            label="Select School"
+                            value={selectedSchool || ""}
+                            options={schoolList}
+                            onChange={(e) => setSelectedSchool(e.target.value)}
+                            placeholder="Choose a school..."
+                        />
+                    </div>
+                    <div className="select-wrapper">
+                        <SelectInput
+                            label="Select Topic"
+                            value={selectedTopics || ""}
+                            options={topicData}
+                            onChange={(e) => setSelectedTopics(e.target.value)}
+                            placeholder="Choose a topic..."
+                        />
+                    </div>
+                    {(selectedProject || selectedSchool || selectedTopics) && (
+                        <button 
+                            className="clear-school-button" 
+                            onClick={() => {
+                                setSelectedProject(null);
+                                setSelectedSchool(null);
+                                setSelectedTopics(null);
+                                getTopicData(null);
+                            }}
+                            title="Clear selection"
+                        >
+                            <ImCross className="clear-icon" />
+                        </button>
+                    )}
+                </div>
+
+                {/* Second Row: Template Buttons */}
+                {selectedTopics && selectedSchool && selectedProject && (
+                    <div className="template-buttons-row">
+                        <div className="template-buttons-group">
+                            <button className="download-button" onClick={handleDownloadTemplateClick} title="Download Template">
+                                <MdFileDownload className="upload-icon" />
+                                <span>Download Performance Template</span>
+                            </button>
+                            <label htmlFor="fileInput" className="download-button" title="Select File">
+                                <MdFileUpload className="upload-icon" />
+                                <span>Upload Performance Template</span>
+                            </label>
+                        </div>
+                        <input
+                            id="fileInput"
+                            type="file"
+                            accept=".xlsx,.xls,.csv"
+                            onChange={handleFileChange}
+                            style={{ display: "none" }}
+                        />
+                        {file && (
+                            <div className="template-buttons-group">
+                                <button className="download-button" onClick={handleUpload} title="Upload Data">
+                                    <MdFileUpload className="upload-icon" />
+                                    <span>Upload Performance Data</span>
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+
     return (
         <div className="project-page">
             <div className="header">
                 <div className="heading-container">
-                    <h2 className="project-heading">Performance</h2>
-                    {/* <p className="subheading">Performance List of Students</p> */}
+                    <h2 className="project-heading">Performance Management</h2>
                 </div>
-                <button
-                    className="g-button create-new-button"
-                    onClick={() => { saveAllPerformances() }}
-                >
-                    Save
-                </button>
-            </div>
-            {/* <div>
-                <input type="file" onChange={handleFileChange} />
-                {file && (<><ImUpload2 onClick={handleUpload} /> Upload Marks</>)}
-            </div> */}
-            <div className="file-upload-container">
-                <label htmlFor="fileInput" className="custom-file-input">
-                    {file ? file.name : "Upload marks/performance"}
-                </label>
-                <input
-                    id="fileInput"
-                    type="file"
-                    onChange={handleFileChange}
-                    style={{ display: "none" }} // Hide the default file input
-                />
-                {file && (
-                    <div className="upload-container">
-                        <div>
-                            <ImUpload2 className="upload-icon" onClick={handleUpload} />
-                        </div>
-                        <div>
-                            <span onClick={handleUpload}>Upload Marks</span>
-
-                        </div>
-                    </div>
+                {selectedSchool && selectedProject && (
+                    <button
+                        className="create-new-button"
+                        onClick={saveAllPerformances}
+                        title="Save Changes"
+                    >
+                        Save Changes
+                    </button>
                 )}
             </div>
-            {
-                selectedTopics && selectedSchool && selectedProject && (<div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div></div>
-                    <div onClick={handleDownloadTemplateClick}>
-                        <ImDownload2 /> Download Template
-                    </div>
-                </div>)
-            }
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                <SelectInput
-                    label="Select Project"
-                    value={selectedProject || ""}
-                    options={projectsList}
-                    onChange={(e) => { setSelectedProject(e.target.value) }}
-                />
-                <SelectInput
-                    label="Select School"
-                    value={selectedSchool || ""}
-                    options={schoolList}
-                    onChange={(e) => { setSelectedSchool(e.target.value) }}
-                />
-                <SelectInput
-                    label="Select Topic"
-                    value={selectedTopics || ""}
-                    options={topicData}
-                    onChange={(e) => { setSelectedTopics(e.target.value) }}
-                />
-                <ImCross className="action-button delete-button" onClick={() => {
-                    setSelectedProject(null);
-                    setSelectedSchool(null);
-                    setSelectedTopics(null);
-                    getTopicData(null);
-                }} />
-            </div>
+
+            {renderFileUploadSection()}
 
             {!(selectedSchool && selectedProject) ? (
-                // <div className="ag-theme-quartz" style={{ height: "500px" }}>
-                //     <AgGridTable rowData={performanceData} columnDefs={columnDefs} />
-                // </div>
-                <>
-                    <h2 className="project-heading">Please select relevant options to view Performance of Student</h2>
-
-                </>
+                <h2 className="project-heading">Please select relevant options to view Performance of Student</h2>
             ) : (
-                <div>
-                    <div className="ag-theme-quartz" style={{ height: "500px" }}>
-                        <AgGridTable
-                            rowData={rowDataWithTpoic}
-                            columnDefs={columDefsWithTopic}
-                            onCellValueChanged={handleCellValueChange}
-                        />
-                    </div>
+                <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
+                    <AgGridTable
+                        rowData={rowDataWithTpoic}
+                        columnDefs={columDefsWithTopic}
+                        onCellValueChanged={handleCellValueChange}
+                        defaultColDef={{
+                            sortable: true,
+                            filter: true,
+                            floatingFilter: true,
+                            resizable: true,
+                            suppressSizeToFit: true,
+                            flex: 1,
+                        }}
+                        pagination={true}
+                        paginationPageSize={10}
+                        rowHeight={48}
+                        headerHeight={48}
+                        animateRows={true}
+                        enableCellTextSelection={true}
+                        suppressMovableColumns={true}
+                        suppressDragLeaveHidesColumns={true}
+                        onGridSizeChanged={(params) => {
+                            params.api.sizeColumnsToFit();
+                        }}
+                        onFirstDataRendered={(params) => {
+                            params.api.sizeColumnsToFit();
+                        }}
+                        className="custom-ag-table"
+                    />
                 </div>
             )}
 
             {isModalVisible && (
                 <ConfirmationModal
                     title="Confirm Deletion"
-                    message="Do you really want to delete this Teacher?"
+                    message="Do you really want to delete this Performance?"
                     onConfirm={deletePerformance}
                     onCancel={cancelDelete}
                 />
             )}
-            {showModal && <SuccessModal data={{ description: "Performance Updated Successfully!!" }} onClose={() => { setShowModal(false) }} />}
-
-            {showUploadSuccessModal && <SuccessModal data={{ description: "Performance Updated Successfully!!" }} onClose={() => { setShowUploadSuccessModal(false) }} />}
-
+            {showModal && (
+                <SuccessModal 
+                    data={{ description: "Performance Updated Successfully!" }} 
+                    onClose={() => setShowModal(false)} 
+                />
+            )}
+            {showUploadSuccessModal && (
+                <SuccessModal 
+                    data={{ description: "Performance Updated Successfully!" }} 
+                    onClose={() => setShowUploadSuccessModal(false)} 
+                />
+            )}
         </div>
-    )
+    );
 }
 
 export default Performance
