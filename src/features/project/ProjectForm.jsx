@@ -184,6 +184,7 @@ const ProjectForm = ({
             value={projectData.description}
             onChange={handleInputChange}
             required
+            isTextArea
           />
           <TextInput
             label="Status"

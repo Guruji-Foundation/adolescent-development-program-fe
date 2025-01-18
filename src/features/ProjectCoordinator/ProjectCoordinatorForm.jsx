@@ -71,7 +71,7 @@ function ProjectCoordinatorForm({
                         onChange={handleInputChange}
                         required
                     />
-                    <TextInput
+                    {/* <TextInput
                         label="Area of Expertise"
                         name="areaOfExpertise"
                         value={formData.areaOfExpertise}
@@ -84,7 +84,7 @@ function ProjectCoordinatorForm({
                         value={formData.availability}
                         onChange={handleInputChange}
                         required
-                    />
+                    /> */}
                     <TextInput
                         label="Mobile Number"
                         name="mobileNumber"

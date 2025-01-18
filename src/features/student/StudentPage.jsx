@@ -8,7 +8,8 @@ import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/Conf
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
-import { ImCross } from "react-icons/im";
+import { ImCross, ImDownload2 } from "react-icons/im"
+import axios from "axios";
 
 const StudentPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
@@ -164,36 +165,83 @@ const StudentPage = () => {
     },
   ];
 
-  return (
-    <div className="project-page">
-      <div className="header">
-        <div className="heading-container">
-          <h2 className="project-heading">Student</h2>
-          <p className="subheading">List of Students</p>
-        </div>
-        <button
-          className="g-button create-new-button"
-          onClick={handelAddStudent}
-        >
-          Create New
-        </button>
+
+  const downloadCsvData = (data, filename) => {
+    const fileBlob = new Blob([data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const fileUrl = window.URL.createObjectURL(fileBlob);
+    const link = document.createElement('a');
+  
+    link.href = fileUrl;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+  
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+ 
+const extractFilenameFromHeaderString = (rawString) => {
+  if (!rawString) return 'download.xlsx'; // Default filename if header is missing
+
+  const filenameMatch = rawString.match(/filename="([^"]+)"/);
+  return filenameMatch ? filenameMatch[1] : 'download.xlsx';
+};
+  
+  const downloadStudentList = async () => {
+    try {
+      // Make an API call to fetch CSV data
+      const response = await axios.get(
+        `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/download?schoolId=${selectedSchool}`, // Adjust the endpoint
+        {
+          responseType: 'blob', // Ensure the response is treated as a binary blob
+        }
+      );
+  
+      // Extract filename from headers
+      const contentDisposition = response.headers['content-disposition'] || '';
+      const filename = extractFilenameFromHeaderString(contentDisposition);
+  
+      // Trigger download
+      downloadCsvData(response.data, filename);
+    } catch (err) {
+      console.error('Error downloading student list:', err.message || err);
+      throw err; // Optionally re-throw the error for higher-level handling
+    }
+  };
+
+  return (<div className="project-page">
+    <div className="header">
+      <div className="heading-container">
+        <h2 className="project-heading">Student</h2>
+        <p className="subheading">List of Students</p>
       </div>
-      <div className="header">
-        <SelectInput
-          label="Select School"
-          value={selectedSchool || ""}
-          options={schoolList}
-          onChange={(e) => {
-            setSelectedSchool(e.target.value);
-          }}
-        />
-        <ImCross
-          className="action-button delete-button"
-          onClick={() => {
-            setSelectedSchool(null);
-          }}
-        />
+      <button
+        className="g-button create-new-button"
+        onClick={handelAddStudent}
+      >
+        Create New
+      </button>
+    </div>
+    <div className='header'>
+      <SelectInput
+        label="Select School"
+        value={selectedSchool || ""}
+        options={schoolList}
+        onChange={(e) => { setSelectedSchool(e.target.value) }}
+      />
+
+      <ImCross className="action-button delete-button"
+        onClick={() => {
+          setSelectedSchool(null)
+        }} />
+
+      <div onClick={downloadStudentList}>
+        <ImDownload2 size={20} />
+        &nbsp;DownLoad Student List
       </div>
+    </div>
 
       <div className="ag-theme-quartz" style={{ height: "500px" }}>
         <AgGridTable rowData={rowData} columnDefs={columnDefs} />

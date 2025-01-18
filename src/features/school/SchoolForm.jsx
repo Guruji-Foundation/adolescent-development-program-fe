@@ -86,13 +86,13 @@ const SchoolForm = ({
             onChange={handleInputChange}
             required
           />
-          <TextInput
+          {/* <TextInput
             label=" Phone Number"
             name="phoneNumber"
             value={schoolData.phoneNumber}
             onChange={handleInputChange}
             required
-          />
+          /> */}
 
           <TextInput
             label="Principal Name"

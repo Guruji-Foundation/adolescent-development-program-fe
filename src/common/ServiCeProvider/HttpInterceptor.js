@@ -25,7 +25,7 @@ const HttpInterceptor = () => {
     return headers;
   };
 
-  const request = async (method, url, data = null, customHeaders = {}) => {
+  const request = async (method, url, data = null, customHeaders = {}, configOptions = {}) => {
     const headers = { ...defaultHeaders(), ...customHeaders };
     const source = axios.CancelToken.source();
 
@@ -34,6 +34,7 @@ const HttpInterceptor = () => {
       url,
       headers,
       cancelToken: source.token,
+      ...configOptions,
     };
 
     if (data) {
@@ -54,8 +55,8 @@ const HttpInterceptor = () => {
     }
   };
 
-  const get = (url, customHeaders = {}) => {
-    return request("get", url, null, customHeaders);
+  const get = (url, customHeaders = {},configOptions={}) => {
+    return request("get", url, null, customHeaders,configOptions);
   };
 
   const post = (url, data, customHeaders = {}) => {

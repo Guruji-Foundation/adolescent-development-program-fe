@@ -95,6 +95,7 @@ export default {
   updateSchool: async (id, schoolData) => {
     return apiServiceBased.put(`${SCHOOL}/${id}`, schoolData);
   },
+
   //---------------------------
 
   //Teacher api methods
@@ -275,6 +276,12 @@ export default {
     return apiServiceBased.get(STUDENT);
   },
 
+  downloadStudentListBySchoolId: (id) => {
+    return apiServiceBased.get(`${STUDENT}/download?schoolId=${id}`, {
+      responseType: 'blob', // Ensure the response is treated as a binary blob
+    });
+  },
+
   //performance
   getPerformanceList: () => {
     return apiServiceBased.get(`${PERFORMANCE}`);
@@ -303,10 +310,12 @@ export default {
   },
 
   saveAllPerformanceTable: (schoolId, projectId, data) => {
-    return apiServiceBased.put(
-      `${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`,
-      data
-    );
+    return apiServiceBased.put(`${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`, data);
+  },
+
+  downloadPerformanceTemplate: (data) => {
+    return apiServiceBased.post(`${PERFORMANCE}/download`,data,
+      { responseType: "blob" });
   },
 
   //Student
@@ -314,6 +323,7 @@ export default {
     return apiServiceBased.get(
       `${STUDENTS}?schoolId=${selectedSchool ? selectedSchool : ""}`
     );
+    return apiServiceBased.get(`${STUDENTS}?schoolId=${selectedSchool ? selectedSchool : ""}`);
   },
 
   addStudent: (data) => {
