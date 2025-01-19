@@ -11,6 +11,7 @@ import SelectInput from "../../common/FormInput/SelectInput";
 import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im";
 import { MdFileDownload, MdFileUpload } from "react-icons/md";
 import axios from "axios";
+import Toast from '../../common/FeedbackComponents/Toast/Toast';
 
 const StudentPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
@@ -19,6 +20,7 @@ const StudentPage = () => {
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [file, setFile] = useState(null);
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'warning' });
 
   const navigate = useNavigate();
 
@@ -115,7 +117,12 @@ const StudentPage = () => {
 
   const uploadFile = async (file) => {
     if (!selectedSchool) {
-      alert("Please select a school");
+      setToast({
+        show: true,
+        message: 'Please select a school before uploading',
+        type: 'warning'
+      });
+      return;
     }
     const formData = new FormData();
     formData.append("file", file);
@@ -138,14 +145,14 @@ const StudentPage = () => {
           },
         }
       );
-      if (response?.status) {
+      if (response?.status === 200) {
         setFile(null);
         setShowUploadSuccessModal(true);
         await getAllStudents();
       }
-      console.log("File uploaded successfully:", response.data);
     } catch (error) {
       console.error("Error uploading file:", error.response || error);
+      alert("Failed to upload file. Please try again.");
     }
   };
 
@@ -166,41 +173,13 @@ const StudentPage = () => {
     }
   };
 
-  const renderActionButtons = (params) => (
-    <div className="action-buttons">
-      <button
-        onClick={() => handleEdit(params?.data?.id)}
-        className="action-button edit-button"
-        title="Edit Student"
-      >
-        <FaEdit />
-      </button>
-      <button
-        onClick={() => handleDelete(params?.data?.id)}
-        className="action-button delete-button"
-        title="Delete Student"
-      >
-        <FaTrashAlt />
-      </button>
-    </div>
-  );
-
-  const defaultColDef = {
-    sortable: true,
-    filter: true,
-    floatingFilter: true,
-    resizable: true,
-    suppressSizeToFit: true,
-    flex: 1,
-  };
-
   const columnDefs = [
     {
       headerName: "Name",
       field: "name",
       minWidth: 180,
       flex: 1.2,
-      cellRenderer: (params) => (
+      cellRenderer: params => (
         <div className="name-cell">
           <span>{params.value}</span>
         </div>
@@ -211,7 +190,7 @@ const StudentPage = () => {
       field: "schoolName",
       minWidth: 180,
       flex: 1.2,
-      cellRenderer: (params) => (
+      cellRenderer: params => (
         <div className="school-cell">
           <span className="school-badge">{params.value}</span>
         </div>
@@ -222,12 +201,12 @@ const StudentPage = () => {
       field: "dob",
       minWidth: 130,
       flex: 1,
-      cellRenderer: (params) => {
+      cellRenderer: params => {
         const date = new Date(params.value);
-        return date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
         });
       },
     },
@@ -236,7 +215,7 @@ const StudentPage = () => {
       field: "email",
       minWidth: 200,
       flex: 1.5,
-      cellRenderer: (params) => (
+      cellRenderer: params => (
         <div className="email-cell">
           <span>{params.value}</span>
         </div>
@@ -247,7 +226,7 @@ const StudentPage = () => {
       field: "phoneNumber",
       minWidth: 150,
       flex: 1,
-      cellRenderer: (params) => (
+      cellRenderer: params => (
         <div className="phone-cell">
           <span>{params.value}</span>
         </div>
@@ -258,7 +237,7 @@ const StudentPage = () => {
       field: "address",
       minWidth: 200,
       flex: 1.5,
-      cellRenderer: (params) => (
+      cellRenderer: params => (
         <div className="address-cell" title={params.value}>
           {params.value}
         </div>
@@ -284,15 +263,44 @@ const StudentPage = () => {
     },
     {
       headerName: "Actions",
-      cellRenderer: renderActionButtons,
+      field: "actions",
+      cellRenderer: params => (
+        <div className="action-buttons">
+          <button
+            onClick={() => handleEdit(params.data.id)}
+            className="action-button edit-button"
+            title="Edit Student"
+          >
+            <FaEdit />
+          </button>
+          <button
+            onClick={() => handleDelete(params.data.id)}
+            className="action-button delete-button"
+            title="Delete Student"
+          >
+            <FaTrashAlt />
+          </button>
+        </div>
+      ),
       filter: false,
       sortable: false,
+      width: 120,
       minWidth: 120,
       maxWidth: 120,
-      pinned: "right",
-      suppressSizeToFit: true,
-    },
+      pinned: 'right',
+      cellStyle: { padding: '0 8px' }
+    }
   ];
+
+  const defaultColDef = {
+    sortable: true,
+    filter: true,
+    floatingFilter: true,
+    resizable: true,
+    suppressSizeToFit: true,
+    flex: 1,
+    cellStyle: { display: 'flex', alignItems: 'center' }
+  };
 
   const downloadCsvData = (data, filename) => {
     const fileBlob = new Blob([data], {
@@ -317,16 +325,11 @@ const StudentPage = () => {
   };
 
   const downloadStudentList = async () => {
-    if (!selectedSchool) {
-      alert("Please select a school");
-      return;
-    }
-    // console.log("Hello");
     try {
       // Make an API call to fetch CSV data
       let url = `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/download?schoolId=${selectedSchool}`;
       const response = await axios.get(
-        url, // Adjust the endpoint
+        url,
         {
           responseType: "blob", // Ensure the response is treated as a binary blob
         }
@@ -346,98 +349,55 @@ const StudentPage = () => {
 
   const renderFileUploadSection = () => (
     <div className="file-upload-container">
-      <div className="control-group">
-        <div className="school-selector-group">
-          <div className="select-wrapper">
-            <SelectInput
-              label="Select School"
-              value={selectedSchool || ""}
-              options={schoolList}
-              onChange={(e) => setSelectedSchool(e.target.value)}
-              placeholder="Select a school"
-            />
-          </div>
-          {selectedSchool && (
-            <button
-              className="clear-school-button"
-              onClick={() => setSelectedSchool(null)}
-              title="Clear selection"
-            >
-              <ImCross className="clear-icon" />
-            </button>
-          )}
+      <div className="school-selector-group">
+        <div className="select-wrapper">
+          <SelectInput
+            label="Select School"
+            value={selectedSchool || ""}
+            options={schoolList}
+            onChange={(e) => setSelectedSchool(e.target.value)}
+            placeholder="Choose a school..."
+          />
         </div>
+        {selectedSchool && (
+          <button 
+            className="clear-school-button" 
+            onClick={() => setSelectedSchool(null)}
+            title="Clear selection"
+          >
+            <ImCross className="clear-icon" />
+          </button>
+        )}
+      </div>
 
-        <div className="buttons-group">
-          <div className="button-wrapper">
-            <label
-              className="download-button"
-              onClick={handleDownloadTemplateClick}
-              title="Download Template"
-            >
-              <MdFileDownload className="upload-icon" />
-              <span>Download Student Template</span>
-            </label>
-          </div>
-
-          <div className="button-wrapper">
-            <div
-              className={`unified-upload-container ${file ? "has-file" : ""}`}
-            >
-              {!file ? (
-                <>
-                  <label
-                    htmlFor="fileInput"
-                    className="upload-button"
-                    title="Select File"
-                  >
-                    <MdFileUpload className="upload-icon" />
-                    <span>Upload Student</span>
-                  </label>
-                  <input
-                    id="fileInput"
-                    type="file"
-                    accept=".xlsx,.xls,.csv"
-                    onChange={handleFileChange}
-                    style={{ display: "none" }}
-                  />
-                </>
-              ) : (
-                <>
-                  <button
-                    className="upload-button upload-action"
-                    onClick={handleUpload}
-                    title="Upload Data"
-                  >
-                    <MdFileUpload className="upload-icon" />
-                    <span>Upload</span>
-                  </button>
-                  <div className="selected-file-info">
-                    <span className="file-name">{file.name}</span>
-                    <button
-                      className="remove-file"
-                      onClick={() => setFile(null)}
-                      title="Remove file"
-                    >
-                      <ImCross className="cancel-icon" />
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className="button-wrapper">
-            <label
-              className="download-button"
-              onClick={downloadStudentList}
-              title="Download Data"
-            >
-              <MdFileDownload className="upload-icon" />
-              <span>Download Student Data</span>
-            </label>
-          </div>
-        </div>
+      <div className="action-buttons-row">
+        <button className="action-button" onClick={handleDownloadTemplateClick}>
+          <MdFileDownload className="button-icon" />
+          Download Template
+        </button>
+        
+        <label htmlFor="fileInput" className="action-button">
+          <MdFileUpload className="button-icon" />
+          Upload Student
+        </label>
+        <input
+          id="fileInput"
+          type="file"
+          accept=".xlsx,.xls,.csv"
+          onChange={(e) => {
+            const selectedFile = e.target.files[0];
+            if (selectedFile) {
+              uploadFile(selectedFile);
+            }
+            e.target.value = "";
+          }}
+          style={{ display: "none" }}
+        />
+        
+        <button className="action-button" onClick={downloadStudentList}>
+          <MdFileDownload className="button-icon" />
+          Download Data
+        </button>
       </div>
     </div>
   );
@@ -459,12 +419,9 @@ const StudentPage = () => {
 
       {renderFileUploadSection()}
 
-      <div
-        className="ag-theme-quartz"
-        style={{ height: "500px", width: "100%" }}
-      >
-        <AgGridTable
-          rowData={rowData}
+      <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
+        <AgGridTable 
+          rowData={rowData} 
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           pagination={true}
@@ -485,12 +442,32 @@ const StudentPage = () => {
         />
       </div>
 
+      {showUploadSuccessModal && (
+        <ConfirmationModal
+          title="Upload Successful"
+          message="Student data has been successfully uploaded!"
+          onConfirm={() => setShowUploadSuccessModal(false)}
+          onCancel={() => setShowUploadSuccessModal(false)}
+          confirmText="Confirm"
+          cancelText="Cancel"
+          showCancelButton={true}
+        />
+      )}
+
       {isModalVisible && (
         <ConfirmationModal
           title="Confirm Deletion"
           message="Do you really want to delete this Student?"
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
+        />
+      )}
+
+      {toast.show && (
+        <Toast
+          type={toast.type}
+          message={toast.message}
+          onClose={() => setToast({ ...toast, show: false })}
         />
       )}
     </div>
