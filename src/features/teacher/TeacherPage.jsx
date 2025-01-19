@@ -3,14 +3,12 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./TeacherPage.css";
 import "../../CSS/Main.css";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
 
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
 import SelectInput from "../../common/FormInput/SelectInput";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
+import CustomTable from "../../common/GloabalComponent/CustomTable";
 import useError from "../../hooks/useError";
 import apiServices from "../../common/ServiCeProvider/Services";
 
@@ -25,24 +23,19 @@ const TeacherPage = () => {
   const { errors, setError } = useError();
   const navigate = useNavigate();
 
-  // Fetch schools data
   async function fetchSchools() {
     try {
-      setLoading(true);
       const response = await apiServices.getAllSchoolList();
       setSchoolList(response?.data?.data?.schools || []);
     } catch (error) {
       setError("Error fetching school data");
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   }
 
-  // Fetch teachers data
   async function fetchTeachers() {
+    setLoading(true);
     try {
-      setLoading(true);
       const endpoint = selectedSchool
         ? apiServices.getAllTeacherList(selectedSchool)
         : apiServices.getAllTeacherList();
@@ -57,7 +50,6 @@ const TeacherPage = () => {
     }
   }
 
-  // Delete teacher
   async function handleDeleteConfirm() {
     try {
       await apiServices.deleteTeacher(selectedTeacherId);
@@ -72,7 +64,6 @@ const TeacherPage = () => {
     }
   }
 
-  // Event Handlers
   const handleEdit = (id) => navigate(`/edit-teacher/${id}`);
   const handleDelete = (id) => {
     setSelectedTeacherId(id);
@@ -85,74 +76,74 @@ const TeacherPage = () => {
     setSelectedTeacherId(null);
   };
 
-  // Column definitions for AG Grid
   const columnDefs = [
-    // {
-    //   headerCheckboxSelection: true,
-    //   checkboxSelection: true,
-    //   width: 50,
-    //   field: "checkbox",
-    //   pinned: "left",
-    // },
     {
       headerName: "Teacher Name",
       field: "name",
-      filter: true,
-      floatingFilter: true,
-      width: 200,
-      resizable: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="teacher-name-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Experience (Years)",
       field: "experience",
-      filter: true,
-      floatingFilter: true,
-      width: 150,
-      resizable: true,
+      flex: 1,
+      cellRenderer: params => (
+        <div className="experience-cell">
+          <span className="experience-badge">
+            {params.value} years
+          </span>
+        </div>
+      )
     },
     {
       headerName: "School Name",
       field: "schoolDetails.name",
-      filter: true,
-      floatingFilter: true,
-      width: 250,
-      resizable: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="school-cell">
+          <span className="school-badge">{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "School Address",
       field: "schoolDetails.address",
-      filter: true,
-      floatingFilter: true,
-      width: 300,
-      resizable: true,
+      flex: 3,
+      cellRenderer: params => (
+        <div className="address-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Actions",
-      field: "actions",
-      filter: false,
-      floatingFilter: false,
-      width: 120,
-      pinned: "right",
-      cellRenderer: (params) => (
-        <div className="action-buttons-container">
+      cellRenderer: params => (
+        <div className="action-buttons">
           <button
             onClick={() => handleEdit(params?.data?.id)}
             className="action-button edit-button"
+            title="Edit Teacher"
           >
-            <FaEdit />
+            <FaEdit size={16} />
           </button>
           <button
             onClick={() => handleDelete(params?.data?.id)}
             className="action-button delete-button"
+            title="Delete Teacher"
           >
-            <FaTrashAlt />
+            <FaTrashAlt size={16} />
           </button>
         </div>
       ),
-    },
+      width: 120,
+      suppressSizeToFit: true
+    }
   ];
 
-  // Effects
   useEffect(() => {
     fetchSchools();
   }, []);
@@ -161,57 +152,52 @@ const TeacherPage = () => {
     fetchTeachers();
   }, [selectedSchool]);
 
-  if (loading) return <LoadingSpinner />;
   if (errors.length > 0) return <ErrorMessage errors={errors} />;
 
   return (
     <div className="teacher-page">
       <div className="header">
         <div className="heading-container">
-          <h2 className="teacher-heading">Teachers</h2>
+          <h2 className="teacher-heading">Teacher Management</h2>
         </div>
         <button
           onClick={handleCreateNew}
-          className="g-button create-new-button"
+          className="create-new-button"
+          title="Create New Teacher"
         >
           Create New
         </button>
       </div>
 
-      <div className="select-container">
-        <div className="select-group">
+      <div className="filter-container">
+        <div className="select-wrapper">
           <SelectInput
-            label="Select School"
+            label="Filter by School"
             value={selectedSchool || ""}
-            options={schoolList || []}
+            options={schoolList}
             onChange={handleSchoolChange}
-            placeholder="Choose a school"
-            className="select-input"
-            labelClassName="select-label"
+            placeholder="Select a school to filter teachers..."
+            className="school-select"
           />
         </div>
       </div>
 
-      <div className="table-container">
-        <div className="ag-theme-quartz">
-          <AgGridTable
-            rowData={teachers}
-            columnDefs={columnDefs}
-            defaultColDef={{
-              resizable: true,
-              sortable: true,
-              wrapText: true,
-              autoHeight: true,
-            }}
-            domLayout="autoHeight"
-          />
-        </div>
-      </div>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <CustomTable 
+          rowData={teachers} 
+          columnDefs={columnDefs}
+          paginationPageSize={20}
+          rowHeight={48}
+          className="teacher-table"
+        />
+      )}
 
       {isModalVisible && (
         <ConfirmationModal
-          title="Confirm Deletion"
-          message="Do you really want to delete this Teacher?"
+          title="Delete Teacher"
+          message="Do you really want to delete this teacher?"
           onConfirm={handleDeleteConfirm}
           onCancel={handleModalClose}
         />

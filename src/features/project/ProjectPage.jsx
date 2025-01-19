@@ -1,5 +1,4 @@
-import react from "react";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -7,37 +6,25 @@ import apiServices from "../../common/ServiCeProvider/Services";
 import useError from "../../hooks/useError";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
+import CustomTable from "../../common/GloabalComponent/CustomTable";
 
 import "./ProjectPage.css";
 import "../../CSS/Main.css";
 
 const ProjectPage = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { errors, setError, clearError } = useError();
-  const [selectedProjectId, setSelectedProjectId] = useState(null); // State to store the selected school for deletion
-  const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
-
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [projects, setProjects] = useState([]);
 
   const navigate = useNavigate();
-  const getDataPath = useCallback((data) => data.name, []);
-  const autoGroupColumnDef = useMemo(() => {
-    return {
-      headerName: "Project/Topic Name",
-      cellRendererParams: {
-        suppressCount: true,
-      },
-    };
-  }, []);
 
   const handleEdit = (id) => {
     navigate(`/edit-project/${id}`);
   };
-  const handleAssign = () => {
-    navigate("/project/school/assign");
-  };
+
   const handleDelete = (id) => {
     setSelectedProjectId(id);
     setIsModalVisible(true);
@@ -49,7 +36,7 @@ const ProjectPage = () => {
         .deleteProject(selectedProjectId)
         .then(() => {
           const updatedProjects = projects.filter(
-            (project) => project.id != selectedProjectId
+            (project) => project.id !== selectedProjectId
           );
           setProjects(updatedProjects);
           setSelectedProjectId(null);
@@ -62,7 +49,7 @@ const ProjectPage = () => {
   };
 
   const cancelDelete = () => {
-    setSelectedProjectId();
+    setSelectedProjectId(null);
     setIsModalVisible(false);
   };
 
@@ -71,14 +58,14 @@ const ProjectPage = () => {
   };
 
   const getProjectList = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = (await apiServices.getAllProjectList(null))?.data?.data
-        ?.projects;
+      const res = (await apiServices.getAllProjectList(null))?.data?.data?.projects;
       setProjects(res);
-      setLoading(false);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,94 +73,99 @@ const ProjectPage = () => {
     getProjectList();
   }, []);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
   if (errors.length > 0) {
-    clearError();
     return <ErrorMessage errors={errors} />;
   }
 
   const columnDefs = [
     {
-      headercheckboxSelection: true,
-      checkboxSelection: false,
-      width: 50,
-    },
-    {
       headerName: "Project Name",
       field: "name",
-      filter: true,
-      floatingFilter: true,
-      cellStyle: { textAlign: 'left' }
+      flex: 2,
+      cellRenderer: params => (
+        <div className="project-name-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Description",
       field: "description",
-      filter: true,
-      floatingFilter: true,
-      flex: 1,
-      cellStyle: { textAlign: 'left' }
+      flex: 3,
+      cellRenderer: params => (
+        <div className="description-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Status",
       field: "status",
-      filter: true,
-      floatingFilter: true,
-      cellStyle: { textAlign: 'left' }
+      flex: 1,
+      cellRenderer: params => (
+        <div className="status-cell">
+          <span className={`status-badge ${params.value.toLowerCase()}`}>
+            {params.value}
+          </span>
+        </div>
+      )
     },
     {
       headerName: "Actions",
-      cellRenderer: (params) => {
-        return (
-          <div>
-            <button
-              onClick={() => handleEdit(params?.data?.id)}
-              className="action-button edit-button"
-            >
-              <FaEdit />
-            </button>
-            <button
-              onClick={() => handleDelete(params?.data?.id)}
-              className="action-button delete-button"
-            >
-              <FaTrashAlt />
-            </button>
-          </div>
-        );
-      },
-    },
+      cellRenderer: params => (
+        <div className="action-buttons">
+          <button
+            onClick={() => handleEdit(params.data.id)}
+            className="action-button edit-button"
+            title="Edit Project"
+          >
+            <FaEdit size={16} />
+          </button>
+          <button
+            onClick={() => handleDelete(params.data.id)}
+            className="action-button delete-button"
+            title="Delete Project"
+          >
+            <FaTrashAlt size={16} />
+          </button>
+        </div>
+      ),
+      width: 120,
+      suppressSizeToFit: true
+    }
   ];
 
   return (
     <div className="project-page">
       <div className="header">
         <div className="heading-container">
-          <h2 className="project-heading">Projects</h2>
+          <h2 className="project-heading">Project Management</h2>
         </div>
         <button
-          className="g-button create-new-button"
+          className="create-new-button"
           onClick={handleCreateNew}
+          title="Create New Project"
         >
           Create New
         </button>
       </div>
-      <div className="ag-theme-quartz" style={{ height: "60vh" }}>
-        <AgGridTable
-          rowData={projects}
+
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <CustomTable 
+          rowData={projects} 
           columnDefs={columnDefs}
-          treeData={true}
-          groupDefaultExpanded={-1}
-          getDataPath={getDataPath}
-          autoGroupColumnDef={autoGroupColumnDef}
+          paginationPageSize={20}
+          rowHeight={48}
+          className="project-table"
         />
-      </div>
+      )}
 
       {isModalVisible && (
         <ConfirmationModal
-          title="Confirm Deletion"
-          message="Do you really want to delete this Project? Corresponding School data will also be deleted" 
+          title="Delete Project"
+          message="Do you really want to delete this Project? Corresponding School data will also be deleted"
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
         />

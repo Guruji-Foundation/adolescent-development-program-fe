@@ -6,22 +6,27 @@ html {
 }
 
 .project-page {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 24px;
+  background: #f5f7fa;
+  min-height: 100vh;
 }
 
 .project-page .header {
+  background: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 /* Column Layout for Headings */
 .projct-page .heading-container {
   display: flex;
-  flex-direction: column; /* Stack the headings vertically */
+  align-items: center;
+  gap: 12px;
 }
 
 .project-page .school-heading {
@@ -36,16 +41,19 @@ html {
 }
 
 .create-new-button {
-  background-color: #339af0;
+  background: #2563eb;
   color: white;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
 .create-new-button:hover {
-  background-color: #228be6;
+  background: #1d4ed8;
+  transform: translateY(-1px);
 }
 
 /* Table Styles */
@@ -137,10 +145,11 @@ html {
 
 /* Project Heading */
 .project-heading {
-  font-size: 24px;
-  font-weight: 600;
-  color: #212529;
+  font-size: 28px;
+  color: #1e293b;
   margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.5px;
 }
 
 /* Status Cell Styling */
@@ -150,13 +159,23 @@ html {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .school-page {
-    padding: 10px;
+  .project-page {
+    padding: 16px;
   }
 
-  .school-table th,
-  .school-table td {
-    padding: 8px 10px;
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .create-new-button {
+    width: 100%;
+  }
+
+  .action-button {
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -185,4 +204,120 @@ html {
 /* Exclude action column from left alignment */
 .ag-theme-quartz .ag-cell:last-child {
   text-align: center !important;
+}
+
+/* Table Cells */
+.project-name-cell,
+.description-cell {
+  padding: 8px;
+  line-height: 1.5;
+}
+
+.status-cell {
+  padding: 8px;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.status-badge.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-badge.in.progress {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.status-badge.beginning {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.status-badge.completed {
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-button {
+  color: #4a90e2;
+}
+
+.delete-button {
+  color: #dc3545;
+}
+
+.edit-button:hover {
+  background-color: #e0f2fe;
+  color: #0284c7;
+  border-color: #0284c7;
+}
+
+.delete-button:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Loading State */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* Table Styles */
+.project-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.ag-theme-quartz {
+  --ag-header-height: 48px;
+  --ag-header-foreground-color: #1e293b;
+  --ag-header-background-color: #f8fafc;
+  --ag-row-hover-color: #f8fafc;
+  --ag-selected-row-background-color: #eff6ff;
+  --ag-font-size: 14px;
+  --ag-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.ag-header-cell {
+  font-weight: 600 !important;
+}
+
+.ag-row-even {
+  background-color: #f8fafc;
+}
+
+.ag-row:hover {
+  background-color: #f1f5f9 !important;
 }

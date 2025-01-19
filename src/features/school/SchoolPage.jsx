@@ -1,39 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import "../../CSS/Main.css";
 import "./SchoolPage.css";
+import "../../CSS/Main.css";
+
 import useError from "../../hooks/useError";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
-import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner"; // Import loading spinner
+import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
-import { MdFileDownload, MdFileUpload } from "react-icons/md";
-import { ImCross } from "react-icons/im";
-import SelectInput from "../../common/FormInput/SelectInput";
 import Toast from '../../common/FeedbackComponents/Toast/Toast';
-
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
-
-import apiServices from "../../common/ServiCeProvider/Services";
-import axios from "axios";
 import FileOperationsButtons from '../../common/GloabalComponent/FileOperationsButtons';
 import CustomTable from "../../common/GloabalComponent/CustomTable";
+import apiServices from "../../common/ServiCeProvider/Services";
+import axios from "axios";
 
 function SchoolPage() {
   const [selectedSchoolId, setSelectedSchoolId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [schoolRowData, setSchoolRowData] = useState([]);
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { errors, setError, clearError } = useError();
   const [toast, setToast] = useState({ show: false, message: '', type: 'warning' });
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
-  const [showDownloadOptions, setShowDownloadOptions] = useState(false);
-
-  const title = "Delete School!";
-  const message = "Do you really want to delete this school";
+  
+  const navigate = useNavigate();
 
   const handleDelete = (id) => {
     clearError();
@@ -41,41 +31,35 @@ function SchoolPage() {
     setIsModalVisible(true);
   };
 
-  const confirmDelete = () => {
-    if (selectedSchoolId !== null) {
-      apiServices
-        .deleteSchool(selectedSchoolId)
-        .then(() => {
-          const updatedSchools = schoolRowData.filter(
-            (school) => school.id !== selectedSchoolId
-          );
-          setSchoolRowData(updatedSchools);
-          setSelectedSchoolId(null);
-          setIsModalVisible(false);
-        })
-        .catch((error) => {
-          console.error("Error deleting school:", error);
-          setError("Failed to delete school. Please try again later.");
+  const confirmDelete = async () => {
+    if (selectedSchoolId) {
+      try {
+        await apiServices.deleteSchool(selectedSchoolId);
+        setSchoolRowData(prev => prev.filter(school => school.id !== selectedSchoolId));
+        setSelectedSchoolId(null);
+        setIsModalVisible(false);
+        setToast({
+          show: true,
+          message: 'School deleted successfully',
+          type: 'success'
         });
+      } catch (error) {
+        setError("Failed to delete school. Please try again later.");
+        setToast({
+          show: true,
+          message: 'Failed to delete school',
+          type: 'error'
+        });
+      }
     }
   };
 
-  const cancelDelete = () => {
-    setSelectedSchoolId(null);
-    setIsModalVisible(false);
-  };
+  const handleEdit = (id) => navigate(`/edit-school/${id}`);
+  const handleCreateNew = () => navigate("/create-school");
 
-  const handleCreateNew = () => {
-    navigate("/create-school");
-  };
-
-  const handleEdit = (id) => {
-    navigate(`/edit-school/${id}`);
-  };
-
-  const getSchooList = async () => {
+  const getSchoolList = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const data = (await apiServices.getAllSchoolList())?.data?.data?.schools;
       const rowData = data?.map((item) => ({
         id: item?.id,
@@ -87,32 +71,15 @@ function SchoolPage() {
         trusteeContactInfo: item?.trusteeContactInfo,
       }));
       setSchoolRowData(rowData);
-      setLoading(false);
     } catch (err) {
       setError(err.message);
-    }
-  };
-
-  const handleDownloadTemplateClick = async () => {
-    try {
-      const response = await axios.get(
-        `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/schools/download-template`,
-        {
-          responseType: "blob",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      downloadCsvData(response.data, "school_template.xlsx");
-    } catch (error) {
-      console.error("Error downloading template:", error);
       setToast({
         show: true,
-        message: 'Failed to download template',
+        message: 'Failed to fetch schools',
         type: 'error'
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,31 +89,43 @@ function SchoolPage() {
     });
     const fileUrl = window.URL.createObjectURL(fileBlob);
     const link = document.createElement("a");
-
     link.href = fileUrl;
     link.setAttribute("download", filename);
     document.body.appendChild(link);
-
     link.click();
     document.body.removeChild(link);
   };
 
+  const handleDownloadTemplateClick = async () => {
+    try {
+      const response = await axios.get(
+        `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/schools/download-template`,
+        {
+          responseType: "blob",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      downloadCsvData(response.data, "school_template.xlsx");
+    } catch (error) {
+      setToast({
+        show: true,
+        message: 'Failed to download template',
+        type: 'error'
+      });
+    }
+  };
+
   const downloadSchoolList = async () => {
     try {
-      let url = `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/schools/download`;
-      const response = await axios.get(url, {
-        responseType: "blob",
-      });
-
-      // Generate filename with current date and time
+      const response = await axios.get(
+        `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/schools/download`,
+        { responseType: "blob" }
+      );
       const now = new Date();
       const date = now.toISOString().split('T')[0];
       const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
-      const filename = `schools_${date}_${time}.xlsx`;
-
-      downloadCsvData(response.data, filename);
+      downloadCsvData(response.data, `schools_${date}_${time}.xlsx`);
     } catch (err) {
-      console.error("Error downloading school list:", err.message || err);
       setToast({
         show: true,
         message: 'Failed to download school list',
@@ -156,28 +135,25 @@ function SchoolPage() {
   };
 
   const handleFileUpload = async (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
+    const file = event.target.files[0];
+    if (file) {
       const formData = new FormData();
-      formData.append("file", selectedFile);
+      formData.append("file", file);
       
       try {
         const response = await axios.post(
           `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/schools/upload`,
           formData,
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+            headers: { "Content-Type": "multipart/form-data" },
           }
         );
         
         if (response?.status === 200) {
           setShowUploadSuccessModal(true);
-          await getSchooList(); // Refresh the list
+          await getSchoolList();
         }
       } catch (error) {
-        console.error("Error uploading file:", error.response || error);
         setToast({
           show: true,
           message: 'Failed to upload file',
@@ -185,98 +161,66 @@ function SchoolPage() {
         });
       }
     }
-    event.target.value = ""; // Reset input
-  };
-
-  const handleDownloadClick = () => {
-    setShowDownloadOptions(!showDownloadOptions);
+    event.target.value = "";
   };
 
   useEffect(() => {
-    getSchooList();
+    getSchoolList();
   }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('.download-container')) {
-        setShowDownloadOptions(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-  if (errors.length > 0) {
-    clearError();
-    return <div>{errors.length > 0 && <ErrorMessage errors={errors} />}</div>;
-  }
 
   const columnDefs = [
     {
       headerName: "School Name",
       field: "name",
-      minWidth: 200,
-      flex: 1.5,
+      flex: 2,
       cellRenderer: params => (
-        <div className="name-cell">
-          <span className="school-badge">{params.value}</span>
+        <div className="school-name-cell">
+          <span className="school-name-badge">{params.value}</span>
         </div>
-      ),
+      )
     },
     {
       headerName: "Address",
       field: "address",
-      minWidth: 200,
-      flex: 1.5,
+      flex: 2,
       cellRenderer: params => (
-        <div className="address-cell" title={params.value}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      headerName: "Contact Person",
-      field: "principalName",
-      minWidth: 180,
-      flex: 1.2,
-    },
-    {
-      headerName: "Contact Number",
-      field: "principalContactNo",
-      minWidth: 150,
-      flex: 1,
-    },
-    {
-      headerName: "Email",
-      field: "managingTrustee",
-      minWidth: 200,
-      flex: 1.5,
-      cellRenderer: params => (
-        <div className="email-cell">
+        <div className="address-cell">
           <span>{params.value}</span>
         </div>
-      ),
+      )
     },
     {
-      headerName: "Trustee Contact Info",
-      field: "trusteeContactInfo",
-      minWidth: 200,
+      headerName: "Principal",
+      field: "principalName",
       flex: 1.5,
       cellRenderer: params => (
-        <div className="trustee-contact-info">
-          {params.value}
+        <div className="principal-cell">
+          <span>{params.value}</span>
         </div>
-      ),
+      )
+    },
+    {
+      headerName: "Contact",
+      field: "principalContactNo",
+      flex: 1,
+      cellRenderer: params => (
+        <div className="contact-cell">
+          <span className="contact-badge">{params.value}</span>
+        </div>
+      )
+    },
+    {
+      headerName: "Managing Trustee",
+      field: "managingTrustee",
+      flex: 1.5
+    },
+    {
+      headerName: "Trustee Contact",
+      field: "trusteeContactInfo",
+      flex: 1.5
     },
     {
       headerName: "Actions",
-      field: "actions",
       cellRenderer: params => (
         <div className="action-buttons">
           <button
@@ -284,24 +228,19 @@ function SchoolPage() {
             className="action-button edit-button"
             title="Edit School"
           >
-            <FaEdit />
+            <FaEdit size={16} />
           </button>
           <button
             onClick={() => handleDelete(params.data.id)}
             className="action-button delete-button"
             title="Delete School"
           >
-            <FaTrashAlt />
+            <FaTrashAlt size={16} />
           </button>
         </div>
       ),
-      filter: false,
-      sortable: false,
       width: 120,
-      minWidth: 120,
-      maxWidth: 120,
-      pinned: 'right',
-      cellStyle: { padding: '0 8px' }
+      suppressSizeToFit: true
     }
   ];
 
@@ -309,39 +248,44 @@ function SchoolPage() {
     <div className="school-page">
       <div className="header">
         <div className="heading-container">
-          <h2 className="school-heading">School</h2>
+          <h2 className="school-heading">School Management</h2>
         </div>
         <div className="header-right">
           <FileOperationsButtons
             onUpload={handleFileUpload}
             onDownloadTemplate={handleDownloadTemplateClick}
             onDownloadData={downloadSchoolList}
-            uploadTitle="Upload School"
+            uploadTitle="Upload School Data"
             downloadTitle="Download Options"
           />
           <button
-            className="g-button create-new-button"
+            className="create-new-button"
             onClick={handleCreateNew}
+            title="Create New School"
           >
             Create New
           </button>
         </div>
       </div>
 
-      <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
         <CustomTable 
           rowData={schoolRowData} 
           columnDefs={columnDefs}
           paginationPageSize={20}
-          rowHeight={40}
+          rowHeight={48}
+          className="school-table"
         />
-      </div>
+      )}
+
       {isModalVisible && (
         <ConfirmationModal
-          title={title}
-          message={message}
+          title="Delete School"
+          message="Do you really want to delete this school? This action cannot be undone."
           onConfirm={confirmDelete}
-          onCancel={cancelDelete}
+          onCancel={() => setIsModalVisible(false)}
         />
       )}
 
