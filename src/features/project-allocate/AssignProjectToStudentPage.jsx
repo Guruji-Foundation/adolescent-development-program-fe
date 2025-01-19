@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./AssignProjectToStudent.css";
@@ -19,7 +19,7 @@ import SelectInput from "../../common/FormInput/SelectInput";
 const AssignProjectToStudentPage = () => {
   const [loading, setLoading] = useState(true);
   const { errors, setError, clearError } = useError();
-
+  const gridRef = useRef();
   const [schools, setSchools] = useState([]);
   const [selectedSchoolId, setSelectedSchoolId] = useState(null);
   const [projects, setProjects] = useState([]);
@@ -184,7 +184,11 @@ const AssignProjectToStudentPage = () => {
   if (errors.length > 0) return <ErrorMessage errors={errors} />;
 
   const columDefs = [
-    { headerCheckboxSelection: true, checkboxSelection: false, width: 50 },
+    {
+      headerCheckboxSelection: true, // Adds a checkbox to the header for "select all"
+      checkboxSelection: true, // Adds checkboxes to individual rows
+      width: 50,
+    },
     {
       headerName: "Student Name",
       field: "name",
@@ -255,7 +259,7 @@ const AssignProjectToStudentPage = () => {
           selectsomthingtext={"Select School"}
           onChange={handleSchoolChange}
           isFilter="false"
-          // required
+        // required
         />
         <SelectInput
           value={selectedProjectId || ""}
@@ -263,12 +267,16 @@ const AssignProjectToStudentPage = () => {
           options={projects}
           selectsomthingtext={"Select Project"}
           isFilter={false}
-          // required
+        // required
         />
       </div>
 
       <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable rowData={students} columnDefs={columDefs} />
+        <AgGridTable
+          ref={gridRef}
+          rowData={students}
+          columnDefs={columDefs}
+          rowSelection="multiple" />
       </div>
 
       <div className="header">

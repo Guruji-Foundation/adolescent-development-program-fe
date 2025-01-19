@@ -440,9 +440,10 @@ function Performance() {
                             placeholder="Choose a topic..."
                         />
                     </div>
+                   
                     {(selectedProject || selectedSchool || selectedTopics) && (
-                        <button 
-                            className="clear-school-button" 
+                        <button
+                            className="clear-school-button"
                             onClick={() => {
                                 setSelectedProject(null);
                                 setSelectedSchool(null);
@@ -464,26 +465,31 @@ function Performance() {
                                 <MdFileDownload className="upload-icon" />
                                 <span>Download Performance Template</span>
                             </button>
-                            <label htmlFor="fileInput" className="download-button" title="Select File">
-                                <MdFileUpload className="upload-icon" />
-                                <span>Upload Performance Template</span>
-                            </label>
                         </div>
-                        <input
-                            id="fileInput"
-                            type="file"
-                            accept=".xlsx,.xls,.csv"
-                            onChange={handleFileChange}
-                            style={{ display: "none" }}
-                        />
-                        {file && (
-                            <div className="template-buttons-group">
-                                <button className="download-button" onClick={handleUpload} title="Upload Data">
+                        {/* <div style={{ dispaly: "flex" ,border: "1px red solid", }}>
+                            <div>
+                                <label htmlFor="fileInput" className="" title="Select File" >
                                     <MdFileUpload className="upload-icon" />
-                                    <span>Upload Performance Data</span>
-                                </button>
-                            </div>
-                        )}
+                                    <span>{file ? file?.name : "Upload Performance Template"}</span>
+                                    <input
+                                        id="fileInput"
+                                        type="file"
+                                        accept=".xlsx,.xls,.csv"
+                                        onChange={handleFileChange}
+                                        style={{ display: "none" }}
+                                    />
+                                </label></div>
+
+                            {file && (
+                                <div className="template-buttons-group">
+                                    <button className="create-new-button" onClick={handleUpload} title="Upload Data">
+                                        <MdFileUpload className="upload-icon" />
+                                        <span>Upload</span>
+                                    </button>
+                                </div>
+                            )}
+                        </div> */}
+                
                     </div>
                 )}
             </div>
@@ -496,6 +502,50 @@ function Performance() {
                 <div className="heading-container">
                     <h2 className="project-heading">Performance Management</h2>
                 </div>
+                <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                border: "2px solid rgb(143, 144, 142)",
+                                borderRadius: "4px",
+                                overflow: "hidden",
+                                width: "100%",
+                                maxWidth: "600px",
+                                height:"40px"
+                            }}
+                        >
+                            <input
+                                id="fileInput"
+                                type="file"
+                                style={{ display: "none" }}
+                                onChange={handleFileChange}
+                            />
+
+                            <label
+                                htmlFor="fileInput"
+                                style={{
+                                    flex: 1,
+                                    padding: "10px 15px",
+                                    cursor: "pointer",
+                                    fontSize: "14px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                }}
+                            >
+                                <MdFileUpload className="upload-icon" />
+                                <span>
+                                    {file ? file.name : "Click to upload marks"}
+                                </span>
+                            </label>
+
+                            <button
+                                className="create-new-button" 
+                                 onClick={handleUpload} 
+                            >
+                                Upload
+                            </button>
+                        </div>
                 {selectedSchool && selectedProject && (
                     <button
                         className="create-new-button"
@@ -553,15 +603,15 @@ function Performance() {
                 />
             )}
             {showModal && (
-                <SuccessModal 
-                    data={{ description: "Performance Updated Successfully!" }} 
-                    onClose={() => setShowModal(false)} 
+                <SuccessModal
+                    data={{ description: "Performance Updated Successfully!" }}
+                    onClose={() => setShowModal(false)}
                 />
             )}
             {showUploadSuccessModal && (
-                <SuccessModal 
-                    data={{ description: "Performance Updated Successfully!" }} 
-                    onClose={() => setShowUploadSuccessModal(false)} 
+                <SuccessModal
+                    data={{ description: "Performance Updated Successfully!" }}
+                    onClose={() => setShowUploadSuccessModal(false)}
                 />
             )}
         </div>
