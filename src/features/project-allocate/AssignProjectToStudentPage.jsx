@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { FaUserPlus, FaUserMinus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 import "./AssignProjectToStudent.css";
@@ -8,11 +9,7 @@ import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import useError from "../../hooks/useError";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
-
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
-
+import CustomTable from "../../common/GloabalComponent/CustomTable";
 import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
 
@@ -181,69 +178,106 @@ const AssignProjectToStudentPage = () => {
     setIsModalVisible(false);
   };
 
+  const unassignedColumnDefs = [
+    {
+      headerName: "Student Name",
+      field: "name",
+      flex: 2,
+      cellRenderer: params => (
+        <div className="student-name-cell">
+          <span>{params.value}</span>
+        </div>
+      )
+    },
+    {
+      headerName: "Phone Number",
+      field: "phoneNumber",
+      flex: 1,
+      cellRenderer: params => (
+        <div className="phone-cell">
+          <span>{params.value}</span>
+        </div>
+      )
+    },
+    {
+      headerName: "Email",
+      field: "email",
+      flex: 2,
+      cellRenderer: params => (
+        <div className="email-cell">
+          <span>{params.value}</span>
+        </div>
+      )
+    },
+    {
+      headerName: "Actions",
+      width: 120,
+      suppressSizeToFit: true,
+      cellRenderer: (params) => (
+        <div className="action-buttons">
+          <button
+            onClick={() => handleAssign(params?.data?.id)}
+            className="action-button assign-button"
+            title="Assign Student"
+          >
+            <FaUserPlus size={16} />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  const assignedColumnDefs = [
+    {
+      headerName: "Student Name",
+      field: "name",
+      flex: 2,
+      cellRenderer: params => (
+        <div className="student-name-cell">
+          <span>{params.value}</span>
+        </div>
+      )
+    },
+    {
+      headerName: "Phone Number",
+      field: "phoneNumber",
+      flex: 1,
+      cellRenderer: params => (
+        <div className="phone-cell">
+          <span>{params.value}</span>
+        </div>
+      )
+    },
+    {
+      headerName: "Email",
+      field: "email",
+      flex: 2,
+      cellRenderer: params => (
+        <div className="email-cell">
+          <span>{params.value}</span>
+        </div>
+      )
+    },
+    {
+      headerName: "Actions",
+      width: 120,
+      suppressSizeToFit: true,
+      cellRenderer: (params) => (
+        <div className="action-buttons">
+          <button
+            onClick={() => handleUnAssign(params?.data?.id)}
+            className="action-button unassign-button"
+            title="Unassign Student"
+          >
+            <FaUserMinus size={16} />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  if (loading) return <LoadingSpinner />;
   if (errors.length > 0) return <ErrorMessage errors={errors} />;
-
-  const columDefs = [
-    {
-      headerCheckboxSelection: true, // Adds a checkbox to the header for "select all"
-      checkboxSelection: true, // Adds checkboxes to individual rows
-      width: 50,
-    },
-    {
-      headerName: "Student Name",
-      field: "name",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Phone Number",
-      field: "phoneNumber",
-      filter: true,
-      floatingFilter: true,
-    },
-    { headerName: "Email", field: "email", filter: true, floatingFilter: true },
-    {
-      headerName: "Actions",
-      field: "actions",
-      cellRenderer: (params) => (
-        <button
-          onClick={() => handleAssign(params?.data?.id)}
-          className="action-button edit-button"
-        >
-          Assign
-        </button>
-      ),
-    },
-  ];
-
-  const uncolumDefs = [
-    { headerCheckboxSelection: true, checkboxSelection: false, width: 50 },
-    {
-      headerName: "Student Name",
-      field: "name",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Phone Number",
-      field: "phoneNumber",
-      filter: true,
-      floatingFilter: true,
-    },
-    { headerName: "Email", field: "email", filter: true, floatingFilter: true },
-    {
-      headerName: "Actions",
-      field: "actions",
-      cellRenderer: (params) => (
-        <button
-          onClick={() => handleUnAssign(params?.data?.id)}
-          className="action-button edit-button"
-        >
-          Unassign
-        </button>
-      ),
-    },
-  ];
 
   return (
     <div className="teacher-page">
@@ -252,40 +286,57 @@ const AssignProjectToStudentPage = () => {
           <h2 className="teacher-heading">Assign Project To Student</h2>
         </div>
       </div>
-      <div className="header">
-        <SelectInput
-          value={selectedSchoolId || ""}
-          options={schools}
-          selectsomthingtext={"Select School"}
-          onChange={handleSchoolChange}
-          isFilter="false"
-        // required
-        />
-        <SelectInput
-          value={selectedProjectId || ""}
-          onChange={handleProjectChange}
-          options={projects}
-          selectsomthingtext={"Select Project"}
-          isFilter={false}
-        // required
-        />
-      </div>
 
-      <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable
-          ref={gridRef}
-          rowData={students}
-          columnDefs={columDefs}
-          rowSelection="multiple" />
-      </div>
-
-      <div className="header">
-        <div className="heading-container">
-          <h2 className="teacher-heading">Assigned Student</h2>
+      <div className="filter-container">
+        <div className="filters-wrapper">
+          <div className="select-wrapper">
+            <SelectInput
+              label="Select School"
+              value={selectedSchoolId || ""}
+              options={schools}
+              onChange={handleSchoolChange}
+              selectsomthingtext={"Select School"}
+              className="school-select"
+            />
+          </div>
+          <div className="select-wrapper">
+            <SelectInput
+              label="Select Project"
+              value={selectedProjectId || ""}
+              onChange={handleProjectChange}
+              options={projects}
+              selectsomthingtext={"Select Project"}
+              className="project-select"
+              disabled={!selectedSchoolId}
+            />
+          </div>
         </div>
       </div>
-      <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable rowData={unAssignStudents} columnDefs={uncolumDefs} />
+
+      <div className="section-container">
+        <div className="section-header">
+          <h3 className="section-title">Unassigned Students</h3>
+        </div>
+        <CustomTable 
+          rowData={students}
+          columnDefs={unassignedColumnDefs}
+          paginationPageSize={10}
+          rowHeight={48}
+          className="student-table"
+        />
+      </div>
+
+      <div className="section-container">
+        <div className="section-header">
+          <h3 className="section-title">Assigned Students</h3>
+        </div>
+        <CustomTable 
+          rowData={unAssignStudents}
+          columnDefs={assignedColumnDefs}
+          paginationPageSize={10}
+          rowHeight={48}
+          className="student-table"
+        />
       </div>
 
       {isModalVisible && (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import Tooltip from "../../common/FeedbackComponents/Tooltip/ToolTip";
 
 import "./AssignProjectToStudent.css";
 import "../../CSS/Main.css";
@@ -10,7 +11,7 @@ import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinn
 import useError from "../../hooks/useError";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
 import SelectInput from "../../common/FormInput/SelectInput";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
+import CustomTable from "../../common/GloabalComponent/CustomTable";
 import apiServices from "../../common/ServiCeProvider/Services";
 
 const AssignProjectToSchoolPage = () => {
@@ -106,49 +107,61 @@ const AssignProjectToSchoolPage = () => {
 
   const columnDefs = [
     {
-      headerCheckboxSelection: true,
-      checkboxSelection: true,
-      width: 50,
-    },
-    {
       headerName: "Project Name",
       field: "project.name",
-      filter: true,
-      floatingFilter: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="project-name-cell">
+          <span className="project-badge">{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Teacher Name",
       field: "teacher.name",
-      filter: true,
-      floatingFilter: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="teacher-name-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "School Name",
       field: "school.name",
-      filter: true,
-      floatingFilter: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="school-cell">
+          <span className="school-badge">{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Start Date",
       field: "startDate",
-      filter: true,
-      floatingFilter: true,
+      flex: 1,
+      cellRenderer: params => (
+        <div className="date-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "End Date",
       field: "endDate",
-      filter: true,
-      floatingFilter: true,
+      flex: 1,
+      cellRenderer: params => (
+        <div className="date-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Actions",
-      field: "actions",
-      filter: false,
-      floatingFilter: false,
       width: 120,
-      pinned: "right",
+      suppressSizeToFit: true,
       cellRenderer: (params) => (
-        <div className="action-buttons-container">
+        <div className="action-buttons">
           <button
             onClick={() => handleEdit(params?.data)}
             className="action-button edit-button"
@@ -158,10 +171,10 @@ const AssignProjectToSchoolPage = () => {
           </button>
           <button
             onClick={() => handleDelete(params?.data)}
-            className="action-button"
-            title="Unassign Project"
+            className="action-button delete-button"
+            title="Unassign"
           >
-            Unassign
+            <FaTrashAlt size={16} />
           </button>
         </div>
       ),
@@ -178,40 +191,39 @@ const AssignProjectToSchoolPage = () => {
           <h2 className="teacher-heading">Assign Project To School</h2>
         </div>
         <button
-          className="g-button create-new-button"
+          className="create-new-button"
           onClick={handleCreateNew}
         >
-          Assign
+          Assign New Project
         </button>
       </div>
 
-      <div className="select-container">
-        <SelectInput
-          label="Select School"
-          value={selectedSchoolId || ""}
-          options={schools}
-          onChange={handleSchoolChange}
-          selectsomthingtext={"All School"}
-          isFilter={true}
-        />
-      </div>
-
-      <div className="table-container">
-        <div className="ag-theme-quartz">
-          <AgGridTable
-            rowData={projects}
-            columnDefs={columnDefs}
-            defaultColDef={{
-              sortable: true,
-            }}
+      <div className="filter-container">
+        <div className="select-wrapper">
+          <SelectInput
+            label="Select School"
+            value={selectedSchoolId || ""}
+            options={schools}
+            onChange={handleSchoolChange}
+            selectsomthingtext={"All Schools"}
+            isFilter={true}
+            className="school-select"
           />
         </div>
       </div>
 
+      <CustomTable 
+        rowData={projects} 
+        columnDefs={columnDefs}
+        paginationPageSize={20}
+        rowHeight={48}
+        className="teacher-table"
+      />
+
       {isModalVisible && (
         <ConfirmationModal
-          title="Unassigned Project!"
-          message="Do you really want to unassinged project from school."
+          title="Unassign Project"
+          message="Are you sure you want to unassign this project from the school?"
           onConfirm={confirmDelete}
           onCancel={handleModalClose}
         />

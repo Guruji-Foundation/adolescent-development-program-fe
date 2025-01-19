@@ -82,18 +82,17 @@ html {
 
 /* Action Buttons */
 .action-button {
-  background-color: #f9f9fb;
+  background: none;
   border: none;
-  font-size: 1rem;
   cursor: pointer;
-  padding: 8px;
+  padding: 5px;
+  margin: 0 2px;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
-  margin-left: 8px;
+  transition: background-color 0.2s;
 }
 
 .action-button:hover {
-  background-color: #e9ecef;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .edit-button {
@@ -102,6 +101,10 @@ html {
 
 .delete-button {
   color: #dc3545;
+}
+
+.delete-button:hover {
+  color: #c82333;
 }
 
 /* Responsive Design */
@@ -116,31 +119,232 @@ html {
   }
 }
 
-/* Dropdown Styling */
-.form-field select {
-  width: 100%; /* Make the dropdown take full width */
-  padding: 10px; /* Add padding for better touch targets */
-  border: 1px solid #e5e7eb; /* Light gray border */
-  border-radius: 4px; /* Rounded corners */
-  background-color: #fff; /* White background */
-  font-size: 1rem; /* Font size */
-  color: hsl(220, 6%, 40%); /* Text color */
-  appearance: none; /* Remove default dropdown arrow */
-  background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="hsl(220, 6%, 40%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cline x1="6" y1="9" x2="12" y2="15" /%3E%3Cline x1="12" y1="9" x2="18" y2="15" /%3E%3C/svg%3E'); /* Custom dropdown arrow */
-  background-repeat: no-repeat; /* Prevent repeating background */
-  background-position: right 10px center; /* Position arrow */
-  background-size: 12px; /* Size of the arrow */
-  transition: border-color 0.2s ease; /* Transition effect */
+/* Dropdown/Select styling */
+.filter-section .select-container {
+  max-width: 250px;
 }
 
-/* On focus, change the border color */
-.form-field select:focus {
-  outline: none; /* Remove default outline */
-  border-color: hsl(210, 25.3%, 50%); /* Darker border color on focus */
+.select-container {
+  margin-bottom: 16px;
+}
+
+.select-container label {
+  display: block;
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.select-container select {
+  width: 100%;
+  padding: 6px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background-color: white;
+  color: #475569;
+  font-size: 13px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+  height: 32px;
+}
+
+.select-container select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.select-container select:hover {
+  border-color: #cbd5e1;
 }
 
 /* Error Messages Styling */
 .error-messages {
   color: #dc3545; /* Red color for error messages */
   margin-top: 10px; /* Space above error messages */
+}
+
+.page-container {
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-title h1 {
+  color: #475569;
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.primary-button {
+  background-color: #1a56db;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.primary-button:hover {
+  background-color: #1e40af;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.table-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* AG Grid customizations */
+.custom-ag-grid {
+  --ag-header-background-color: #f8fafc;
+  --ag-header-foreground-color: #475569;
+  --ag-header-height: 48px;
+  --ag-row-height: 48px;
+  --ag-border-color: #e2e8f0;
+}
+
+.action-buttons-container {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.edit-button {
+  color: #3b82f6;
+}
+
+.delete-button {
+  color: #ef4444;
+}
+
+.action-button:hover {
+  background-color: #f1f5f9;
+}
+
+/* Inherit all styles from TeacherPage.css */
+@import '../../features/teacher/TeacherPage.css';
+
+/* Additional styles specific to project assignments */
+.project-name-cell {
+  padding: 8px;
+}
+
+.project-badge {
+  background: #f0f9ff;
+  color: #0369a1;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.date-cell {
+  padding: 8px;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+/* Override any specific styles if needed */
+.teacher-heading {
+  font-size: 24px; /* Slightly smaller than teacher page */
+}
+
+/* Custom table styles */
+.custom-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Additional styles for AssignProjectToStudent */
+.filters-wrapper {
+  display: flex;
+  gap: 24px;
+}
+
+.select-wrapper {
+  flex: 1;
+  max-width: 300px;
+}
+
+.section-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.section-title {
+  font-size: 18px;
+  color: #1e293b;
+  margin: 0;
+  font-weight: 500;
+}
+
+.student-name-cell,
+.phone-cell,
+.email-cell {
+  padding: 8px;
+  line-height: 1.5;
+}
+
+.assign-button {
+  color: #059669;
+}
+
+.assign-button:hover {
+  background-color: #ecfdf5;
+  color: #047857;
+  border-color: #047857;
+}
+
+.unassign-button {
+  color: #dc3545;
+}
+
+.unassign-button:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .filters-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .select-wrapper {
+    max-width: 100%;
+  }
 }
