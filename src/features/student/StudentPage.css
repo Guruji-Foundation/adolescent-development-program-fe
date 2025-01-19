@@ -51,423 +51,148 @@ html {
 }
 
 .file-upload-container {
+  background-color: white;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  margin: 24px 0;
-  gap: 24px;
-  background-color: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-              0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 32px;
 }
 
 .school-selector-group {
+  flex: 0 0 260px;
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 300px;
-  max-width: 500px;
-  position: relative;
 }
 
 .select-wrapper {
   flex: 1;
-  position: relative;
-}
-
-.select-input {
-  width: 100%;
 }
 
 .select-input select {
-  height: 40px;
   width: 100%;
+  height: 40px;
   padding: 8px 12px;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   background-color: white;
   color: #1e293b;
   font-size: 14px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-  text-overflow: ellipsis;
-  width: 100%;
-  max-width: 100%;
-}
-
-.select-input select option {
-  padding: 8px 12px;
-  font-size: 14px;
-  white-space: normal;
-  word-wrap: break-word;
-  min-height: 40px;
-  line-height: 1.4;
-  width: auto;
-  max-width: none;
-}
-
-.select-input select:hover {
-  border-color: #3b82f6;
-}
-
-.select-input select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-.select-input select:focus option {
-  padding: 12px;
-  background-color: white;
-}
-
-.select-input select:focus option:hover,
-.select-input select:focus option:focus,
-.select-input select:focus option:active {
-  background-color: #eff6ff;
-  color: #3b82f6;
-}
-
-.selected-school {
-  position: absolute;
-  top: -20px;
-  left: 0;
-  font-size: 12px;
-  color: #3b82f6;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: calc(100% - 40px);
-  background-color: #eff6ff;
-  padding: 2px 8px;
-  border-radius: 4px;
-  z-index: 1;
-}
-
-.clear-school-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  border: 1px solid #e2e8f0;
-  background-color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 0;
-  color: #64748b;
-  flex-shrink: 0;
-}
-
-.clear-school-button:hover {
-  background-color: #f1f5f9;
-  color: #ef4444;
-  border-color: #ef4444;
-  transform: translateY(-1px);
-}
-
-.clear-icon {
-  width: 10px;
-  height: 10px;
 }
 
 .buttons-group {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 24px;
   flex: 1;
+  justify-content: flex-end;
+  white-space: nowrap;
 }
 
-/* Update SelectInput styles */
-.select-input {
-  flex: 1;
-  min-width: 200px;
-}
-
-.select-input select {
-  height: 40px;
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  background-color: white;
-  color: #1e293b;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-}
-
-.select-input select:hover {
-  border-color: #3b82f6;
-}
-
-.select-input select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-.download-button {
-  display: flex;
+.download-button,
+.upload-button {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: white;
-  border: 1px solid #e2e8f0;
-  color: #475569;
-  transition: all 0.2s ease;
+  padding: 8px 20px;
+  height: 40px;
+  border-radius: 6px;
   font-weight: 500;
-  position: relative;
-  overflow: hidden;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  min-width: fit-content;
+  flex-shrink: 0;
 }
 
-.download-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1;
+.upload-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.upload-button:hover {
+  background: #2563eb;
 }
 
 .download-button:hover {
-  color: white;
-  border-color: transparent;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-}
-
-.download-button:hover::before {
-  opacity: 1;
-}
-
-.download-button span {
-  z-index: 2;
-  position: relative;
+  background: #f1f5f9;
 }
 
 .upload-icon {
-  font-size: 1.2rem;
-  z-index: 2;
+  font-size: 18px;
+}
+
+.selected-file-info {
+  position: absolute;
+  bottom: -24px;
+  left: 0;
+  font-size: 12px;
+  color: #475569;
+}
+
+.unified-upload-container {
   position: relative;
+  flex-shrink: 0;
 }
 
-.action-button {
-  padding: 8px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+@media (max-width: 1400px) {
+  .file-upload-container {
+    max-width: 1200px;
+    padding: 20px 28px;
+    gap: 24px;
+  }
 }
 
-.edit-button {
-  color: #3b82f6;
-  background-color: rgba(59, 130, 246, 0.1);
+@media (max-width: 1200px) {
+  .file-upload-container {
+    max-width: 960px;
+    padding: 20px 24px;
+    gap: 20px;
+  }
+
+  .buttons-group {
+    gap: 16px;
+  }
 }
 
-.edit-button:hover {
-  background-color: rgba(59, 130, 246, 0.2);
-  transform: translateY(-1px);
+@media (max-width: 992px) {
+  .file-upload-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+  }
+
+  .school-selector-group {
+    width: 100%;
+    flex: none;
+  }
+
+  .buttons-group {
+    margin-top: 16px;
+    justify-content: flex-start;
+  }
 }
 
-.delete-button {
-  color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.1);
-}
+@media (max-width: 768px) {
+  .buttons-group {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
 
-.delete-button:hover {
-  background-color: rgba(239, 68, 68, 0.2);
-  transform: translateY(-1px);
-}
-
-.ag-theme-quartz {
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-              0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  background-color: white;
-}
-
-/* Add smooth scrollbar for the table */
-.ag-body-viewport::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.ag-body-viewport::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
-}
-
-.ag-body-viewport::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-
-.ag-body-viewport::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Table Styles */
-.custom-ag-table {
-  --ag-header-height: 48px;
-  --ag-header-foreground-color: #1e293b;
-  --ag-header-background-color: #f8fafc;
-  --ag-header-cell-hover-background-color: #f1f5f9;
-  --ag-header-cell-moving-background-color: #f1f5f9;
-  --ag-row-hover-color: #f8fafc;
-  --ag-selected-row-background-color: #eff6ff;
-  --ag-font-size: 14px;
-  --ag-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-}
-
-.ag-header-cell {
-  font-weight: 600 !important;
-  font-size: 13px !important;
-}
-
-.name-cell, .school-cell, .email-cell, .phone-cell {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: 0 4px;
-}
-
-.school-badge {
-  padding: 4px 12px;
-  background-color: #f0f9ff;
-  color: #0369a1;
-  border-radius: 16px;
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.email-cell span, 
-.phone-cell span,
-.name-cell span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #475569;
-}
-
-.address-cell {
-  padding: 0 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #475569;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-/* Pagination Styles */
-.ag-paging-panel {
-  border-top: 1px solid #e2e8f0;
-  padding: 12px !important;
-}
-
-.ag-paging-button {
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 6px !important;
-  padding: 4px 8px !important;
-}
-
-.ag-paging-button:hover {
-  background-color: #f8fafc !important;
-}
-
-.ag-paging-page-summary-panel {
-  font-size: 13px !important;
-  color: #64748b !important;
-}
-
-/* Row Styles */
-.ag-row {
-  border-bottom: 1px solid #f1f5f9 !important;
-}
-
-.ag-row-hover {
-  background-color: #f8fafc !important;
-}
-
-.ag-row-selected {
-  background-color: #eff6ff !important;
-}
-
-/* Filter Styles */
-.ag-header-cell-filtered {
-  background-color: #eff6ff !important;
-}
-
-.ag-floating-filter-input {
-  border-radius: 4px !important;
-  border: 1px solid #e2e8f0 !important;
-  padding: 4px 8px !important;
-}
-
-.ag-floating-filter-input:focus {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
-}
-
-/* Ensure content stays within cells */
-.ag-cell {
-  overflow: hidden !important;
-}
-
-.ag-cell-wrapper {
-  height: 100%;
-  width: 100%;
-}
-
-/* Add styles for the select placeholder */
-.select-input select:invalid,
-.select-input select option[value=""] {
-  color: #94a3b8;
-}
-
-/* Style for the selected option */
-.select-input select:focus option:checked {
-  background-color: #eff6ff;
-  color: #3b82f6;
-}
-
-/* Increase dropdown width */
-.select-input select[size]:not([size="1"]) {
-  height: auto;
-  min-width: 100%;
-}
-
-/* Ensure proper text alignment */
-.select-input select,
-.select-input select option {
-  text-align: left;
+  .download-button,
+  .upload-button {
+    padding: 8px 16px;
+  }
 }
