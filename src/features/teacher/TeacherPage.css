@@ -7,140 +7,370 @@ html {
 }
 
 .teacher-page {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 24px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
 }
 
-/* Header Section */
-.teacher-page .header {
+/* Header Styles */
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-}
-
-/* Column Layout for Headings */
-.teacher-page .heading-container {
-  display: flex;
-  flex-direction: column; /* Stack the headings vertically */
-}
-
-.teacher-page .teacher-heading {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: hsl(210, 25.3%, 32.5%);
-}
-
-.teacher-page .subheading {
-  font-size: 1.1rem;
-  color: rgba(0, 7, 20, 0.62);
-}
-
-.create-new-button {
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 5px;
-}
-
-/* Table Section */
-.teacher-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-top: 20px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: white;
   border-radius: 8px;
-  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.teacher-table th,
-.teacher-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+.heading-container {
+  display: flex;
+  align-items: center;
 }
 
-.teacher-table th {
-  background-color: #f9f9fb;
-  color: hsl(220, 6%, 40%);
+.teacher-heading {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
   font-weight: 600;
 }
 
-.teacher-table td {
-  color: hsl(220, 6%, 40%);
+/* Button Styles */
+.create-new-button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
 }
 
-.teacher-table tr:last-child td {
-  border-bottom: none;
-}
-
-.teacher-table tr:hover {
-  background-color: #f5f5f5;
+.create-new-button:hover {
+  background-color: #45a049;
 }
 
 /* Action Buttons */
 .action-button {
-  background-color: #f9f9fb;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
   padding: 8px;
+  margin: 0 4px;
+  border: none;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
-  margin-left: 8px;
-}
-
-.action-button:hover {
-  background-color: #e9ecef;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .edit-button {
-  color: #007bff;
+  background-color: #2196f3;
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #1976d2;
 }
 
 .delete-button {
-  color: #dc3545;
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f;
+}
+
+/* Select Input Styles */
+.select-container {
+  margin-bottom: 24px;
+  background-color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 400px;
+}
+
+.select-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.select-input {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  width: 100%;
+}
+
+.select-input:hover {
+  border-color: #aaa;
+}
+
+.select-input:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.select-input option {
+  padding: 12px;
+  font-size: 14px;
+}
+
+/* Placeholder styling */
+.select-input option[value=""] {
+  color: #666;
+}
+
+/* Disabled state */
+.select-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* Error state */
+.select-input.error {
+  border-color: #f44336;
+}
+
+/* For Firefox */
+.select-input {
+  text-overflow: ellipsis;
+}
+
+/* For IE/Edge */
+.select-input::-ms-expand {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .select-container {
+    padding: 12px 16px;
+  }
+
+  .select-input {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+/* Table Container with Horizontal Scroll */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* AG Grid Container */
+.ag-theme-quartz {
+  min-width: 1200px;
+  width: 100%;
+  height: 500px !important;
+  background-color: white;
+}
+
+/* Grid Header */
+.ag-theme-quartz .ag-header {
+  background-color: #f8f9fa;
+  height: 48px !important;
+}
+
+.ag-theme-quartz .ag-header-cell {
+  font-weight: 600;
+  color: #333;
+  padding: 8px;
+  line-height: 32px !important;
+  height: 48px !important;
+}
+
+.ag-theme-quartz .ag-header-row {
+  height: 48px !important;
+}
+
+/* Cell Content Wrapping */
+.ag-theme-quartz .ag-cell {
+  line-height: 1.5;
+  padding: 12px 8px !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow: visible !important;
+}
+
+.ag-theme-quartz .ag-row {
+  height: auto !important;
+  min-height: 48px !important;
+  padding: 4px 0 !important;
+}
+
+/* Ensure proper spacing between header and first row */
+.ag-theme-quartz .ag-header-container {
+  margin-bottom: 4px;
+}
+
+/* Column Widths */
+.ag-theme-quartz .ag-header-cell[col-id="checkbox"] {
+  min-width: 50px;
+  width: 50px;
+}
+
+.ag-theme-quartz .ag-header-cell[col-id="name"],
+.ag-theme-quartz .ag-cell[col-id="name"] {
+  min-width: 200px;
+  width: 200px;
+}
+
+.ag-theme-quartz .ag-header-cell[col-id="experience"],
+.ag-theme-quartz .ag-cell[col-id="experience"] {
+  min-width: 150px;
+  width: 150px;
+}
+
+.ag-theme-quartz .ag-header-cell[col-id="schoolDetails.name"],
+.ag-theme-quartz .ag-cell[col-id="schoolDetails.name"] {
+  min-width: 250px;
+  width: 250px;
+}
+
+.ag-theme-quartz .ag-header-cell[col-id="schoolDetails.address"],
+.ag-theme-quartz .ag-cell[col-id="schoolDetails.address"] {
+  min-width: 300px;
+  width: 300px;
+}
+
+.ag-theme-quartz .ag-header-cell[col-id="actions"],
+.ag-theme-quartz .ag-cell[col-id="actions"] {
+  min-width: 120px;
+  width: 120px;
+}
+
+/* Action Buttons */
+.action-buttons-container {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: #2196f3;
+  color: white;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Scrollbar Styling */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #666;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .teacher-page {
-    padding: 10px;
-  }
-
-  .teacher-table th,
-  .teacher-table td {
-    padding: 8px 10px;
+  .ag-theme-quartz {
+    height: 400px !important;
   }
 }
 
-/* Dropdown Styling */
-.form-field select {
-  width: 100%; /* Make the dropdown take full width */
-  padding: 10px; /* Add padding for better touch targets */
-  border: 1px solid #e5e7eb; /* Light gray border */
-  border-radius: 4px; /* Rounded corners */
-  background-color: #fff; /* White background */
-  font-size: 1rem; /* Font size */
-  color: hsl(220, 6%, 40%); /* Text color */
-  appearance: none; /* Remove default dropdown arrow */
-  background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="hsl(220, 6%, 40%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cline x1="6" y1="9" x2="12" y2="15" /%3E%3Cline x1="12" y1="9" x2="18" y2="15" /%3E%3C/svg%3E'); /* Custom dropdown arrow */
-  background-repeat: no-repeat; /* Prevent repeating background */
-  background-position: right 10px center; /* Position arrow */
-  background-size: 12px; /* Size of the arrow */
-  transition: border-color 0.2s ease; /* Transition effect */
+/* Loading Spinner Container */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
 }
 
-/* On focus, change the border color */
-.form-field select:focus {
-  outline: none; /* Remove default outline */
-  border-color: hsl(210, 25.3%, 50%); /* Darker border color on focus */
+/* Error Message Styles */
+.error-container {
+  padding: 16px;
+  margin: 16px 0;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  color: #c62828;
 }
 
-/* Error Messages Styling */
-.error-messages {
-  color: #dc3545; /* Red color for error messages */
-  margin-top: 10px; /* Space above error messages */
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Animation Classes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
 }

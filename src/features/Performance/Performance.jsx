@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import apiServices from "../../common/ServiCeProvider/Services";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im"
+import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";

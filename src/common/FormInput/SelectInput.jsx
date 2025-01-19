@@ -1,15 +1,34 @@
 import React from "react";
+import "./SelectInput.css";
 
-const SelectInput = ({ label, value, options, onChange, placeholder }) => {
+const SelectInput = ({
+  label,
+  value,
+  options,
+  onChange,
+  selectsomthingtext,
+  name,
+  required,
+  disabled,
+  className,
+  labelClassName,
+}) => {
   return (
-    <div className="select-input">
-      <select 
-        value={value} 
+    <div className={`form-group ${className || ""}`}>
+      <label className={`form-label ${labelClassName || ""}`}>
+        {label}
+        {required && <span className="required-mark">*</span>}
+      </label>
+      <select
+        value={value}
         onChange={onChange}
-        style={{ width: '100%' }}
+        name={name}
+        required={required}
+        disabled={disabled}
+        className="select-field"
       >
-        <option value="">{placeholder || "Select..."}</option>
-        {options.map((option) => (
+        <option value="">{selectsomthingtext || "Select"}</option>
+        {options?.map((option) => (
           <option key={option.id} value={option.id}>
             {option.name}
           </option>
