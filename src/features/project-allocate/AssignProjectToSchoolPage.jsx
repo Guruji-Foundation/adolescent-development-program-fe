@@ -39,8 +39,13 @@ const AssignProjectToSchoolPage = () => {
   async function getAllAssignProject() {
     try {
       setLoading(true);
-      const res = await apiServices.getProjectBySchool(selectedSchoolId);
-      setProjects(res?.data?.data?.schoolProjects || []);
+      if(selectedSchoolId){
+        const res = await apiServices.getProjectBySchool(selectedSchoolId);
+        setProjects(res?.data?.data?.schoolProjects || []);
+      }else{
+        const res = await apiServices.getProjectBySchool();
+        setProjects(res?.data?.data?.schoolProjects || []);
+      }
     } catch (error) {
       setError(error.message);
     } finally {
@@ -53,16 +58,16 @@ const AssignProjectToSchoolPage = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedSchoolId) {
-      getAllAssignProject();
-    } else {
-      setProjects([]);
-      setLoading(false);
-    }
+    getAllAssignProject();
   }, [selectedSchoolId]);
 
   const handleSchoolChange = (e) => {
-    setSelectedSchoolId(e.target.value);
+    // console.log(e.target.value,"-");
+    if(e.target.value==""){
+      setSelectedSchoolId(null);
+    }else{
+      setSelectedSchoolId(e.target.value);
+    }
   };
 
   const handleCreateNew = () => {

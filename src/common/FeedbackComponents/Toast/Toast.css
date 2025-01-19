@@ -23,6 +23,27 @@
     border-left: 4px solid #3b82f6;
   }
   
+  .toast-container.danger {
+    background-color: #fee2e2;
+    border-left: 4px solid #dc2626;
+  }
+  
+  .toast-container.danger .toast-icon {
+    color: #dc2626;
+  }
+  
+  .toast-container.danger .toast-title {
+    color: #dc2626;
+  }
+  
+  .toast-container.danger .toast-text {
+    color: #991b1b;
+  }
+  
+  .toast-container.danger .toast-close {
+    color: #dc2626;
+  }
+  
   .toast-content {
     display: flex;
     align-items: flex-start;

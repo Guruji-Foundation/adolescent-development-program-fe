@@ -5,35 +5,49 @@ body {
 }
 
 .form-container {
-  /* max-width: 800px;
-  margin: 50px auto;
-  padding: 30px;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); 
-  text-align: left;
-  transition: all 0.3s ease; */
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-h2 {
-  font-size: 26px;
-  font-weight: 700;
-  color: #4a4a4a;
+.form-container h2 {
   text-align: center;
+  color: #333;
   margin-bottom: 30px;
 }
 
-/* Flexbox Layout */
 .form-layout {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Form Fields: 48% width for 2-column layout */
-.form-field {
-  width: 48%;
-  margin-bottom: 20px;
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.form-row > * {
+  flex: 1;
+}
+
+.form-row.single-input {
+  max-width: 50%;
+}
+
+.submit-button {
+  margin-top: 30px;
+  width: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 label {
@@ -72,22 +86,6 @@ input:hover {
   border-color: #0073e6; /* Slight hover effect */
 }
 
-/* Submit button styling */
-.submit-button {
-  width: 160px;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  margin: 30px auto;
-  display: block;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* .submit-button:hover {
-  background-color: #004bb5;
-  box-shadow: 0 4px 8px rgba(0, 87, 217, 0.2); /* Slight shadow on hover} */
-
 /* Success and Error Messages */
 .success-message,
 .error-messages {
@@ -111,15 +109,4 @@ input:hover {
 
 .error-messages p {
   margin: 5px 0;
-}
-
-/* Responsive: Stack fields on small screens */
-@media (max-width: 768px) {
-  .form-field {
-    width: 100%; /* Make fields full-width on smaller screens */
-  }
-
-  .submit-button {
-    width: 100%;
-  }
 }

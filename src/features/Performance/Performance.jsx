@@ -13,6 +13,7 @@ import axios from 'axios';
 import "../../CSS/Main.css"
 import { MdFileDownload, MdFileUpload } from "react-icons/md";
 import './Performance.css';
+import Toast from "../../common/FeedbackComponents/Toast/Toast";
 
 function Performance() {
     const navigate = useNavigate();
@@ -36,6 +37,11 @@ function Performance() {
     const [selectedTopics, setSelectedTopics] = useState(null);
     const [file, setFile] = useState(null);
     const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastType, setToastType] = useState("warning");
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = React.useRef(null);
 
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
@@ -338,6 +344,14 @@ function Performance() {
     };
 
     const handleDownloadTemplateClick = async () => {
+        if (!selectedTopics) {
+            setShowToast(true);
+            setToastMessage("Please select a topic before downloading the template");
+            setToastType("warning");
+            setTimeout(() => setShowToast(false), 3000);
+            return;
+        }
+
         try {
             const requestBody = {
                 schoolId: Number(selectedSchool),
@@ -346,25 +360,60 @@ function Performance() {
                     Number(selectedTopics)
                 ]
             }
-            // const response = await apiServices.downloadPerformanceTemplate(requestBody);
             const response = await axios.post(
-                `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`, requestBody, // Adjust the endpoint
+                `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`, 
+                requestBody,
                 {
-                    responseType: 'blob', // Ensure the response is treated as a binary blob
+                    responseType: 'blob',
                 }
             );
-            const contentDisposition = response.headers['content-disposition'] || '';
-            // const filename = extractFilenameFromHeaderString(contentDisposition);
-            console.log(typeof response.data);
-            // Trigger download
-            downloadCsvData(response.data, "Performace");
+
+            // Check if the response is actually a blob (successful download)
+            if (response.data instanceof Blob) {
+                downloadCsvData(response.data, "Performance");
+            } else {
+                setShowToast(true);
+                setToastMessage("Failed to download template. Please try again.");
+                setToastType("danger");
+            }
         } catch (error) {
-            throw error;
+            console.error("Download error:", error);
+            
+            // Get the error message from the API response
+            const errorMessage = error.response?.data?.messages?.[0]?.message || "An unexpected error occurred";
+            
+            setShowToast(true);
+            setToastMessage(errorMessage);
+            setToastType("danger");
+            setTimeout(() => setShowToast(false), 3000);
         }
-    }
+    };
+
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+            uploadFile(selectedFile);
+        }
+        // Reset the input value immediately after getting the file
+        if (event.target) {
+            event.target.value = '';
+        }
+    };
+
+    const handleUploadClick = () => {
+        if (!selectedTopics) {
+            setShowToast(true);
+            setToastMessage("Please select a topic before uploading the file");
+            setToastType("warning");
+            setTimeout(() => setShowToast(false), 3000);
+            return;
+        }
+        fileInputRef.current?.click();
+    };
 
     const uploadFile = async (file) => {
-        // Form the data
+        setIsUploading(true);
         const formData = new FormData();
         formData.append('file', file);
 
@@ -387,24 +436,20 @@ function Performance() {
 
             if (response?.status) {
                 setFile(null);
-                setShowUploadSuccessModal(true)
+                setShowUploadSuccessModal(true);
+                // Refresh the table data
+                if (selectedProject && selectedSchool) {
+                    await getPerformanceDetailsBasedOnProjectAndSchool();
+                }
             }
-            console.log('File uploaded successfully:', response.data);
         } catch (error) {
             console.error('Error uploading file:', error.response || error);
-        }
-    };
-
-
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
-    };
-
-    const handleUpload = () => {
-        if (file) {
-            uploadFile(file);
-        } else {
-            alert('Please select a file to upload.');
+            setShowToast(true);
+            setToastMessage("Error uploading file. Please try again.");
+            setToastType("danger");
+            setTimeout(() => setShowToast(false), 3000);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -456,105 +501,52 @@ function Performance() {
                         </button>
                     )}
                 </div>
-
-                {/* Second Row: Template Buttons */}
-                {selectedTopics && selectedSchool && selectedProject && (
-                    <div className="template-buttons-row">
-                        <div className="template-buttons-group">
-                            <button className="download-button" onClick={handleDownloadTemplateClick} title="Download Template">
-                                <MdFileDownload className="upload-icon" />
-                                <span>Download Performance Template</span>
-                            </button>
-                        </div>
-                        {/* <div style={{ dispaly: "flex" ,border: "1px red solid", }}>
-                            <div>
-                                <label htmlFor="fileInput" className="" title="Select File" >
-                                    <MdFileUpload className="upload-icon" />
-                                    <span>{file ? file?.name : "Upload Performance Template"}</span>
-                                    <input
-                                        id="fileInput"
-                                        type="file"
-                                        accept=".xlsx,.xls,.csv"
-                                        onChange={handleFileChange}
-                                        style={{ display: "none" }}
-                                    />
-                                </label></div>
-
-                            {file && (
-                                <div className="template-buttons-group">
-                                    <button className="create-new-button" onClick={handleUpload} title="Upload Data">
-                                        <MdFileUpload className="upload-icon" />
-                                        <span>Upload</span>
-                                    </button>
-                                </div>
-                            )}
-                        </div> */}
-                
-                    </div>
-                )}
             </div>
         </div>
     );
 
     return (
         <div className="project-page">
+            {isUploading && <LoadingSpinner />}
             <div className="header">
                 <div className="heading-container">
                     <h2 className="project-heading">Performance Management</h2>
                 </div>
-                <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                border: "2px solid rgb(143, 144, 142)",
-                                borderRadius: "4px",
-                                overflow: "hidden",
-                                width: "100%",
-                                maxWidth: "600px",
-                                height:"40px"
-                            }}
+                <div style={{ display: "flex", gap: "10px" }}>
+                    <div className="download-container">
+                        <button 
+                            className="icon-button" 
+                            onClick={handleDownloadTemplateClick} 
+                            title="Download Template"
                         >
-                            <input
-                                id="fileInput"
-                                type="file"
-                                style={{ display: "none" }}
-                                onChange={handleFileChange}
-                            />
-
-                            <label
-                                htmlFor="fileInput"
-                                style={{
-                                    flex: 1,
-                                    padding: "10px 15px",
-                                    cursor: "pointer",
-                                    fontSize: "14px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "10px",
-                                }}
-                            >
-                                <MdFileUpload className="upload-icon" />
-                                <span>
-                                    {file ? file.name : "Click to upload marks"}
-                                </span>
-                            </label>
-
-                            <button
-                                className="create-new-button" 
-                                 onClick={handleUpload} 
-                            >
-                                Upload
-                            </button>
-                        </div>
-                {selectedSchool && selectedProject && (
-                    <button
-                        className="create-new-button"
-                        onClick={saveAllPerformances}
-                        title="Save Changes"
-                    >
-                        Save Changes
-                    </button>
-                )}
+                            <MdFileDownload className="button-icon" />
+                        </button>
+                    </div>
+                    <div className="upload-container">
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            style={{ display: "none" }}
+                            onChange={handleFileChange}
+                        />
+                        <button 
+                            className="icon-button"
+                            onClick={handleUploadClick}
+                            title="Upload Marks"
+                        >
+                            <MdFileUpload className="button-icon" />
+                        </button>
+                    </div>
+                    {selectedSchool && selectedProject && (
+                        <button
+                            className="create-new-button"
+                            onClick={saveAllPerformances}
+                            title="Save Changes"
+                        >
+                            Save Changes
+                        </button>
+                    )}
+                </div>
             </div>
 
             {renderFileUploadSection()}
@@ -612,6 +604,13 @@ function Performance() {
                 <SuccessModal
                     data={{ description: "Performance Updated Successfully!" }}
                     onClose={() => setShowUploadSuccessModal(false)}
+                />
+            )}
+            {showToast && (
+                <Toast 
+                    type={toastType}
+                    message={toastMessage}
+                    onClose={() => setShowToast(false)}
                 />
             )}
         </div>
