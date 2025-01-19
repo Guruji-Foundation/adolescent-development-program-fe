@@ -28,6 +28,7 @@ function SchoolPage() {
   const { errors, setError, clearError } = useError();
   const [toast, setToast] = useState({ show: false, message: '', type: 'warning' });
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
+  const [showDownloadOptions, setShowDownloadOptions] = useState(false);
 
   const title = "Delete School!";
   const message = "Do you really want to delete this school";
@@ -185,36 +186,25 @@ function SchoolPage() {
     event.target.value = ""; // Reset input
   };
 
-  const renderFileUploadSection = () => (
-    <div className="file-upload-container">
-      <div className="action-buttons-row">
-        <button className="action-button" onClick={handleDownloadTemplateClick}>
-          <MdFileDownload className="button-icon" />
-          Download Template
-        </button>
-        
-        <label htmlFor="fileInput" className="action-button">
-          <MdFileUpload className="button-icon" />
-          Upload School
-        </label>
-        <input
-          id="fileInput"
-          type="file"
-          accept=".xlsx,.xls,.csv"
-          onChange={handleFileUpload}
-          style={{ display: "none" }}
-        />
-        
-        <button className="action-button" onClick={downloadSchoolList}>
-          <MdFileDownload className="button-icon" />
-          Download Data
-        </button>
-      </div>
-    </div>
-  );
+  const handleDownloadClick = () => {
+    setShowDownloadOptions(!showDownloadOptions);
+  };
 
   useEffect(() => {
     getSchooList();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.download-container')) {
+        setShowDownloadOptions(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
   }, []);
 
   if (loading) {
@@ -299,15 +289,51 @@ function SchoolPage() {
         <div className="heading-container">
           <h2 className="school-heading">School</h2>
         </div>
-        <button
-          className="g-button create-new-button"
-          onClick={handleCreateNew}
-        >
-          Create New
-        </button>
+        <div className="header-right">
+          <div className="header-buttons">
+            <label 
+              htmlFor="fileInput" 
+              className="icon-button"
+              title="Upload School"
+            >
+              <MdFileUpload className="button-icon" />
+            </label>
+            <input
+              id="fileInput"
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              onChange={handleFileUpload}
+              style={{ display: "none" }}
+            />
+            
+            <div className="download-container">
+              <button 
+                className="icon-button" 
+                onClick={handleDownloadClick}
+                title="Download Options"
+              >
+                <MdFileDownload className="button-icon" />
+              </button>
+              {showDownloadOptions && (
+                <div className="download-options">
+                  <button onClick={handleDownloadTemplateClick}>
+                    Download Template
+                  </button>
+                  <button onClick={downloadSchoolList}>
+                    Download Data
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          <button
+            className="g-button create-new-button"
+            onClick={handleCreateNew}
+          >
+            Create New
+          </button>
+        </div>
       </div>
-
-      {renderFileUploadSection()}
 
       <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
         <AgGridTable 
