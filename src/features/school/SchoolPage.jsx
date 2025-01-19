@@ -19,6 +19,7 @@ import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 import apiServices from "../../common/ServiCeProvider/Services";
 import axios from "axios";
 import FileOperationsButtons from '../../common/GloabalComponent/FileOperationsButtons';
+import CustomTable from "../../common/GloabalComponent/CustomTable";
 
 function SchoolPage() {
   const [selectedSchoolId, setSelectedSchoolId] = useState(null);
@@ -216,72 +217,92 @@ function SchoolPage() {
     return <div>{errors.length > 0 && <ErrorMessage errors={errors} />}</div>;
   }
 
-  const columDefs = [
-    {
-      headerCheckboxSelection: true,
-      checkboxSelection: false,
-      width: 50,
-    },
+  const columnDefs = [
     {
       headerName: "School Name",
       field: "name",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 200,
+      flex: 1.5,
+      cellRenderer: params => (
+        <div className="name-cell">
+          <span className="school-badge">{params.value}</span>
+        </div>
+      ),
     },
     {
       headerName: "Address",
       field: "address",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 200,
+      flex: 1.5,
+      cellRenderer: params => (
+        <div className="address-cell" title={params.value}>
+          {params.value}
+        </div>
+      ),
     },
     {
-      headerName: "Principal Name",
+      headerName: "Contact Person",
       field: "principalName",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 180,
+      flex: 1.2,
     },
     {
-      headerName: "Managing Trustee",
+      headerName: "Contact Number",
       field: "principalContactNo",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 150,
+      flex: 1,
     },
     {
-      headerName: "Trustee Contact",
+      headerName: "Email",
       field: "managingTrustee",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 200,
+      flex: 1.5,
+      cellRenderer: params => (
+        <div className="email-cell">
+          <span>{params.value}</span>
+        </div>
+      ),
     },
     {
       headerName: "Trustee Contact Info",
       field: "trusteeContactInfo",
-      filter: true,
-      floatingFilter: true,
+      minWidth: 200,
+      flex: 1.5,
+      cellRenderer: params => (
+        <div className="trustee-contact-info">
+          {params.value}
+        </div>
+      ),
     },
     {
       headerName: "Actions",
-      // field: "actions",
-      filter: true,
-      floatingFilter: true,
-      cellRenderer: (params) => {
-        return (
-          <div>
-            <button
-              onClick={() => handleEdit(params?.data?.id)}
-              className="action-button edit-button"
-            >
-              <FaEdit />
-            </button>
-            <button
-              onClick={() => handleDelete(params?.data?.id)}
-              className="action-button delete-button"
-            >
-              <FaTrashAlt />
-            </button>
-          </div>
-        );
-      },
-    },
+      field: "actions",
+      cellRenderer: params => (
+        <div className="action-buttons">
+          <button
+            onClick={() => handleEdit(params.data.id)}
+            className="action-button edit-button"
+            title="Edit School"
+          >
+            <FaEdit />
+          </button>
+          <button
+            onClick={() => handleDelete(params.data.id)}
+            className="action-button delete-button"
+            title="Delete School"
+          >
+            <FaTrashAlt />
+          </button>
+        </div>
+      ),
+      filter: false,
+      sortable: false,
+      width: 120,
+      minWidth: 120,
+      maxWidth: 120,
+      pinned: 'right',
+      cellStyle: { padding: '0 8px' }
+    }
   ];
 
   return (
@@ -308,24 +329,11 @@ function SchoolPage() {
       </div>
 
       <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
-        <AgGridTable 
+        <CustomTable 
           rowData={schoolRowData} 
-          columnDefs={columDefs}
-          pagination={true}
-          paginationPageSize={10}
-          rowHeight={48}
-          headerHeight={48}
-          animateRows={true}
-          enableCellTextSelection={true}
-          suppressMovableColumns={true}
-          suppressDragLeaveHidesColumns={true}
-          onGridSizeChanged={(params) => {
-            params.api.sizeColumnsToFit();
-          }}
-          onFirstDataRendered={(params) => {
-            params.api.sizeColumnsToFit();
-          }}
-          className="custom-ag-table"
+          columnDefs={columnDefs}
+          paginationPageSize={20}
+          rowHeight={40}
         />
       </div>
       {isModalVisible && (

@@ -1,0 +1,47 @@
+.custom-table-container {
+  height: 500px;
+  width: 100%;
+}
+
+.custom-ag-table .name-cell,
+.custom-ag-table .email-cell,
+.custom-ag-table .phone-cell,
+.custom-ag-table .address-cell {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-ag-table .school-cell .school-badge {
+  background-color: #e8f0fe;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #1a73e8;
+}
+
+.custom-ag-table .action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.custom-ag-table .action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.custom-ag-table .edit-button {
+  color: #1a73e8;
+}
+
+.custom-ag-table .delete-button {
+  color: #dc3545;
+}
+
+.custom-ag-table .action-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}

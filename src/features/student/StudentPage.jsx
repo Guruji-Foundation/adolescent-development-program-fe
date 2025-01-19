@@ -13,6 +13,7 @@ import { MdFileDownload, MdFileUpload } from "react-icons/md";
 import axios from "axios";
 import Toast from '../../common/FeedbackComponents/Toast/Toast';
 import FileOperationsButtons from '../../common/GloabalComponent/FileOperationsButtons';
+import CustomTable from '../../common/GloabalComponent/CustomTable';
 
 const StudentPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
@@ -420,28 +421,12 @@ const StudentPage = () => {
 
       {renderFileUploadSection()}
 
-      <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
-        <AgGridTable 
-          rowData={rowData} 
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          pagination={true}
-          paginationPageSize={10}
-          rowHeight={48}
-          headerHeight={48}
-          animateRows={true}
-          enableCellTextSelection={true}
-          suppressMovableColumns={true}
-          suppressDragLeaveHidesColumns={true}
-          onGridSizeChanged={(params) => {
-            params.api.sizeColumnsToFit();
-          }}
-          onFirstDataRendered={(params) => {
-            params.api.sizeColumnsToFit();
-          }}
-          className="custom-ag-table"
-        />
-      </div>
+      <CustomTable 
+        rowData={rowData} 
+        columnDefs={columnDefs}
+        paginationPageSize={20}
+        rowHeight={40}
+      />
 
       {showUploadSuccessModal && (
         <ConfirmationModal
