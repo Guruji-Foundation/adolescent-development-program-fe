@@ -18,6 +18,7 @@ import AgGridTable from "../../common/GloabalComponent/AgGridTable";
 
 import apiServices from "../../common/ServiCeProvider/Services";
 import axios from "axios";
+import FileOperationsButtons from '../../common/GloabalComponent/FileOperationsButtons';
 
 function SchoolPage() {
   const [selectedSchoolId, setSelectedSchoolId] = useState(null);
@@ -290,42 +291,13 @@ function SchoolPage() {
           <h2 className="school-heading">School</h2>
         </div>
         <div className="header-right">
-          <div className="header-buttons">
-            <label 
-              htmlFor="fileInput" 
-              className="icon-button"
-              title="Upload School"
-            >
-              <MdFileUpload className="button-icon" />
-            </label>
-            <input
-              id="fileInput"
-              type="file"
-              accept=".xlsx,.xls,.csv"
-              onChange={handleFileUpload}
-              style={{ display: "none" }}
-            />
-            
-            <div className="download-container">
-              <button 
-                className="icon-button" 
-                onClick={handleDownloadClick}
-                title="Download Options"
-              >
-                <MdFileDownload className="button-icon" />
-              </button>
-              {showDownloadOptions && (
-                <div className="download-options">
-                  <button onClick={handleDownloadTemplateClick}>
-                    Download Template
-                  </button>
-                  <button onClick={downloadSchoolList}>
-                    Download Data
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+          <FileOperationsButtons
+            onUpload={handleFileUpload}
+            onDownloadTemplate={handleDownloadTemplateClick}
+            onDownloadData={downloadSchoolList}
+            uploadTitle="Upload School"
+            downloadTitle="Download Options"
+          />
           <button
             className="g-button create-new-button"
             onClick={handleCreateNew}

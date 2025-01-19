@@ -12,6 +12,7 @@ import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im";
 import { MdFileDownload, MdFileUpload } from "react-icons/md";
 import axios from "axios";
 import Toast from '../../common/FeedbackComponents/Toast/Toast';
+import FileOperationsButtons from '../../common/GloabalComponent/FileOperationsButtons';
 
 const StudentPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
@@ -21,6 +22,7 @@ const StudentPage = () => {
   const [file, setFile] = useState(null);
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: 'warning' });
+  const [showDownloadOptions, setShowDownloadOptions] = useState(false);
 
   const navigate = useNavigate();
 
@@ -82,6 +84,19 @@ const StudentPage = () => {
   useEffect(() => {
     getAllStudents();
   }, [selectedSchool]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.download-container')) {
+        setShowDownloadOptions(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   const confirmDelete = async () => {
     try {
@@ -376,36 +391,6 @@ const StudentPage = () => {
           </button>
         )}
       </div>
-
-      <div className="action-buttons-row">
-        <button className="action-button" onClick={handleDownloadTemplateClick}>
-          <MdFileDownload className="button-icon" />
-          Download Template
-        </button>
-        
-        <label htmlFor="fileInput" className="action-button">
-          <MdFileUpload className="button-icon" />
-          Upload Student
-        </label>
-        <input
-          id="fileInput"
-          type="file"
-          accept=".xlsx,.xls,.csv"
-          onChange={(e) => {
-            const selectedFile = e.target.files[0];
-            if (selectedFile) {
-              uploadFile(selectedFile);
-            }
-            e.target.value = "";
-          }}
-          style={{ display: "none" }}
-        />
-        
-        <button className="action-button" onClick={downloadStudentList}>
-          <MdFileDownload className="button-icon" />
-          Download Data
-        </button>
-      </div>
     </div>
   );
 
@@ -415,13 +400,22 @@ const StudentPage = () => {
         <div className="heading-container">
           <h2 className="project-heading">Student Management</h2>
         </div>
-        <button
-          className="create-new-button"
-          onClick={handelAddStudent}
-          title="Add New Student"
-        >
-          Create New
-        </button>
+        <div className="header-right">
+          <FileOperationsButtons
+            onUpload={uploadFile}
+            onDownloadTemplate={handleDownloadTemplateClick}
+            onDownloadData={downloadStudentList}
+            uploadTitle="Upload Student"
+            downloadTitle="Download Options"
+          />
+          <button
+            className="create-new-button"
+            onClick={handelAddStudent}
+            title="Add New Student"
+          >
+            Create New
+          </button>
+        </div>
       </div>
 
       {renderFileUploadSection()}
