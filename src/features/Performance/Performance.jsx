@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import apiServices from "../../common/ServiCeProvider/Services";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im"
+import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import AgGridTable from "../../common/GloabalComponent/AgGridTable";
@@ -11,6 +11,9 @@ import SelectInput from "../../common/FormInput/SelectInput";
 import SuccessModal from "../../common/FeedbackComponents/Sucess/SuccessModal";
 import axios from 'axios';
 import "../../CSS/Main.css"
+import { MdFileDownload, MdFileUpload } from "react-icons/md";
+import './Performance.css';
+import Toast from "../../common/FeedbackComponents/Toast/Toast";
 
 function Performance() {
     const navigate = useNavigate();
@@ -34,6 +37,11 @@ function Performance() {
     const [selectedTopics, setSelectedTopics] = useState(null);
     const [file, setFile] = useState(null);
     const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastType, setToastType] = useState("warning");
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = React.useRef(null);
 
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
@@ -336,6 +344,14 @@ function Performance() {
     };
 
     const handleDownloadTemplateClick = async () => {
+        if (!selectedTopics) {
+            setShowToast(true);
+            setToastMessage("Please select a topic before downloading the template");
+            setToastType("warning");
+            setTimeout(() => setShowToast(false), 3000);
+            return;
+        }
+
         try {
             const requestBody = {
                 schoolId: Number(selectedSchool),
@@ -344,25 +360,60 @@ function Performance() {
                     Number(selectedTopics)
                 ]
             }
-            // const response = await apiServices.downloadPerformanceTemplate(requestBody);
             const response = await axios.post(
-                `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`, requestBody, // Adjust the endpoint
+                `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`, 
+                requestBody,
                 {
-                    responseType: 'blob', // Ensure the response is treated as a binary blob
+                    responseType: 'blob',
                 }
             );
-            const contentDisposition = response.headers['content-disposition'] || '';
-            // const filename = extractFilenameFromHeaderString(contentDisposition);
-            console.log(typeof response.data);
-            // Trigger download
-            downloadCsvData(response.data, "Performace");
+
+            // Check if the response is actually a blob (successful download)
+            if (response.data instanceof Blob) {
+                downloadCsvData(response.data, "Performance");
+            } else {
+                setShowToast(true);
+                setToastMessage("Failed to download template. Please try again.");
+                setToastType("danger");
+            }
         } catch (error) {
-            throw error;
+            console.error("Download error:", error);
+            
+            // Get the error message from the API response
+            const errorMessage = error.response?.data?.messages?.[0]?.message || "An unexpected error occurred";
+            
+            setShowToast(true);
+            setToastMessage(errorMessage);
+            setToastType("danger");
+            setTimeout(() => setShowToast(false), 3000);
         }
-    }
+    };
+
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+            uploadFile(selectedFile);
+        }
+        // Reset the input value immediately after getting the file
+        if (event.target) {
+            event.target.value = '';
+        }
+    };
+
+    const handleUploadClick = () => {
+        if (!selectedTopics) {
+            setShowToast(true);
+            setToastMessage("Please select a topic before uploading the file");
+            setToastType("warning");
+            setTimeout(() => setShowToast(false), 3000);
+            return;
+        }
+        fileInputRef.current?.click();
+    };
 
     const uploadFile = async (file) => {
-        // Form the data
+        setIsUploading(true);
         const formData = new FormData();
         formData.append('file', file);
 
@@ -385,136 +436,185 @@ function Performance() {
 
             if (response?.status) {
                 setFile(null);
-                setShowUploadSuccessModal(true)
+                setShowUploadSuccessModal(true);
+                // Refresh the table data
+                if (selectedProject && selectedSchool) {
+                    await getPerformanceDetailsBasedOnProjectAndSchool();
+                }
             }
-            console.log('File uploaded successfully:', response.data);
         } catch (error) {
             console.error('Error uploading file:', error.response || error);
+            setShowToast(true);
+            setToastMessage("Error uploading file. Please try again.");
+            setToastType("danger");
+            setTimeout(() => setShowToast(false), 3000);
+        } finally {
+            setIsUploading(false);
         }
     };
 
-
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
-    };
-
-    const handleUpload = () => {
-        if (file) {
-            uploadFile(file);
-        } else {
-            alert('Please select a file to upload.');
-        }
-    };
+    const renderFileUploadSection = () => (
+        <div className="file-upload-container">
+            <div className="selection-and-template-container">
+                {/* First Row: Selection Inputs */}
+                <div className="school-selector-group">
+                    <div className="select-wrapper">
+                        <SelectInput
+                            label="Select Project"
+                            value={selectedProject || ""}
+                            options={projectsList}
+                            onChange={(e) => setSelectedProject(e.target.value)}
+                            placeholder="Choose a project..."
+                        />
+                    </div>
+                    <div className="select-wrapper">
+                        <SelectInput
+                            label="Select School"
+                            value={selectedSchool || ""}
+                            options={schoolList}
+                            onChange={(e) => setSelectedSchool(e.target.value)}
+                            placeholder="Choose a school..."
+                        />
+                    </div>
+                    <div className="select-wrapper">
+                        <SelectInput
+                            label="Select Topic"
+                            value={selectedTopics || ""}
+                            options={topicData}
+                            onChange={(e) => setSelectedTopics(e.target.value)}
+                            placeholder="Choose a topic..."
+                        />
+                    </div>
+                   
+                    {(selectedProject || selectedSchool || selectedTopics) && (
+                        <button
+                            className="clear-school-button"
+                            onClick={() => {
+                                setSelectedProject(null);
+                                setSelectedSchool(null);
+                                setSelectedTopics(null);
+                                getTopicData(null);
+                            }}
+                            title="Clear selection"
+                        >
+                            <ImCross className="clear-icon" />
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <div className="project-page">
+            {isUploading && <LoadingSpinner />}
             <div className="header">
                 <div className="heading-container">
-                    <h2 className="project-heading">Performance</h2>
-                    {/* <p className="subheading">Performance List of Students</p> */}
+                    <h2 className="project-heading">Performance Management</h2>
                 </div>
-                <button
-                    className="g-button create-new-button"
-                    onClick={() => { saveAllPerformances() }}
-                >
-                    Save
-                </button>
-            </div>
-            {/* <div>
-                <input type="file" onChange={handleFileChange} />
-                {file && (<><ImUpload2 onClick={handleUpload} /> Upload Marks</>)}
-            </div> */}
-            <div className="file-upload-container">
-                <label htmlFor="fileInput" className="custom-file-input">
-                    {file ? file.name : "Upload marks/performance"}
-                </label>
-                <input
-                    id="fileInput"
-                    type="file"
-                    onChange={handleFileChange}
-                    style={{ display: "none" }} // Hide the default file input
-                />
-                {file && (
+                <div style={{ display: "flex", gap: "10px" }}>
+                    <div className="download-container">
+                        <button 
+                            className="icon-button" 
+                            onClick={handleDownloadTemplateClick} 
+                            title="Download Template"
+                        >
+                            <MdFileDownload className="button-icon" />
+                        </button>
+                    </div>
                     <div className="upload-container">
-                        <div>
-                            <ImUpload2 className="upload-icon" onClick={handleUpload} />
-                        </div>
-                        <div>
-                            <span onClick={handleUpload}>Upload Marks</span>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            style={{ display: "none" }}
+                            onChange={handleFileChange}
+                        />
+                        <button 
+                            className="icon-button"
+                            onClick={handleUploadClick}
+                            title="Upload Marks"
+                        >
+                            <MdFileUpload className="button-icon" />
+                        </button>
+                    </div>
+                    {selectedSchool && selectedProject && (
+                        <button
+                            className="create-new-button"
+                            onClick={saveAllPerformances}
+                            title="Save Changes"
+                        >
+                            Save Changes
+                        </button>
+                    )}
+                </div>
+            </div>
 
-                        </div>
-                    </div>
-                )}
-            </div>
-            {
-                selectedTopics && selectedSchool && selectedProject && (<div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div></div>
-                    <div onClick={handleDownloadTemplateClick}>
-                        <ImDownload2 /> Download Template
-                    </div>
-                </div>)
-            }
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                <SelectInput
-                    label="Select Project"
-                    value={selectedProject || ""}
-                    options={projectsList}
-                    onChange={(e) => { setSelectedProject(e.target.value) }}
-                />
-                <SelectInput
-                    label="Select School"
-                    value={selectedSchool || ""}
-                    options={schoolList}
-                    onChange={(e) => { setSelectedSchool(e.target.value) }}
-                />
-                <SelectInput
-                    label="Select Topic"
-                    value={selectedTopics || ""}
-                    options={topicData}
-                    onChange={(e) => { setSelectedTopics(e.target.value) }}
-                />
-                <ImCross className="action-button delete-button" onClick={() => {
-                    setSelectedProject(null);
-                    setSelectedSchool(null);
-                    setSelectedTopics(null);
-                    getTopicData(null);
-                }} />
-            </div>
+            {renderFileUploadSection()}
 
             {!(selectedSchool && selectedProject) ? (
-                // <div className="ag-theme-quartz" style={{ height: "500px" }}>
-                //     <AgGridTable rowData={performanceData} columnDefs={columnDefs} />
-                // </div>
-                <>
-                    <h2 className="project-heading">Please select relevant options to view Performance of Student</h2>
-
-                </>
+                <h2 className="project-heading">Please select relevant options to view Performance of Student</h2>
             ) : (
-                <div>
-                    <div className="ag-theme-quartz" style={{ height: "500px" }}>
-                        <AgGridTable
-                            rowData={rowDataWithTpoic}
-                            columnDefs={columDefsWithTopic}
-                            onCellValueChanged={handleCellValueChange}
-                        />
-                    </div>
+                <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
+                    <AgGridTable
+                        rowData={rowDataWithTpoic}
+                        columnDefs={columDefsWithTopic}
+                        onCellValueChanged={handleCellValueChange}
+                        defaultColDef={{
+                            sortable: true,
+                            filter: true,
+                            floatingFilter: true,
+                            resizable: true,
+                            suppressSizeToFit: true,
+                            flex: 1,
+                        }}
+                        pagination={true}
+                        paginationPageSize={10}
+                        rowHeight={48}
+                        headerHeight={48}
+                        animateRows={true}
+                        enableCellTextSelection={true}
+                        suppressMovableColumns={true}
+                        suppressDragLeaveHidesColumns={true}
+                        onGridSizeChanged={(params) => {
+                            params.api.sizeColumnsToFit();
+                        }}
+                        onFirstDataRendered={(params) => {
+                            params.api.sizeColumnsToFit();
+                        }}
+                        className="custom-ag-table"
+                    />
                 </div>
             )}
 
             {isModalVisible && (
                 <ConfirmationModal
                     title="Confirm Deletion"
-                    message="Do you really want to delete this Teacher?"
+                    message="Do you really want to delete this Performance?"
                     onConfirm={deletePerformance}
                     onCancel={cancelDelete}
                 />
             )}
-            {showModal && <SuccessModal data={{ description: "Performance Updated Successfully!!" }} onClose={() => { setShowModal(false) }} />}
-
-            {showUploadSuccessModal && <SuccessModal data={{ description: "Performance Updated Successfully!!" }} onClose={() => { setShowUploadSuccessModal(false) }} />}
-
+            {showModal && (
+                <SuccessModal
+                    data={{ description: "Performance Updated Successfully!" }}
+                    onClose={() => setShowModal(false)}
+                />
+            )}
+            {showUploadSuccessModal && (
+                <SuccessModal
+                    data={{ description: "Performance Updated Successfully!" }}
+                    onClose={() => setShowUploadSuccessModal(false)}
+                />
+            )}
+            {showToast && (
+                <Toast 
+                    type={toastType}
+                    message={toastMessage}
+                    onClose={() => setShowToast(false)}
+                />
+            )}
         </div>
-    )
+    );
 }
 
 export default Performance

@@ -97,8 +97,8 @@ const TeacherForm = ({
 
   return (
     <div className="form-container">
-      <h2>{heading}</h2>
       <form onSubmit={handleSubmitButton}>
+        <h2>{heading}</h2>
         <div className="form-layout">
           <TextInput
             label="Teacher Name"

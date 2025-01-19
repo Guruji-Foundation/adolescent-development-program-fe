@@ -68,71 +68,71 @@ const SchoolForm = ({
 
   return (
     <div className="form-container">
-      <h2>{heading}</h2>
       <form onSubmit={handleSubmitButton}>
+        <h2>{heading}</h2>
         <div className="form-layout">
-          <TextInput
-            label="School Name"
-            name="name"
-            value={schoolData.name}
-            onChange={handleInputChange}
-            required
-          />
+          <div className="form-row">
+            <TextInput
+              label="School Name"
+              name="name"
+              value={schoolData.name}
+              onChange={handleInputChange}
+              required
+            />
 
-          <TextInput
-            label="Address"
-            name="address"
-            value={schoolData.address}
-            onChange={handleInputChange}
-            required
-          />
-          {/* <TextInput
-            label=" Phone Number"
-            name="phoneNumber"
-            value={schoolData.phoneNumber}
-            onChange={handleInputChange}
-            required
-          /> */}
+            <TextInput
+              label="Address"
+              name="address"
+              value={schoolData.address}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
-          <TextInput
-            label="Principal Name"
-            name="principalName"
-            value={schoolData.principalName}
-            onChange={handleInputChange}
-            required
-          />
+          <div className="form-row">
+            <TextInput
+              label="Principal Name"
+              name="principalName"
+              value={schoolData.principalName}
+              onChange={handleInputChange}
+              required
+            />
 
-          <TextInput
-            label="Principal Contact No"
-            name="principalContactNo"
-            value={schoolData.principalContactNo}
-            onChange={handleInputChange}
-            required
-          />
+            <TextInput
+              label="Principal Contact No"
+              name="principalContactNo"
+              value={schoolData.principalContactNo}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
-          <TextInput
-            label="Managing Trustee"
-            name="managingTrustee"
-            value={schoolData.managingTrustee}
-            onChange={handleInputChange}
-          />
+          <div className="form-row">
+            <TextInput
+              label="Managing Trustee"
+              name="managingTrustee"
+              value={schoolData.managingTrustee}
+              onChange={handleInputChange}
+            />
 
-          <TextInput
-            label="Trustee Contact Info"
-            name="trusteeContactInfo"
-            value={schoolData.trusteeContactInfo}
-            onChange={handleInputChange}
-          />
+            <TextInput
+              label="Trustee Contact Info"
+              name="trusteeContactInfo"
+              value={schoolData.trusteeContactInfo}
+              onChange={handleInputChange}
+            />
+          </div>
 
-          <TextInput
-            label="Website"
-            name="website"
-            value={schoolData.website}
-            onChange={handleInputChange}
-          />
+          <div className="form-row single-input">
+            <TextInput
+              label="Website"
+              name="website"
+              value={schoolData.website}
+              onChange={handleInputChange}
+            />
+          </div>
         </div>
 
-        {/* Use Button component */}
         <Button
           type="submit"
           label="Submit"
@@ -141,7 +141,6 @@ const SchoolForm = ({
       </form>
 
       {errors.length > 0 && <ErrorMessage errors={errors} />}
-
       {showModal && <SuccessModal data={message} onClose={handleClose} />}
     </div>
   );

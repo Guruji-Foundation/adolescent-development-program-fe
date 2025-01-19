@@ -6,153 +6,685 @@ html {
   line-height: 1.6;
 }
 
-.student-page {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+.project-page {
+  padding: 24px;
+  background: #f5f7fa;
+  min-height: 100vh;
 }
 
-/* Header Section */
-.student-page .header {
+.header {
+  background: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  gap: 16px;
 }
 
-/* Column Layout for Headings */
-.student-page .heading-container {
+.heading-container {
   display: flex;
-  flex-direction: column; /* Stack the headings vertically */
+  align-items: center;
+  gap: 12px;
 }
 
-.student-page .student-heading {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: hsl(210, 25.3%, 32.5%);
-}
-
-.student-page .subheading {
-  font-size: 1.1rem;
-  color: rgba(0, 7, 20, 0.62);
+.project-heading {
+  font-size: 28px;
+  color: #1e293b;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.5px;
 }
 
 .create-new-button {
-  background-color: #28a745;
+  background: #2563eb;
   color: white;
-  border: none;
   padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
 }
 
 .create-new-button:hover {
-  background-color: #218838;
-}
-
-/* Table Section */
-.student-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-top: 20px;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.student-table th,
-.student-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.student-table th {
-  background-color: #f9f9fb;
-  color: hsl(220, 6%, 40%);
-  font-weight: 600;
-}
-
-.student-table td {
-  color: hsl(220, 6%, 40%);
-}
-
-.student-table tr:last-child td {
-  border-bottom: none;
-}
-
-.student-table tr:hover {
-  background-color: #f5f5f5;
-}
-
-/* Action Buttons */
-.action-button {
-  background-color: #f9f9fb;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-  margin-left: 8px;
-}
-
-.action-button:hover {
-  background-color: #e9ecef;
-}
-
-.edit-button {
-  color: #007bff;
-}
-
-.delete-button {
-  color: #dc3545;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .student-page {
-    padding: 10px;
-  }
-
-  .student-table th,
-  .student-table td {
-    padding: 8px 10px;
-  }
-}
-
-.download-button,
-.custom-file-input {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  background-color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.download-button:hover,
-.custom-file-input:hover {
-  background-color: #f5f5f5;
-  border-color: #d0d0d0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.upload-icon,
-.download-icon {
-  font-size: 20px;
-  color: #666;
+  background: #1d4ed8;
 }
 
 .file-upload-container {
+  margin: 24px 0;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.school-selector-group {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.select-wrapper {
+  flex: 1;
+}
+
+.select-input {
+  width: 100%;
+}
+
+.select-input select {
+  height: 40px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background-color: white;
+  color: #1e293b;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 100%;
+}
+
+.select-input select option {
+  padding: 8px 12px;
+  font-size: 14px;
+  white-space: normal;
+  word-wrap: break-word;
+  min-height: 40px;
+  line-height: 1.4;
+  width: auto;
+  max-width: none;
+}
+
+.select-input select:hover {
+  border-color: #3b82f6;
+}
+
+.select-input select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.select-input select:focus option {
+  padding: 12px;
+  background-color: white;
+}
+
+.select-input select:focus option:hover,
+.select-input select:focus option:focus,
+.select-input select:focus option:active {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+.selected-school {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  font-size: 12px;
+  color: #3b82f6;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 40px);
+  background-color: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.clear-school-button {
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6c757d;
+  transition: all 0.2s ease;
+}
+
+.clear-school-button:hover {
+  color: #dc3545;
+}
+
+.clear-icon {
+  font-size: 12px;
+}
+
+.buttons-group {
   display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+/* Update SelectInput styles */
+.select-input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.select-input select {
+  height: 40px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background-color: white;
+  color: #1e293b;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.select-input select:hover {
+  border-color: #3b82f6;
+}
+
+.select-input select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.download-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.download-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.download-button:hover {
+  color: white;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.download-button:hover::before {
+  opacity: 1;
+}
+
+.download-button span {
+  z-index: 2;
+  position: relative;
+}
+
+.upload-icon {
+  font-size: 1.2rem;
+  z-index: 2;
+  position: relative;
+}
+
+.action-button {
+  padding: 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.edit-button:hover {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.delete-button:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.button-icon {
+  font-size: 18px;
+  color: #4a90e2;
+}
+
+.ag-theme-quartz {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background-color: white;
+}
+
+/* Add smooth scrollbar for the table */
+.ag-body-viewport::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.ag-body-viewport::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.ag-body-viewport::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.ag-body-viewport::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Table Styles */
+.custom-ag-table {
+  --ag-header-height: 48px;
+  --ag-header-foreground-color: #1e293b;
+  --ag-header-background-color: #f8fafc;
+  --ag-header-cell-hover-background-color: #f1f5f9;
+  --ag-header-cell-moving-background-color: #f1f5f9;
+  --ag-row-hover-color: #f8fafc;
+  --ag-selected-row-background-color: #eff6ff;
+  --ag-font-size: 14px;
+  --ag-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.ag-header-cell {
+  font-weight: 600 !important;
+  font-size: 13px !important;
+}
+
+.name-cell, .school-cell, .email-cell, .phone-cell {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 4px;
+}
+
+.school-badge {
+  padding: 4px 12px;
+  background-color: #f0f9ff;
+  color: #0369a1;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.email-cell span, 
+.phone-cell span,
+.name-cell span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #475569;
+}
+
+.address-cell {
+  padding: 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #475569;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Pagination Styles */
+.ag-paging-panel {
+  border-top: 1px solid #e2e8f0;
+  padding: 12px !important;
+}
+
+.ag-paging-button {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+}
+
+.ag-paging-button:hover {
+  background-color: #f8fafc !important;
+}
+
+.ag-paging-page-summary-panel {
+  font-size: 13px !important;
+  color: #64748b !important;
+}
+
+/* Row Styles */
+.ag-row {
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.ag-row-hover {
+  background-color: #f8fafc !important;
+}
+
+.ag-row-selected {
+  background-color: #eff6ff !important;
+}
+
+/* Filter Styles */
+.ag-header-cell-filtered {
+  background-color: #eff6ff !important;
+}
+
+.ag-floating-filter-input {
+  border-radius: 4px !important;
+  border: 1px solid #e2e8f0 !important;
+  padding: 4px 8px !important;
+}
+
+.ag-floating-filter-input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Ensure content stays within cells */
+.ag-cell {
+  overflow: hidden !important;
+}
+
+.ag-cell-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+/* Add styles for the select placeholder */
+.select-input select:invalid,
+.select-input select option[value=""] {
+  color: #94a3b8;
+}
+
+/* Style for the selected option */
+.select-input select:focus option:checked {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+/* Increase dropdown width */
+.select-input select[size]:not([size="1"]) {
+  height: auto;
+  min-width: 100%;
+}
+
+/* Ensure proper text alignment */
+.select-input select,
+.select-input select option {
+  text-align: left;
+}
+
+.action-buttons-row {
+  display: flex;
+  justify-content: flex-end;
   gap: 16px;
   align-items: center;
-  margin-bottom: 20px;
+}
+
+/* Custom styles for the select input */
+.select-wrapper select {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #495057;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.select-wrapper select:focus {
+  border-color: #4a90e2;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+/* Style for disabled state */
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f1f3f5;
+}
+
+/* Add hover effect for the entire container */
+.file-upload-container:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-buttons-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .action-button {
+    padding: 8px;  /* Larger touch target */
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+/* Table Action Buttons Styling */
+.action-buttons {
+  gap: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.action-button {
+  padding: 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.action-button.edit-button,
+.action-button.delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.action-button.edit-button {
+  color: #4a90e2;
+}
+
+.action-button.delete-button {
+  color: #dc3545;
+}
+
+.action-button.edit-button:hover {
+  background-color: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.action-button.delete-button:hover {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.action-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Ensure the cell content is visible */
+.ag-theme-quartz .ag-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  overflow: visible !important;
+}
+
+/* Style for the action column */
+.ag-theme-quartz .ag-cell[col-id="actions"] {
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Remove default AG Grid cell styling that might interfere */
+.ag-theme-quartz .ag-cell-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure buttons stay visible on row hover */
+.ag-theme-quartz .ag-row:hover .action-buttons {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Add hover effect to table rows */
+.ag-theme-quartz .ag-row:hover {
+  background-color: #f8f9fa !important;
+}
+
+/* Add tooltip styles */
+[title] {
+  position: relative;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-buttons {
+    gap: 4px;
+  }
+  
+  .action-button.edit-button,
+  .action-button.delete-button {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .action-button svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.download-container {
+  position: relative;
+  display: inline-block;
+}
+
+.download-options {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 1000;
+  min-width: 160px;
+}
+
+.download-options button {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.download-options button:hover {
+  background-color: #f5f5f5;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-button:hover {
+  background-color: #f8fafc;
+  border-color: #3b82f6;
+}
+
+.button-icon {
+  font-size: 20px;
+  color: #475569;
+}
+
+.icon-button:hover .button-icon {
+  color: #3b82f6;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Table Styles */
+.ag-row-even {
+  background-color: #f8fafc;
 }

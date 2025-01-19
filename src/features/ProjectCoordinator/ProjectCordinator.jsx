@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
+import CustomTable from "../../common/GloabalComponent/CustomTable";
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import apiServices from "../../common/ServiCeProvider/Services";
@@ -29,41 +29,33 @@ function ProjectCordinator() {
     {
       headerName: "Name",
       field: "name",
-      filter: true,
-      floatingFilter: true,
+      cellClass: 'name-cell'
     },
     {
       headerName: "Area Of Expertise",
       field: "areaOfExpertise",
-      filter: true,
-      floatingFilter: true,
+      cellClass: 'name-cell'
     },
     {
       headerName: "Availability",
       field: "availability",
-      filter: true,
-      floatingFilter: true,
+      cellClass: 'name-cell'
     },
     {
       headerName: "Mobile Number",
       field: "mobileNumber",
-      filter: true,
-      floatingFilter: true,
+      cellClass: 'phone-cell'
     },
     {
       headerName: "Address",
       field: "address",
-      filter: true,
-      floatingFilter: true,
+      cellClass: 'address-cell'
     },
     {
       headerName: "Actions",
-      // field: "actions",
-      filter: true,
-      floatingFilter: true,
       cellRenderer: (params) => {
         return (
-          <div>
+          <div className="action-buttons">
             <button
               onClick={() => handleEdit(params?.data?.id)}
               className="action-button edit-button"
@@ -156,9 +148,10 @@ function ProjectCordinator() {
         </button>
       </div>
 
-      <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable rowData={rowData} columnDefs={columnDefs} />
-      </div>
+      <CustomTable 
+        rowData={rowData} 
+        columnDefs={columnDefs}
+      />
 
       {isModalVisible && (
         <ConfirmationModal

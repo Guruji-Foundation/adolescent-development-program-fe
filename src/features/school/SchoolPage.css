@@ -7,116 +7,193 @@ html {
 }
 
 .school-page {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 24px;
+  background: #f5f7fa;
+  min-height: 100vh;
 }
 
-/* Header Section */
-.school-page .header {
+/* Header styles */
+.header {
+  background: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
-/* Column Layout for Headings */
-.school-page .heading-container {
+.heading-container {
   display: flex;
-  flex-direction: column; /* Stack the headings vertically */
+  align-items: center;
+  gap: 12px;
 }
 
-.school-page .school-heading {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: hsl(210, 25.3%, 32.5%);
+.school-heading {
+  font-size: 28px;
+  color: #1e293b;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.5px;
 }
 
-.school-page subheading {
-  font-size: 1.1rem;
-  color: rgba(0, 7, 20, 0.62);
+.header-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .create-new-button {
-  border: none;
+  background: #2563eb;
+  color: white;
   padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 5px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .create-new-button:hover {
-  background-color: #218838;
+  background: #1d4ed8;
+  transform: translateY(-1px);
 }
 
-/* Table Section */
-.school-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-top: 20px;
-  border-radius: 8px;
-  overflow: hidden;
+/* Table Cells */
+.school-name-cell,
+.address-cell,
+.principal-cell {
+  padding: 8px;
+  line-height: 1.5;
 }
 
-.school-table th,
-.school-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+.school-name-badge {
+  background: #f0f9ff;
+  color: #0369a1;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
-.school-table th {
-  background-color: #f9f9fb;
-  color: hsl(220, 6%, 40%);
-  font-weight: 600;
-}
-
-.school-table td {
-  color: hsl(220, 6%, 40%);
-}
-
-.school-table tr:last-child td {
-  border-bottom: none;
-}
-
-.school-table tr:hover {
-  background-color: #f5f5f5;
+.contact-badge {
+  background: #f0fdf4;
+  color: #166534;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 /* Action Buttons */
-.action-button {
-  background-color: #f9f9fb;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-  margin-left: 8px;
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
 }
 
-.action-button:hover {
-  background-color: #e9ecef;
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .edit-button {
-  color: #007bff;
+  color: #4a90e2;
 }
 
 .delete-button {
   color: #dc3545;
 }
 
+.edit-button:hover {
+  background-color: #e0f2fe;
+  color: #0284c7;
+  border-color: #0284c7;
+}
+
+.delete-button:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Loading State */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* Table Styles */
+.school-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.ag-theme-quartz {
+  --ag-header-height: 48px;
+  --ag-header-foreground-color: #1e293b;
+  --ag-header-background-color: #f8fafc;
+  --ag-row-hover-color: #f8fafc;
+  --ag-selected-row-background-color: #eff6ff;
+  --ag-font-size: 14px;
+  --ag-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.ag-header-cell {
+  font-weight: 600 !important;
+}
+
+.ag-row-even {
+  background-color: #f8fafc;
+}
+
+.ag-row:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* File Operations */
+.file-operations {
+  display: flex;
+  gap: 8px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .school-page {
-    padding: 10px;
+    padding: 16px;
   }
 
-  .school-table th,
-  .school-table td {
-    padding: 8px 10px;
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .header-right {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .create-new-button {
+    width: 100%;
+  }
+
+  .action-button {
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -135,4 +212,130 @@ html {
 .error-message .warning-icon {
   margin-right: 10px;
   font-size: 1.5em;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-button:hover {
+  background-color: #e0e0e0;
+}
+
+.button-icon {
+  font-size: 16px;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.icon-button:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+.button-icon {
+  font-size: 20px;
+  color: #666;
+}
+
+/* Update tooltip styling with bold text */
+.icon-button[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+  letter-spacing: 0.2px;
+}
+
+/* Arrow for tooltip */
+.icon-button[title]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+  z-index: 1000;
+}
+
+.download-container {
+  position: relative;
+}
+
+.download-options {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.download-options button {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.download-options button:hover {
+  background-color: #f5f5f5;
+}
+
+/* Add a subtle animation for the dropdown */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.download-options {
+  animation: slideDown 0.2s ease-out;
 }

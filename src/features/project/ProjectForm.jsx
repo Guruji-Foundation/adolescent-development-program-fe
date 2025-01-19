@@ -22,9 +22,8 @@ const ProjectForm = ({
   message,
   heading,
   handleCloseModal,
-  projectDataDefault=null,
+  projectDataDefault = null,
 }) => {
-
   const [projectData, setProjectData] = useState({
     name: projectDataDefault?.name,
     description: projectDataDefault?.description,
@@ -32,14 +31,14 @@ const ProjectForm = ({
     projectCoordinatorId: projectDataDefault?.projectCoordinatorIds?.[0]?.id,
   });
 
-  console.log("88888",projectDataDefault)
+  console.log("88888", projectDataDefault);
   const [coordinatorList, setCoordinatorList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { errors, setError, clearError } = useError();
   const [showAddTopicModal, setShowAddTopicModal] = useState(false);
   const [topicDataArray, setTopicDataArray] = useState([]);
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
   const [selectedTopicId, setSelectedTopicId] = useState(-1);
   const [editTopicData, setEditTopicData] = useState(null);
 
@@ -63,14 +62,15 @@ const ProjectForm = ({
   }, []);
 
   useEffect(() => {
-    if(projectDataDefault){
+    if (projectDataDefault) {
       setProjectData({
         name: projectDataDefault?.name,
         description: projectDataDefault?.description,
         status: projectDataDefault?.status,
-        projectCoordinatorId: projectDataDefault?.projectCoordinatorIds?.[0]?.id,
+        projectCoordinatorId:
+          projectDataDefault?.projectCoordinatorIds?.[0]?.id,
       });
-      setTopicDataArray(projectDataDefault?.topics)
+      setTopicDataArray(projectDataDefault?.topics);
     }
   }, [projectDataDefault]);
 
@@ -82,8 +82,8 @@ const ProjectForm = ({
         description: projectData?.description,
         status: projectData?.status,
         projectCoordinatorIds: [projectData?.projectCoordinatorId],
-        createOrUpdateTopicRequests: topicDataArray
-      }
+        createOrUpdateTopicRequests: topicDataArray,
+      };
       const res = await handleSubmit(postData);
       if (res?.data?.status) {
         setShowModal(true);
@@ -120,9 +120,9 @@ const ProjectForm = ({
     setTopicDataArray((prevArray) =>
       prevArray.filter((item) => item?.id !== selectedTopicId)
     );
-    setSelectedTopicId(-1)
+    setSelectedTopicId(-1);
     setIsShowDeleteModal(false);
-  }
+  };
   const columnDefs = [
     {
       headerName: "Topic Name",
@@ -145,30 +145,34 @@ const ProjectForm = ({
           <div>
             <button
               type="button"
-              onClick={() => { setEditTopicData(params?.data); setShowAddTopicModal(true) }}
+              onClick={() => {
+                setEditTopicData(params?.data);
+                setShowAddTopicModal(true);
+              }}
               className="action-button edit-button"
             >
               <FaEdit />
             </button>
             <button
               type="button"
-              onClick={() => { setSelectedTopicId(params?.data?.id); setIsShowDeleteModal(true) }}
+              onClick={() => {
+                setSelectedTopicId(params?.data?.id);
+                setIsShowDeleteModal(true);
+              }}
               className="action-button delete-button"
             >
               <FaTrashAlt />
             </button>
-          </div >
+          </div>
         );
       },
     },
-  ]
-
+  ];
 
   return (
     <div className="form-container">
-      <h2>{heading}</h2>
-
       <form onSubmit={handleSubmitButton}>
+        <h2>{heading}</h2>
         <div className="form-layout">
           <TextInput
             label="Project Name"
@@ -203,20 +207,27 @@ const ProjectForm = ({
         </div>
         <button
           type="button"
-          onClick={() => { setShowAddTopicModal(true) }}
-          style={{ border: "none", backgroundColor: "inherit", color: "dodgerblue", fontWeight: "600" }}
+          onClick={() => {
+            setShowAddTopicModal(true);
+          }}
+          style={{
+            border: "none",
+            backgroundColor: "inherit",
+            color: "dodgerblue",
+            fontWeight: "600",
+          }}
         >
           + Add Topic
         </button>
-        {
-          topicDataArray?.length > 0 && <div className="ag-theme-quartz">
+        {topicDataArray?.length > 0 && (
+          <div className="ag-theme-quartz">
             <AgGridTable
               rowData={topicDataArray}
               columnDefs={columnDefs}
               domLayout={"autoHeight"}
             />
           </div>
-        }
+        )}
         <Button
           type="submit"
           label="Submit"
@@ -225,19 +236,28 @@ const ProjectForm = ({
       </form>
       {errors?.length > 0 && <ErrorMessage errors={errors} />}
       {showModal && <SuccessModal data={message} onClose={handleClose} />}
-      {
-        showAddTopicModal && <AddTopicWithProject onClose={() => { setEditTopicData(null); setShowAddTopicModal(false) }} topicDataArray={topicDataArray} setTopicDataArray={setTopicDataArray} editTopicData={editTopicData} />
-      }
-      {
-        isShowDeleteModal && (
-          <ConfirmationModal
-            title="Confirm Deletion"
-            message="Do you really want to delete this Topic? Corresponding Performance of Student will also be Deleted."
-            onConfirm={handleDeleteTopic}
-            onCancel={() => { setSelectedTopicId(-1); setIsShowDeleteModal(false) }}
-          />
-        )
-      }
+      {showAddTopicModal && (
+        <AddTopicWithProject
+          onClose={() => {
+            setEditTopicData(null);
+            setShowAddTopicModal(false);
+          }}
+          topicDataArray={topicDataArray}
+          setTopicDataArray={setTopicDataArray}
+          editTopicData={editTopicData}
+        />
+      )}
+      {isShowDeleteModal && (
+        <ConfirmationModal
+          title="Confirm Deletion"
+          message="Do you really want to delete this Topic? Corresponding Performance of Student will also be Deleted."
+          onConfirm={handleDeleteTopic}
+          onCancel={() => {
+            setSelectedTopicId(-1);
+            setIsShowDeleteModal(false);
+          }}
+        />
+      )}
     </div>
   );
 };

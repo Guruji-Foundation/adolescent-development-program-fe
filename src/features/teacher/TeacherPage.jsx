@@ -1,176 +1,205 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
-import "./TeacherPage.css"; // Assuming your styles are in TeacherPage.css
+import "./TeacherPage.css";
 import "../../CSS/Main.css";
 
-import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal"; // Import the modal component
+import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
-import useError from "../../hooks/useError";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
-
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
-
+import SelectInput from "../../common/FormInput/SelectInput";
+import CustomTable from "../../common/GloabalComponent/CustomTable";
+import useError from "../../hooks/useError";
 import apiServices from "../../common/ServiCeProvider/Services";
 
 const TeacherPage = () => {
   const [teachers, setTeachers] = useState([]);
   const [selectedTeacherId, setSelectedTeacherId] = useState(null);
+  const [selectedSchool, setSelectedSchool] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { errors, setError, clearError } = useError();
+  const [schoolList, setSchoolList] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
-
+  const { errors, setError } = useError();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    apiServices
-      .getAllTeacherList()
-      .then((teacherData) => {
-        console.log(teacherData?.data?.data?.teacherDetails);
-        setTeachers(teacherData?.data?.data?.teacherDetails);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError("Error fetching teacher data ");
-        console.error("Error fetching teacher data:", error);
-        setLoading(false);
-      });
-  }, []);
-
-  const handleEdit = (id) => {
-    console.log(id);
-    navigate(`/edit-teacher/${id}`);
-  };
-
-  const handleDelete = (id) => {
-    setSelectedTeacherId(id); // Store the school id for deletion
-    setIsModalVisible(true); // Show the confirmation modal
-  };
-
-  // Confirm deletion and delete the school
-  const confirmDelete = () => {
-    if (selectedTeacherId != null) {
-      apiServices
-        .deleteTeacher(selectedTeacherId)
-        .then(() => {
-          const updatedTeachers = teachers.filter(
-            (school) => school.id != selectedTeacherId
-          );
-          setTeachers(updatedTeachers); // Update the schools state
-          setSelectedTeacherId(null); // Reset the selected school id
-          setIsModalVisible(false); // Close the modal
-        })
-        .catch((error) => {
-          console.error("Error deleting school:", error);
-        });
+  async function fetchSchools() {
+    try {
+      const response = await apiServices.getAllSchoolList();
+      setSchoolList(response?.data?.data?.schools || []);
+    } catch (error) {
+      setError("Error fetching school data");
+      console.error(error);
     }
-  };
-
-  // Cancel deletion and close the modal
-  const cancelDelete = () => {
-    setSelectedTeacherId(null); // Reset the selected school id
-    setIsModalVisible(false); // Close the modal
-  };
-
-  const handleCreateNew = () => {
-    navigate("/create-teacher");
-  };
-
-  if (loading) {
-    return <LoadingSpinner />;
   }
 
-  if (errors.length > 0) {
-    return <div>{errors.length > 0 && <ErrorMessage errors={errors} />}</div>;
+  async function fetchTeachers() {
+    setLoading(true);
+    try {
+      const endpoint = selectedSchool
+        ? apiServices.getAllTeacherList(selectedSchool)
+        : apiServices.getAllTeacherList();
+
+      const response = await endpoint;
+      setTeachers(response?.data?.data?.teacherDetails || []);
+    } catch (error) {
+      setError("Error fetching teacher data");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  const columDefs = [
-    {
-      headerCheckboxSelection: true,
-      checkboxSelection: false,
-      width: 50,
-    },
+  async function handleDeleteConfirm() {
+    try {
+      await apiServices.deleteTeacher(selectedTeacherId);
+      setTeachers((prev) =>
+        prev.filter((teacher) => teacher.id !== selectedTeacherId)
+      );
+      setIsModalVisible(false);
+      setSelectedTeacherId(null);
+    } catch (error) {
+      setError("Error deleting teacher");
+      console.error(error);
+    }
+  }
+
+  const handleEdit = (id) => navigate(`/edit-teacher/${id}`);
+  const handleDelete = (id) => {
+    setSelectedTeacherId(id);
+    setIsModalVisible(true);
+  };
+  const handleCreateNew = () => navigate("/create-teacher");
+  const handleSchoolChange = (e) => setSelectedSchool(e.target.value);
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+    setSelectedTeacherId(null);
+  };
+
+  const columnDefs = [
     {
       headerName: "Teacher Name",
       field: "name",
-      filter: true,
-      floatingFilter: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="teacher-name-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Experience (Years)",
       field: "experience",
-      filter: true,
-      floatingFilter: true,
+      flex: 1,
+      cellRenderer: params => (
+        <div className="experience-cell">
+          <span className="experience-badge">
+            {params.value} years
+          </span>
+        </div>
+      )
     },
     {
       headerName: "School Name",
-      field: `schoolDetails.name`,
-      filter: true,
-      floatingFilter: true,
+      field: "schoolDetails.name",
+      flex: 2,
+      cellRenderer: params => (
+        <div className="school-cell">
+          <span className="school-badge">{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "School Address",
       field: "schoolDetails.address",
-      filter: true,
-      floatingFilter: true,
+      flex: 3,
+      cellRenderer: params => (
+        <div className="address-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
-
     {
       headerName: "Actions",
-      field: "actions",
-      filter: true,
-      floatingFilter: true,
-      cellRenderer: (params) => {
-        return (
-          <div>
-            <button
-              onClick={() => handleEdit(params?.data?.id)}
-              className="action-button edit-button"
-            >
-              <FaEdit />
-            </button>
-            <button
-              onClick={() => handleDelete(params?.data?.id)}
-              className="action-button delete-button"
-            >
-              <FaTrashAlt />
-            </button>
-          </div>
-        );
-      },
-    },
+      cellRenderer: params => (
+        <div className="action-buttons">
+          <button
+            onClick={() => handleEdit(params?.data?.id)}
+            className="action-button edit-button"
+            title="Edit Teacher"
+          >
+            <FaEdit size={16} />
+          </button>
+          <button
+            onClick={() => handleDelete(params?.data?.id)}
+            className="action-button delete-button"
+            title="Delete Teacher"
+          >
+            <FaTrashAlt size={16} />
+          </button>
+        </div>
+      ),
+      width: 120,
+      suppressSizeToFit: true
+    }
   ];
+
+  useEffect(() => {
+    fetchSchools();
+  }, []);
+
+  useEffect(() => {
+    fetchTeachers();
+  }, [selectedSchool]);
+
+  if (errors.length > 0) return <ErrorMessage errors={errors} />;
 
   return (
     <div className="teacher-page">
-      {/* Header Section */}
       <div className="header">
         <div className="heading-container">
-          <h2 className="teacher-heading">Teachers</h2>
+          <h2 className="teacher-heading">Teacher Management</h2>
         </div>
         <button
           onClick={handleCreateNew}
-          className="g-button create-new-button"
+          className="create-new-button"
+          title="Create New Teacher"
         >
           Create New
         </button>
       </div>
 
-      {/* AgGrid Tables */}
-      <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable rowData={teachers} columnDefs={columDefs} />
+      <div className="filter-container">
+        <div className="select-wrapper">
+          <SelectInput
+            label="Filter by School"
+            value={selectedSchool || ""}
+            options={schoolList}
+            onChange={handleSchoolChange}
+            placeholder="Select a school to filter teachers..."
+            className="school-select"
+          />
+        </div>
       </div>
-      {/* Confirmation Modal */}
+
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <CustomTable 
+          rowData={teachers} 
+          columnDefs={columnDefs}
+          paginationPageSize={20}
+          rowHeight={48}
+          className="teacher-table"
+        />
+      )}
+
       {isModalVisible && (
         <ConfirmationModal
-          title="Confirm Deletion"
-          message="Do you really want to delete this Teacher?"
-          onConfirm={confirmDelete}
-          onCancel={cancelDelete}
+          title="Delete Teacher"
+          message="Do you really want to delete this teacher?"
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleModalClose}
         />
       )}
     </div>

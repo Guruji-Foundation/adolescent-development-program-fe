@@ -1,93 +1,73 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import Tooltip from "../../common/FeedbackComponents/Tooltip/ToolTip";
 
 import "./AssignProjectToStudent.css";
 import "../../CSS/Main.css";
-import { FaEdit } from "react-icons/fa";
 
 import ConfirmationModal from "../../common/FeedbackComponents/Confirmation/ConfirmationModal";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 import useError from "../../hooks/useError";
 import ErrorMessage from "../../common/FormInput/ErrorMessage";
-
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
-
-import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
+import CustomTable from "../../common/GloabalComponent/CustomTable";
+import apiServices from "../../common/ServiCeProvider/Services";
 
 const AssignProjectToSchoolPage = () => {
   const [loading, setLoading] = useState(true);
   const { errors, setError, clearError } = useError();
-
   const [schools, setSchools] = useState([]);
   const [selectedSchoolId, setSelectedSchoolId] = useState(null);
   const [projects, setProjects] = useState([]);
-  const [selectedProjectId, setSelectedProjectId] = useState(null);
-
   const [selectedProjectToDelete, setSelectedProjectToDelete] = useState(null);
-
-  const [students, setStudents] = useState([]);
-  const [unAssignStudents, setUnAssignStudents] = useState([]);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [assignFlag, setAssignFlag] = useState(true);
-  const title = "Unassigned Project!";
-  const message = "Do you really want to unassinged project from school.";
   const navigate = useNavigate();
 
   // Fetch list of schools on initial render
-  const getSchooList = async () => {
+  async function getSchoolList() {
     try {
       const data = (await apiServices.getAllSchoolList())?.data?.data?.schools;
-      const rowData = data?.map((item) => ({
-        id: item?.id,
-        name: item?.name,
-        address: item?.address,
-        principalName: item?.principalName,
-        principalContactNo: item?.principalContactNo,
-        managingTrustee: item?.managingTrustee,
-        trusteeContactInfo: item?.trusteeContactInfo,
-      }));
-      setSchools(rowData);
+      setSchools(data || []);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
-  };
-  const getAllAssignProject = async () => {
+  }
+
+  async function getAllAssignProject() {
     try {
-      const res = await apiServices.getProjectBySchool(selectedSchoolId);
-      console.log(res?.data?.data?.schoolProjects);
-      setProjects(res?.data?.data?.schoolProjects);
+      setLoading(true);
+      if(selectedSchoolId){
+        const res = await apiServices.getProjectBySchool(selectedSchoolId);
+        setProjects(res?.data?.data?.schoolProjects || []);
+      }else{
+        const res = await apiServices.getProjectBySchool();
+        setProjects(res?.data?.data?.schoolProjects || []);
+      }
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   useEffect(() => {
-    getSchooList();
-    getAllAssignProject();
+    getSchoolList();
   }, []);
 
   useEffect(() => {
-    if (selectedSchoolId) {
-      console.log("hello form seleceted school");
-      getAllAssignProject();
-    }
+    getAllAssignProject();
   }, [selectedSchoolId]);
 
   const handleSchoolChange = (e) => {
-    console.log(e.target.value);
-    setSelectedSchoolId(e.target.value);
-  };
-
-  const handleProjectChange = (e) => {
-    setSelectedProjectId(e.target.value);
-  };
-
-  const handleClose = () => {
-    setIsModalVisible(false);
+    // console.log(e.target.value,"-");
+    if(e.target.value==""){
+      setSelectedSchoolId(null);
+    }else{
+      setSelectedSchoolId(e.target.value);
+    }
   };
 
   const handleCreateNew = () => {
@@ -95,7 +75,6 @@ const AssignProjectToSchoolPage = () => {
   };
 
   const handleEdit = (params) => {
-    console.log(params);
     navigate(`/project/${params.project.id}/school/${params.school.id}/assign`);
   };
 
@@ -104,109 +83,111 @@ const AssignProjectToSchoolPage = () => {
     setSelectedProjectToDelete(params);
     setIsModalVisible(true);
   };
-  console.log("h999");
-  console.log(projects.project);
-  const confirmDelete = () => {
-    if (selectedProjectToDelete !== null) {
-      apiServices
-        .unassignProjectByProjectIdAndSchoolId(
+
+  const confirmDelete = async () => {
+    if (selectedProjectToDelete) {
+      try {
+        await apiServices.unassignProjectByProjectIdAndSchoolId(
           selectedProjectToDelete.school.id,
           selectedProjectToDelete.project.id
-        )
-        .then(() => {
-          console.log("from delete");
-          console.log(selectedProjectToDelete.project.id);
-          const updatedAssignProject = projects.filter(
-            (project) =>
-              project?.project?.id !== selectedProjectToDelete?.project?.id ||
-              project?.school?.id !== selectedProjectToDelete?.school?.id
-          );
-          setProjects(updatedAssignProject);
-          setSelectedProjectToDelete(null);
-          setIsModalVisible(false);
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
+        );
+        const updatedAssignProject = projects.filter(
+          (project) =>
+            project?.project?.id !== selectedProjectToDelete?.project?.id ||
+            project?.school?.id !== selectedProjectToDelete?.school?.id
+        );
+        setProjects(updatedAssignProject);
+        setSelectedProjectToDelete(null);
+        setIsModalVisible(false);
+      } catch (error) {
+        setError(error.message);
+      }
     }
   };
 
-  const cancelDelete = () => {
+  const handleModalClose = () => {
     setSelectedProjectToDelete(null);
     setIsModalVisible(false);
   };
 
-  if (errors.length > 0) return <ErrorMessage errors={errors} />;
-
-  const columDefs = [
-    { headerCheckboxSelection: true, checkboxSelection: false, width: 50 },
+  const columnDefs = [
     {
       headerName: "Project Name",
       field: "project.name",
-      filter: true,
-      floatingFilter: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="project-name-cell">
+          <span className="project-badge">{params.value}</span>
+        </div>
+      )
     },
-
     {
       headerName: "Teacher Name",
       field: "teacher.name",
-      filter: true,
-      floatingFilter: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="teacher-name-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "School Name",
       field: "school.name",
-      filter: true,
-      floatingFilter: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="school-cell">
+          <span className="school-badge">{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Start Date",
       field: "startDate",
-      filter: true,
-      floatingFilter: true,
+      flex: 1,
+      cellRenderer: params => (
+        <div className="date-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "End Date",
       field: "endDate",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Actual Start Date",
-      field: "actualStartDate",
-      filter: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Actual End Date",
-      field: "actualEndDate",
-      filter: true,
-      floatingFilter: true,
+      flex: 1,
+      cellRenderer: params => (
+        <div className="date-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Actions",
-      filter: true,
-      floatingFilter: true,
-      cellRenderer: (params) => {
-        return (
-          <div>
-            <button
-              onClick={() => handleEdit(params?.data)}
-              className="action-button edit-button"
-            >
-              <FaEdit />
-            </button>
-            <button
-              onClick={() => handleDelete(params?.data)}
-              className="action-button delete-button"
-            >
-              Unassign
-            </button>
-          </div>
-        );
-      },
+      width: 120,
+      suppressSizeToFit: true,
+      cellRenderer: (params) => (
+        <div className="action-buttons">
+          <button
+            onClick={() => handleEdit(params?.data)}
+            className="action-button edit-button"
+            title="Edit"
+          >
+            <FaEdit size={16} />
+          </button>
+          <button
+            onClick={() => handleDelete(params?.data)}
+            className="action-button delete-button"
+            title="Unassign"
+          >
+            <FaTrashAlt size={16} />
+          </button>
+        </div>
+      ),
     },
   ];
+
+  if (loading) return <LoadingSpinner />;
+  if (errors.length > 0) return <ErrorMessage errors={errors} />;
 
   return (
     <div className="teacher-page">
@@ -215,35 +196,41 @@ const AssignProjectToSchoolPage = () => {
           <h2 className="teacher-heading">Assign Project To School</h2>
         </div>
         <button
-          className="g-button create-new-button"
+          className="create-new-button"
           onClick={handleCreateNew}
         >
-          Assign
+          Assign New Project
         </button>
       </div>
 
-      <div className="header">
-        <SelectInput
-          // label="Select School"
-          value={selectedSchoolId || ""}
-          options={schools}
-          onChange={handleSchoolChange}
-          selectsomthingtext={"All School"}
-          isFilter={true}
-          // required
-        />
+      <div className="filter-container">
+        <div className="select-wrapper">
+          <SelectInput
+            label="Select School"
+            value={selectedSchoolId || ""}
+            options={schools}
+            onChange={handleSchoolChange}
+            selectsomthingtext={"All Schools"}
+            isFilter={true}
+            className="school-select"
+          />
+        </div>
       </div>
 
-      <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable rowData={projects} columnDefs={columDefs} />
-      </div>
+      <CustomTable 
+        rowData={projects} 
+        columnDefs={columnDefs}
+        paginationPageSize={20}
+        rowHeight={48}
+        className="teacher-table"
+      />
 
       {isModalVisible && (
         <ConfirmationModal
-          title={title}
-          message={message}
+          title="Unassign Project"
+          message="Are you sure you want to unassign this project from the school?"
           onConfirm={confirmDelete}
-          onCancel={cancelDelete}
+          onCancel={handleModalClose}
         />
       )}
     </div>

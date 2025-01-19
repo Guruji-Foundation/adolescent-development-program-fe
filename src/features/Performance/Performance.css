@@ -1,0 +1,233 @@
+.file-upload-container {
+    background-color: white;
+    padding: 40px 40px 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin: 32px 0;
+    transition: all 0.3s ease;
+}
+
+.selection-and-template-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.school-selector-group {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+    padding: 0 24px;
+    margin-bottom: 0;
+}
+
+.select-wrapper {
+    flex: 1;
+    min-width: 280px;
+    max-width: 320px;
+    position: relative;
+}
+
+.select-input {
+    width: 100%;
+}
+
+.select-input select {
+    width: 100%;
+    height: 48px;
+    padding: 12px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background-color: white;
+    color: #1e293b;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+.clear-school-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clear-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.template-buttons-row {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    padding: 16px 24px 0;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 16px;
+}
+
+.template-buttons-group {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.download-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    min-width: 280px;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.download-button:hover {
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.upload-icon {
+    font-size: 1.2rem;
+}
+
+.select-input select:hover {
+    border-color: #3b82f6;
+    background-color: #f8fafc;
+}
+
+.clear-school-button:hover {
+    background-color: #fee2e2;
+    border-color: #ef4444;
+    transform: translateY(-1px);
+}
+
+.template-buttons-row:last-child,
+.download-button:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.template-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.template-button:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+.template-icon {
+    font-size: 18px;
+}
+
+.template-buttons-group {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0;
+}
+
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.icon-button:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.button-icon {
+    font-size: 20px;
+    color: #666;
+}
+
+/* Tooltip styling */
+.icon-button[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+    letter-spacing: 0.2px;
+}
+
+/* Arrow for tooltip */
+.icon-button[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+    z-index: 1000;
+}
+
+.download-container {
+    position: relative;
+}
+
+/* Style for "No Rows To Show" message */
+.ag-overlay-no-rows-center {
+    color: #dc3545 !important; /* Red color */
+    font-weight: 500 !important;
+}
+
+.upload-container {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}

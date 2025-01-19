@@ -1,0 +1,78 @@
+.tab-switch {
+  background: var(--background-color, #f8f9fa);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.tab-switch__container {
+  display: flex;
+  gap: 8px;
+  background: transparent;
+}
+
+.tab-switch__button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary, #64748b);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  outline: none;
+}
+
+.tab-switch__button:hover {
+  color: var(--text-primary, #1e293b);
+  background: var(--hover-background, rgba(0, 0, 0, 0.04));
+}
+
+.tab-switch__button.active {
+  background: var(--primary-color, #fff);
+  color: var(--primary-text, #0f172a);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tab-switch__icon {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+}
+
+.tab-switch__label {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Animation */
+.tab-switch__button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primary-color, #2563eb);
+  transition: all 0.2s ease-in-out;
+  transform: translateX(-50%);
+}
+
+.tab-switch__button.active::after {
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tab-switch__button {
+    padding: 10px 16px;
+  }
+
+  .tab-switch__label {
+    font-size: 13px;
+  }
+}

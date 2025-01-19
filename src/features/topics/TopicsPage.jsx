@@ -12,7 +12,7 @@ import ErrorMessage from "../../common/FormInput/ErrorMessage";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
+import CustomTable from "../../common/GloabalComponent/CustomTable";
 
 import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
@@ -33,18 +33,8 @@ const TopicsPage = () => {
 
   const navigate = useNavigate();
 
-  // Fetch project list based on selected school
-  const getProjectList = async () => {
-    try {
-      const res = (await apiServices.getAllProjectList())?.data?.data?.projects;
-      setProjects(res);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
   const getAllTopicList = async () => {
-    // console.log(selectedProjectId);
+    setLoading(true);
     try {
       const res = (await apiServices.getAllTopicList(selectedProjectId))?.data
         ?.data?.topics;
@@ -53,16 +43,34 @@ const TopicsPage = () => {
       setTopics(res);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
-  useEffect(() => {
-    getAllTopicList();
-    console.log("hello form topic list");
-  }, [selectedProjectId]);
+
+  const getProjectList = async () => {
+    try {
+      const res = (await apiServices.getAllProjectList())?.data?.data?.projects;
+      setProjects(res);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     getProjectList();
   }, []);
+
+  useEffect(() => {
+    if (selectedProjectId) {
+      getAllTopicList();
+    } else {
+      setTopics([]);
+      setLoading(false);
+    }
+  }, [selectedProjectId]);
 
   const handleDelete = (id) => {
     clearError();
@@ -116,75 +124,102 @@ const TopicsPage = () => {
   if (errors.length > 0) return <ErrorMessage errors={errors} />;
 
   const columDefs = [
-    { headerCheckboxSelection: true, checkboxSelection: false, width: 50 },
     {
       headerName: "Topic Name",
       field: "name",
-      filter: true,
-      floatingFilter: true,
+      cellClass: 'name-cell',
+      flex: 2,
+      cellRenderer: params => (
+        <div className="topic-name-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Description",
       field: "description",
-      filter: true,
-      floatingFilter: true,
+      flex: 3,
+      cellRenderer: params => (
+        <div className="description-cell">
+          <span>{params.value}</span>
+        </div>
+      )
     },
     {
       headerName: "Project Name",
       field: "projectName",
-      filter: true,
-      floatingFilter: true,
+      flex: 2,
+      cellRenderer: params => (
+        <div className="project-cell">
+          <span className="project-badge">{params.value}</span>
+        </div>
+      )
     },
-
     {
       headerName: "Actions",
-      filter: true,
-      floatingFilter: true,
-      cellRenderer: (params) => {
-        return (
-          <div>
-            <button
-              onClick={() => handleEdit(params?.data?.id)}
-              className="action-button edit-button"
-            >
-              <FaEdit />
-            </button>
-            <button
-              onClick={() => handleDelete(params?.data?.id)}
-              className="action-button delete-button"
-            >
-              <FaTrashAlt />
-            </button>
-          </div>
-        );
-      },
-    },
+      cellRenderer: params => (
+        <div className="action-buttons">
+          <button
+            onClick={() => handleEdit(params?.data?.id)}
+            className="action-button edit-button"
+            title="Edit Topic"
+          >
+            <FaEdit size={16} />
+          </button>
+          <button
+            onClick={() => handleDelete(params?.data?.id)}
+            className="action-button delete-button"
+            title="Delete Topic"
+          >
+            <FaTrashAlt size={16} />
+          </button>
+        </div>
+      ),
+      width: 120,
+      suppressSizeToFit: true
+    }
   ];
 
   return (
-    <div className="school-page">
+    <div className="topic-page">
       <div className="header">
         <div className="heading-container">
-          <h2 className="school-heading">Topic</h2>
+          <h2 className="topic-heading">Topic Management</h2>
         </div>
         <button
-          className="g-button create-new-button"
+          className="create-new-button"
           onClick={handleCreateNew}
+          title="Create New Topic"
         >
           Create New
         </button>
       </div>
-      <div className="header">
-        <SelectInput
-          label="Select Project"
-          value={selectedProjectId || ""}
-          onChange={handleProjectChange}
-          options={projects}
+
+      <div className="filter-container">
+        <div className="select-wrapper">
+          <SelectInput
+            label="Filter by Project"
+            value={selectedProjectId || ""}
+            onChange={handleProjectChange}
+            options={projects}
+            placeholder="Select a project to filter topics..."
+            className="project-select"
+          />
+        </div>
+      </div>
+
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <CustomTable 
+          rowData={topics} 
+          columnDefs={columDefs}
+          paginationPageSize={20}
+          rowHeight={48}
+          className="topic-table"
         />
-      </div>
-      <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable rowData={topics} columnDefs={columDefs} />
-      </div>
+      )}
+
       {isModalVisible && (
         <ConfirmationModal
           title={title}
