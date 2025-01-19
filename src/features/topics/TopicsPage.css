@@ -7,9 +7,10 @@ html {
 }
 
 .teacher-page {
-  padding: 20px;
+  padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
+  background: #f5f7fa;
 }
 
 /* Header Section */
@@ -107,7 +108,7 @@ html {
 /* Responsive Design */
 @media (max-width: 768px) {
   .teacher-page {
-    padding: 10px;
+    padding: 16px;
   }
 
   .teacher-table th,
@@ -143,4 +144,225 @@ html {
 .error-messages {
   color: #dc3545; /* Red color for error messages */
   margin-top: 10px; /* Space above error messages */
+}
+
+.filter-section {
+  margin: 20px 0;
+  padding: 0 16px;
+}
+
+.select-container {
+  max-width: 300px;
+}
+
+.project-select {
+  width: 100%;
+}
+
+/* If you need to style the select input itself */
+.project-select select {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.project-select label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.page-header {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.school-heading {
+  color: #1e293b;
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.subheading {
+  color: #64748b;
+  font-size: 15px;
+  margin: 4px 0 0 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.search-container {
+  position: relative;
+}
+
+.search-input {
+  padding: 10px 16px 10px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 280px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 20px;
+}
+
+.search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+.create-new-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #3b82f6;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.create-new-button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.button-icon {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.filter-controls {
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.filter-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.select-container {
+  width: 300px;
+}
+
+.project-select {
+  width: 100%;
+}
+
+.project-select select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  color: #1e293b;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.project-select select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+.quick-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.stat-badge {
+  background: #f8fafc;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.stat-label {
+  display: block;
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.table-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .teacher-page {
+    padding: 16px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .create-new-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .select-container {
+    width: 100%;
+  }
+  
+  .quick-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
 }

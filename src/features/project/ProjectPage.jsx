@@ -106,19 +106,22 @@ const ProjectPage = () => {
       field: "name",
       filter: true,
       floatingFilter: true,
+      cellStyle: { textAlign: 'left' }
     },
     {
       headerName: "Description",
       field: "description",
       filter: true,
       floatingFilter: true,
-      flex:1,
+      flex: 1,
+      cellStyle: { textAlign: 'left' }
     },
     {
       headerName: "Status",
       field: "status",
       filter: true,
       floatingFilter: true,
+      cellStyle: { textAlign: 'left' }
     },
     {
       headerName: "Actions",

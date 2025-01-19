@@ -12,7 +12,7 @@ import ErrorMessage from "../../common/FormInput/ErrorMessage";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import AgGridTable from "../../common/GloabalComponent/AgGridTable";
+import CustomTable from "../../common/GloabalComponent/CustomTable";
 
 import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
@@ -116,33 +116,50 @@ const TopicsPage = () => {
   if (errors.length > 0) return <ErrorMessage errors={errors} />;
 
   const columDefs = [
-    { headerCheckboxSelection: true, checkboxSelection: false, width: 50 },
+    { 
+      headerCheckboxSelection: true, 
+      checkboxSelection: false, 
+      width: 50,
+      suppressSizeToFit: true
+    },
     {
       headerName: "Topic Name",
       field: "name",
-      filter: true,
-      floatingFilter: true,
+      cellClass: 'name-cell',
+      flex: 2,
+      cellStyle: { 
+        textAlign: 'left',
+        whiteSpace: 'normal',
+        lineHeight: '1.5'
+      }
     },
     {
       headerName: "Description",
       field: "description",
-      filter: true,
-      floatingFilter: true,
+      flex: 3,
+      cellClass: 'description-cell',
+      cellStyle: { 
+        textAlign: 'left',
+        whiteSpace: 'normal',
+        lineHeight: '1.5'
+      }
     },
     {
       headerName: "Project Name",
       field: "projectName",
-      filter: true,
-      floatingFilter: true,
+      cellClass: 'name-cell',
+      flex: 2,
+      cellStyle: { 
+        textAlign: 'left',
+        whiteSpace: 'normal',
+        lineHeight: '1.5'
+      }
     },
-
     {
       headerName: "Actions",
-      filter: true,
-      floatingFilter: true,
       cellRenderer: (params) => {
         return (
-          <div>
+          <div className="action-buttons">
             <button
               onClick={() => handleEdit(params?.data?.id)}
               className="action-button edit-button"
@@ -158,6 +175,13 @@ const TopicsPage = () => {
           </div>
         );
       },
+      width: 120,
+      suppressSizeToFit: true,
+      cellStyle: { 
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+      }
     },
   ];
 
@@ -174,17 +198,19 @@ const TopicsPage = () => {
           Create New
         </button>
       </div>
-      <div className="header">
-        <SelectInput
-          label="Select Project"
-          value={selectedProjectId || ""}
-          onChange={handleProjectChange}
-          options={projects}
-        />
+      <div className="filter-section">
+        <div className="select-container">
+          <SelectInput
+            label="Select Project"
+            value={selectedProjectId || ""}
+            onChange={handleProjectChange}
+            options={projects}
+            className="project-select"
+            style={{ minWidth: '300px' }}
+          />
+        </div>
       </div>
-      <div className="ag-theme-quartz" style={{ height: "500px" }}>
-        <AgGridTable rowData={topics} columnDefs={columDefs} />
-      </div>
+      <CustomTable rowData={topics} columnDefs={columDefs} />
       {isModalVisible && (
         <ConfirmationModal
           title={title}

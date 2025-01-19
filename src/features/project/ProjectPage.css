@@ -36,38 +36,116 @@ html {
 }
 
 .create-new-button {
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 5px;
+  background-color: #339af0;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .create-new-button:hover {
-  background-color: #218838;
+  background-color: #228be6;
 }
 
-/* Action Buttons */
-.action-button {
-  background-color: #f9f9fb;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 8px;
+/* Table Styles */
+.ag-theme-quartz {
+  --ag-header-background-color: #ffffff;
+  --ag-header-foreground-color: #333;
+  --ag-header-height: 48px;
+  --ag-row-height: 48px;
+  --ag-row-hover-color: #f8f9fa;
+  --ag-selected-row-background-color: #f8f9fa;
+  --ag-font-size: 14px;
+  --ag-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  border: 1px solid #e9ecef;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
-  margin-left: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-.action-button:hover {
-  background-color: #e9ecef;
+/* Header Styles */
+.ag-header-cell {
+  font-weight: 500;
+  color: #495057;
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Row Styles */
+.ag-row {
+  border-bottom: 1px solid #e9ecef !important;
+}
+
+.ag-row-even {
+  background-color: #ffffff;
+}
+
+.ag-row-odd {
+  background-color: #ffffff;
+}
+
+.ag-row:hover {
+  background-color: #f8f9fa !important;
+}
+
+/* Filter Styles */
+.ag-floating-filter-input {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: #495057;
+}
+
+.ag-floating-filter-input:focus {
+  border-color: #4dabf7;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.1);
+}
+
+/* Action Button Styles */
+.action-button {
+  padding: 6px;
+  width: 32px;
+  height: 32px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .edit-button {
-  color: #007bff;
+  background-color: #e7f5ff;
+  color: #339af0;
+}
+
+.edit-button:hover {
+  background-color: #d0ebff;
 }
 
 .delete-button {
-  color: #dc3545;
+  background-color: #fff5f5;
+  color: #fa5252;
+}
+
+.delete-button:hover {
+  background-color: #ffe3e3;
+}
+
+/* Project Heading */
+.project-heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+/* Status Cell Styling */
+.ag-cell[col-id="status"] {
+  text-transform: capitalize;
 }
 
 /* Responsive Design */
@@ -97,4 +175,14 @@ html {
 .error-message .warning-icon {
   margin-right: 10px;
   font-size: 1.5em;
+}
+
+/* Force left alignment for all cells */
+.ag-theme-quartz .ag-cell {
+  text-align: left !important;
+}
+
+/* Exclude action column from left alignment */
+.ag-theme-quartz .ag-cell:last-child {
+  text-align: center !important;
 }
