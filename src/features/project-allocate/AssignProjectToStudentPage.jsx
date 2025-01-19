@@ -14,7 +14,7 @@ import apiServices from "../../common/ServiCeProvider/Services";
 import SelectInput from "../../common/FormInput/SelectInput";
 
 const AssignProjectToStudentPage = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { errors, setError, clearError } = useError();
   const gridRef = useRef();
   const [schools, setSchools] = useState([]);
@@ -40,6 +40,7 @@ const AssignProjectToStudentPage = () => {
   // Fetch list of schools on initial render
   const getSchooList = async () => {
     try {
+      setLoading(true);
       const data = (await apiServices.getAllSchoolList())?.data?.data?.schools;
       const rowData = data?.map((item) => ({
         id: item?.id,
@@ -53,6 +54,8 @@ const AssignProjectToStudentPage = () => {
       setSchools(rowData);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,49 +63,34 @@ const AssignProjectToStudentPage = () => {
   const getProjectList = async () => {
     if (selectedSchoolId) {
       try {
+        setLoading(true);
         const res = (await apiServices.getAllProjectList(selectedSchoolId))
           ?.data?.data?.projects;
         setProjects(res);
       } catch (err) {
         setError(err.message);
-      }
-    }
-  };
-
-  // Fetch allocated students
-  const getAllUnAssignedStudents = async () => {
-    if (selectedProjectId && selectedSchoolId) {
-      try {
-        setLoading(true);
-        const studentData = (
-          await apiServices.getAllUnAllocatedStudents(
-            selectedSchoolId,
-            selectedProjectId
-          )
-        )?.data?.data?.students;
-        setStudents(studentData);
-      } catch (error) {
-        setError("Error fetching allocated students");
       } finally {
         setLoading(false);
       }
     }
   };
 
-  // Fetch unallocated students
-
-  const getAllAssginedStudents = async () => {
+  // Fetch allocated and unallocated students
+  const fetchStudents = async () => {
     if (selectedProjectId && selectedSchoolId) {
       try {
-        const res = (
-          await apiServices.getAllAllocatedStudents(
-            selectedSchoolId,
-            selectedProjectId
-          )
-        )?.data?.data?.students;
-        setUnAssignStudents(res);
-      } catch (err) {
-        setError(err.message);
+        setLoading(true);
+        const [unallocatedRes, allocatedRes] = await Promise.all([
+          apiServices.getAllUnAllocatedStudents(selectedSchoolId, selectedProjectId),
+          apiServices.getAllAllocatedStudents(selectedSchoolId, selectedProjectId)
+        ]);
+        
+        setStudents(unallocatedRes?.data?.data?.students || []);
+        setUnAssignStudents(allocatedRes?.data?.data?.students || []);
+      } catch (error) {
+        setError("Error fetching students");
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -110,26 +98,25 @@ const AssignProjectToStudentPage = () => {
   useEffect(() => {
     getSchooList();
   }, []);
-  console.log(selectedSchoolId + " " + selectedProjectId);
 
   useEffect(() => {
     if (selectedSchoolId) {
       getProjectList();
+      // Reset project selection and students when school changes
+      setSelectedProjectId(null);
+      setStudents([]);
+      setUnAssignStudents([]);
     }
   }, [selectedSchoolId]);
 
   useEffect(() => {
     if (selectedSchoolId && selectedProjectId) {
-      getAllUnAssignedStudents();
-      getAllAssginedStudents();
+      fetchStudents();
     }
   }, [selectedSchoolId, selectedProjectId]);
 
   const handleSchoolChange = (e) => {
     setSelectedSchoolId(e.target.value);
-    setSelectedProjectId(null);
-    setStudents([]);
-    setUnAssignStudents([]);
   };
 
   const handleProjectChange = (e) => {
@@ -139,6 +126,7 @@ const AssignProjectToStudentPage = () => {
   // Assign student to project
   const handleAssign = async (id) => {
     try {
+      setLoading(true);
       await apiServices.allocateProjectToStudent(
         selectedSchoolId,
         selectedProjectId,
@@ -146,18 +134,18 @@ const AssignProjectToStudentPage = () => {
       );
       setAssignFlag(true);
       setIsModalVisible(true);
-
-      // Refresh unassigned and assigned students data
-      await getAllAssginedStudents();
-      await getAllUnAssignedStudents();
+      await fetchStudents(); // Refresh both tables
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Unassign student from project
   const handleUnAssign = async (id) => {
     try {
+      setLoading(true);
       await apiServices.deAllocateProjectToStudent(
         selectedSchoolId,
         selectedProjectId,
@@ -165,12 +153,11 @@ const AssignProjectToStudentPage = () => {
       );
       setAssignFlag(false);
       setIsModalVisible(true);
-
-      // Refresh assigned and unassigned students data
-      await getAllAssginedStudents();
-      await getAllUnAssignedStudents();
+      await fetchStudents(); // Refresh both tables
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 

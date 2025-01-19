@@ -5,7 +5,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--overlay-color, rgba(0, 0, 0, 0.5));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,24 +14,24 @@
   
   /* Modal content */
   .modal-content {
-    background-color: white;
+    background-color: var(--background-color, white);
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius-lg, 8px);
+    box-shadow: var(--shadow-lg, 0 4px 12px rgba(0, 0, 0, 0.1));
     text-align: center;
   }
   
   .close-button {
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #0057D9;
-    color: white;
+    background-color: var(--primary-color, #0057D9);
+    color: var(--primary-text-color, white);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm, 4px);
     cursor: pointer;
   }
   
   .close-button:hover {
-    background-color: #004bb5;
+    background-color: var(--primary-color-dark, #004bb5);
   }
   
