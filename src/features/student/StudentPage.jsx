@@ -318,32 +318,39 @@ const StudentPage = () => {
   };
 
   const extractFilenameFromHeaderString = (rawString) => {
-    if (!rawString) return "download.xlsx"; // Default filename if header is missing
+    console.log("rawString", rawString);
+    if (!rawString) return "Students.xlsx"; // Default filename if header is missing
 
-    const filenameMatch = rawString.match(/filename="([^"]+)"/);
-    return filenameMatch ? filenameMatch[1] : "download.xlsx";
+    const filenameMatch = rawString.match(/filename=([^;]+)/);
+    return filenameMatch ? filenameMatch[1].trim() : "Students.xlsx";
   };
 
   const downloadStudentList = async () => {
+    if (!selectedSchool) {
+      setToast({
+        show: true,
+        message: 'Please select a school before downloading',
+        type: 'warning'
+      });
+      return;
+    }
     try {
-      // Make an API call to fetch CSV data
       let url = `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/download?schoolId=${selectedSchool}`;
-      const response = await axios.get(
-        url,
-        {
-          responseType: "blob", // Ensure the response is treated as a binary blob
-        }
-      );
+      const response = await axios.get(url, {
+        responseType: "blob",
+      });
 
-      // Extract filename from headers
-      const contentDisposition = response.headers["content-disposition"] || "";
-      const filename = extractFilenameFromHeaderString(contentDisposition);
+      // Generate filename with current date and time
+      const now = new Date();
+      const date = now.toISOString().split('T')[0];
+      const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
+      const filename = `students_${date}_${time}.xlsx`;
 
       // Trigger download
       downloadCsvData(response.data, filename);
     } catch (err) {
       console.error("Error downloading student list:", err.message || err);
-      throw err; // Optionally re-throw the error for higher-level handling
+      throw err;
     }
   };
 
