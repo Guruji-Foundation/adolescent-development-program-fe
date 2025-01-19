@@ -375,18 +375,18 @@ const StudentPage = () => {
       <div className="school-selector-group">
         <div className="select-wrapper">
           <SelectInput
-            label="Select School"
+            label="Filter by School"
             value={selectedSchool || ""}
             options={schoolList}
             onChange={(e) => setSelectedSchool(e.target.value)}
-            placeholder="Choose a school..."
+            placeholder="Select a school to filter students..."
           />
         </div>
         {selectedSchool && (
           <button 
             className="clear-school-button" 
             onClick={() => setSelectedSchool(null)}
-            title="Clear selection"
+            title="Clear school filter"
           >
             <ImCross className="clear-icon" />
           </button>

@@ -7,16 +7,20 @@ html {
 }
 
 .project-page {
-  padding: 28px;
-  background-color: #f8fafc;
+  padding: 24px;
+  background: #f5f7fa;
   min-height: 100vh;
 }
 
 .header {
+  background: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
   gap: 16px;
 }
 
@@ -35,19 +39,15 @@ html {
 }
 
 .create-new-button {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: #2563eb;
   color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  padding: 10px 20px;
+  border-radius: 6px;
+  transition: background 0.2s;
 }
 
 .create-new-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  background: #1d4ed8;
 }
 
 .file-upload-container {
@@ -59,10 +59,10 @@ html {
 }
 
 .school-selector-group {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .select-wrapper {
@@ -255,56 +255,24 @@ html {
 }
 
 .action-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #495057;
-  transition: all 0.2s ease;
-  font-weight: 500;
-  min-width: 160px;
-  justify-content: center;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
 }
 
-.action-button:hover {
-  background-color: #e9ecef;
-  border-color: #dee2e6;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+.edit-button:hover {
+  background: #e0f2fe;
+  color: #0284c7;
 }
 
-.action-button:active {
-  transform: translateY(0);
+.delete-button:hover {
+  background: #fee2e2;
+  color: #dc2626;
 }
 
 .button-icon {
   font-size: 18px;
   color: #4a90e2;
-}
-
-.edit-button {
-  color: #3b82f6;
-  background-color: rgba(59, 130, 246, 0.1);
-}
-
-.edit-button:hover {
-  background-color: rgba(59, 130, 246, 0.2);
-  transform: translateY(-1px);
-}
-
-.delete-button {
-  color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.1);
-}
-
-.delete-button:hover {
-  background-color: rgba(239, 68, 68, 0.2);
-  transform: translateY(-1px);
 }
 
 .ag-theme-quartz {
@@ -523,18 +491,26 @@ html {
   }
   
   .action-button {
-    width: 100%;
+    padding: 8px;  /* Larger touch target */
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 16px;
   }
 }
 
 /* Table Action Buttons Styling */
 .action-buttons {
-  display: flex;
   gap: 8px;
+  display: flex;
   justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+}
+
+.action-button {
+  padding: 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
 }
 
 .action-button.edit-button,
@@ -706,4 +682,9 @@ html {
 .header-buttons {
   display: flex;
   gap: 8px;
+}
+
+/* Table Styles */
+.ag-row-even {
+  background-color: #f8fafc;
 }
