@@ -17,14 +17,13 @@ const AssignProjectToStudentPage = () => {
   const [loading, setLoading] = useState(false);
   const { errors, setError, clearError } = useError();
   const gridRef = useRef();
+  const gridRef2 = useRef();
   const [schools, setSchools] = useState([]);
   const [selectedSchoolId, setSelectedSchoolId] = useState(null);
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
-
   const [students, setStudents] = useState([]);
   const [unAssignStudents, setUnAssignStudents] = useState([]);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [assignFlag, setAssignFlag] = useState(true);
   const AssignModelData = {
@@ -36,6 +35,8 @@ const AssignProjectToStudentPage = () => {
     description: "You Have Successfully Unassigned Project from Student",
   };
   const navigate = useNavigate();
+  const [selectedAssignLength, setSelectedAssignLength] = useState(0);
+  const [selectedUnAssignLength, setSelectedUnAssignLength] = useState(0);
 
   // Fetch list of schools on initial render
   const getSchooList = async () => {
@@ -84,7 +85,7 @@ const AssignProjectToStudentPage = () => {
           apiServices.getAllUnAllocatedStudents(selectedSchoolId, selectedProjectId),
           apiServices.getAllAllocatedStudents(selectedSchoolId, selectedProjectId)
         ]);
-        
+
         setStudents(unallocatedRes?.data?.data?.students || []);
         setUnAssignStudents(allocatedRes?.data?.data?.students || []);
       } catch (error) {
@@ -167,6 +168,11 @@ const AssignProjectToStudentPage = () => {
 
   const unassignedColumnDefs = [
     {
+      headerCheckboxSelection: true,
+      checkboxSelection: true,
+      width: 50,
+    },
+    {
       headerName: "Student Name",
       field: "name",
       flex: 2,
@@ -203,7 +209,7 @@ const AssignProjectToStudentPage = () => {
       cellRenderer: (params) => (
         <div className="action-buttons">
           <button
-            onClick={() => handleAssign(params?.data?.id)}
+            onClick={() => handleAssign([params?.data?.id])}
             className="action-button assign-button"
             title="Assign Student"
           >
@@ -216,6 +222,11 @@ const AssignProjectToStudentPage = () => {
 
   const assignedColumnDefs = [
     {
+      headerCheckboxSelection: true,
+      checkboxSelection: true,
+      width: 50,
+    },
+    {
       headerName: "Student Name",
       field: "name",
       flex: 2,
@@ -252,7 +263,7 @@ const AssignProjectToStudentPage = () => {
       cellRenderer: (params) => (
         <div className="action-buttons">
           <button
-            onClick={() => handleUnAssign(params?.data?.id)}
+            onClick={() => handleUnAssign([Number(params?.data?.id)])}
             className="action-button unassign-button"
             title="Unassign Student"
           >
@@ -262,6 +273,41 @@ const AssignProjectToStudentPage = () => {
       ),
     },
   ];
+
+  const handleGridReady = (params) => {
+    gridRef.current = params;
+  };
+
+  const handleAssignSelectionChanged = () => {
+    if (gridRef.current && gridRef.current.api) {
+      const selectedRows = gridRef.current.api.getSelectedRows();
+      setSelectedAssignLength(selectedRows.length); // Show button only if rows are selected
+    }
+  };
+
+  const handleAssignMultiple = () => {
+    if (gridRef.current && gridRef.current.api) {
+      const selectedRows = gridRef.current.api.getSelectedRows();
+      const selectedIds = selectedRows.map((row) => row.id);
+      handleAssign(selectedIds)
+      setSelectedAssignLength(0);
+      console.log("Selected IDs:", selectedIds);
+    } else {
+      console.error("Grid API is not available.");
+    }
+  }
+
+  const handleUnAssignMultiple = () => {
+    if (gridRef2.current && gridRef2.current.api) {
+      const selectedRows = gridRef2.current.api.getSelectedRows();
+      const selectedIds = selectedRows.map((row) => row.id);
+      handleUnAssign(selectedIds)
+      setSelectedUnAssignLength(0);
+      console.log("Selected IDs:", selectedIds);
+    } else {
+      console.error("Grid API is not available.");
+    }
+  }
 
   if (loading) return <LoadingSpinner />;
   if (errors.length > 0) return <ErrorMessage errors={errors} />;
@@ -297,6 +343,14 @@ const AssignProjectToStudentPage = () => {
               disabled={!selectedSchoolId}
             />
           </div>
+          {selectedAssignLength > 0 && <div className="select-wrapper multiassign-button-container">
+
+            <button className="create-new-button" onClick={handleAssignMultiple} >
+              Assign {selectedAssignLength} Students
+            </button>
+          </div>}
+
+
         </div>
       </div>
 
@@ -304,25 +358,44 @@ const AssignProjectToStudentPage = () => {
         <div className="section-header">
           <h3 className="section-title">Unassigned Students</h3>
         </div>
-        <CustomTable 
+        <CustomTable
+          ref={gridRef}
           rowData={students}
           columnDefs={unassignedColumnDefs}
           paginationPageSize={10}
+          onGridReady={handleGridReady}
           rowHeight={48}
           className="student-table"
+          onSelectionChanged={handleAssignSelectionChanged}
+          rowSelection="multiple"
         />
       </div>
 
       <div className="section-container">
-        <div className="section-header">
+        <div className="section-header" style={{ display: "flex" ,justifyContent:"space-between"}}>
           <h3 className="section-title">Assigned Students</h3>
+          {selectedUnAssignLength > 0 && <div className="select-wrapper">
+
+            <button className="create-new-button" onClick={handleUnAssignMultiple} >
+              Unassign {selectedUnAssignLength} Students
+            </button>
+          </div>}
         </div>
-        <CustomTable 
+        <CustomTable
+          ref={gridRef2}
           rowData={unAssignStudents}
           columnDefs={assignedColumnDefs}
           paginationPageSize={10}
+          onGridReady={(params) => { gridRef2.current = params; }}
+          onSelectionChanged={() => {
+            if (gridRef2.current && gridRef2.current.api) {
+              const selectedRows = gridRef2.current.api.getSelectedRows();
+              setSelectedUnAssignLength(selectedRows.length); // Show button only if rows are selected
+            }
+          }}
           rowHeight={48}
           className="student-table"
+          rowSelection="multiple"
         />
       </div>
 

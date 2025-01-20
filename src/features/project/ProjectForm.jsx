@@ -31,7 +31,6 @@ const ProjectForm = ({
     projectCoordinatorId: projectDataDefault?.projectCoordinatorIds?.[0]?.id,
   });
 
-  console.log("88888", projectDataDefault);
   const [coordinatorList, setCoordinatorList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -174,36 +173,42 @@ const ProjectForm = ({
       <form onSubmit={handleSubmitButton}>
         <h2>{heading}</h2>
         <div className="form-layout">
-          <TextInput
-            label="Project Name"
-            name="name"
-            value={projectData.name}
-            onChange={handleInputChange}
-            required
-          />
+          <div className='form-row'>
+            <TextInput
+              label="Project Name"
+              name="name"
+              value={projectData.name}
+              onChange={handleInputChange}
+              required
+            />
 
-          <TextInput
-            label="Description"
-            name="description"
-            value={projectData.description}
-            onChange={handleInputChange}
-            required
-            isTextArea
-          />
-          <TextInput
-            label="Status"
-            name="status"
-            value={projectData.status}
-            onChange={handleInputChange}
-            required
-          />
-          <SelectInput
-            label="Project Coordinator"
-            value={projectData.projectCoordinatorId || ""}
-            onChange={handleSchoolChange}
-            options={coordinatorList}
-            required
-          />
+            <TextInput
+              label="Description"
+              name="description"
+              value={projectData.description}
+              onChange={handleInputChange}
+              required
+              isTextArea
+            />
+          </div>
+
+          <div className='form-row'>
+            <TextInput
+              label="Status"
+              name="status"
+              value={projectData.status}
+              onChange={handleInputChange}
+              required
+            />
+            <SelectInput
+              label="Project Coordinator"
+              value={projectData.projectCoordinatorId || ""}
+              onChange={handleSchoolChange}
+              options={coordinatorList}
+              required
+            />
+          </div>
+
         </div>
         <button
           type="button"

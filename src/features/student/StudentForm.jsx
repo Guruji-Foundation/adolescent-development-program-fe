@@ -102,93 +102,109 @@ function StudentForm({
 
     return (
         <div className="form-container">
-            <h2>{heading}</h2>
             <form onSubmit={handleSubmitButton}>
                 <div className="form-layout">
-                    <SelectInput
-                        label="School Name"
-                        value={formData.schoolId || ""}
-                        onChange={(e) => {
-                            setFormData({
-                                ...formData,
-                                schoolId: Number(e?.target?.value)
-                            })
-                        }}
-                        options={schoolDropDownData}
-                        required
-                    />
-                    <TextInput
-                        label="Name Of Student"
-                        name="studentName"
-                        value={formData.studentName}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    <div>
-                        <label htmlFor="dateOfBirth">Date of Birth<span className='required'> *</span></label>
-                        <input
-                            type="date"
-                            id="dateOfBirth"
-                            name="dateOfBirth"
-                            value={formData.dateOfBirth || ""}
-                            onChange={(e) =>
+            <h2>{heading}</h2>
+
+                    <div className='form-row'>
+                        <TextInput
+                            label="Name Of Student"
+                            name="studentName"
+                            value={formData.studentName}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <SelectInput
+                            label="School Name"
+                            value={formData.schoolId || ""}
+                            onChange={(e) => {
                                 setFormData({
                                     ...formData,
-                                    dateOfBirth: e.target.value,
+                                    schoolId: Number(e?.target?.value)
                                 })
-                            }
+                            }}
+                            options={schoolDropDownData}
                             required
                         />
                     </div>
-                    <TextInput
-                        label="Parent Name"
-                        name="parentName"
-                        value={formData.parentName}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    <TextInput
-                        label="Parent's Occupation"
-                        name="parentOccupation"
-                        value={formData.parentOccupation}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    <TextInput
-                        label="Parent's Number"
-                        name="parentNumber"
-                        value={formData.parentNumber}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    <TextInput
-                        label="Address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    <TextInput
-                        label="Student's Number"
-                        name="studentNumber"
-                        value={formData.studentNumber}
-                        onChange={handleInputChange}
-                    // required
-                    />
-                    <TextInput
-                        label="Alternate Number"
-                        name="alternateNumber"
-                        value={formData.alternateNumber}
-                        onChange={handleInputChange}
-                    // required
-                    />
-                    <TextInput
-                        label="Email Address"
-                        name="emailId"
-                        value={formData.emailId}
-                        onChange={handleInputChange}
-                    // required
-                    />
+
+                    <div className='form-row'>
+                        <div>
+                            <label htmlFor="dateOfBirth">Date of Birth<span className='required' style={{ color: "red" }}> *</span></label>
+                            <input
+                                type="date"
+                                id="dateOfBirth"
+                                name="dateOfBirth"
+                                value={formData.dateOfBirth || ""}
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        dateOfBirth: e.target.value,
+                                    })
+                                }
+                                required
+                            />
+                        </div>
+                        <TextInput
+                            label="Parent Name"
+                            name="parentName"
+                            value={formData.parentName}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+
+                    <div className='form-row'>
+                        <TextInput
+                            label="Parent's Occupation"
+                            name="parentOccupation"
+                            value={formData.parentOccupation}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <TextInput
+                            label="Parent's Number"
+                            name="parentNumber"
+                            value={formData.parentNumber}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+
+                    <div className='form-row'>
+                        <TextInput
+                            label="Address"
+                            name="address"
+                            value={formData.address}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <TextInput
+                            label="Student's Number"
+                            name="studentNumber"
+                            value={formData.studentNumber}
+                            onChange={handleInputChange}
+                        // required
+                        />
+                    </div>
+
+                    <div className='form-row'>
+                        <TextInput
+                            label="Alternate Number"
+                            name="alternateNumber"
+                            value={formData.alternateNumber}
+                            onChange={handleInputChange}
+                        // required
+                        />
+                        {/* <TextInput
+                            label="Email Address"
+                            name="emailId"
+                            value={formData.emailId}
+                            onChange={handleInputChange}
+                        // required
+                        /> */}
+                        </div>
+
                 </div>
                 <Button
                     type="submit"

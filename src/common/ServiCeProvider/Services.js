@@ -190,7 +190,7 @@ export default {
       `${PROJECT}/${projectId}/schools/students/assign`,
       {
         schoolId: schoolId,
-        studentIds: [Number(studentId)],
+        studentIds: studentId,
       }
     );
   },
@@ -201,7 +201,7 @@ export default {
       `${PROJECT}/${projectId}/schools/students/un-assign`,
       {
         schoolId: schoolId,
-        studentIds: [Number(studentId)],
+        studentIds: studentId,
       }
     );
   },

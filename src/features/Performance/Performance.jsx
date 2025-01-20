@@ -69,61 +69,6 @@ function Performance() {
         navigate(`/edit-performance/${id}`);
     };
 
-    const columnDefs = [
-        {
-            headercheckboxSelection: true,
-            checkboxSelection: false,
-            width: 50,
-        },
-        {
-            headerName: "Student",
-            field: "studentName",
-            filter: true,
-            flex: 1,
-            floatingFilter: true,
-        },
-        {
-            headerName: "Topic Name",
-            field: "topicName",
-            filter: true,
-            flex: 1,
-            floatingFilter: true,
-        },
-        {
-            headerName: "Marks before Intervention",
-            field: "beforeInterventionMark",
-            filter: true,
-            floatingFilter: true,
-        },
-        {
-            headerName: "Marks After Intervention",
-            field: "afterInterventionMark",
-            filter: true,
-            floatingFilter: true,
-        },
-        {
-            headerName: "Actions",
-            cellRenderer: (params) => {
-                return (
-                    <div>
-                        <button
-                            onClick={() => handleEdit(params?.data?.id)}
-                            className="action-button edit-button"
-                        >
-                            <FaEdit />
-                        </button>
-                        {/* <button
-                            onClick={() => handleDelete(params?.data?.id)}
-                            className="action-button delete-button"
-                        >
-                            <FaTrashAlt />
-                        </button> */}
-                    </div>
-                );
-            },
-        },
-    ]
-
     const getPerformanceData = async () => {
         try {
             const data = (await apiServices.getPerformanceList())?.data?.data?.performances
@@ -170,25 +115,46 @@ function Performance() {
         getPerformanceData();
     }, [studentData, topicData])
 
+    const getProjectList = async () => {
+        if (selectedSchool) {
+            try {
+                // setLoading(true);
+                const res = (await apiServices.getAllProjectList(selectedSchool))
+                    ?.data?.data?.projects;
+                setProjectsList(res);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                // setLoading(false);
+            }
+        }
+    };
+
     useEffect(() => {
-        apiServices
-            .getAllProjectList()
-            .then((res) => {
-                res = res?.data?.data?.projects;
-                // console.log(res);
-                if (res && res.length > 0) {
-                    setProjectsList(res);
-                } else {
-                    setProjectsList([]);
-                }
-            })
-            .catch((error) => {
-                setError("Error fetching school data.");
-                console.error("Error fetching school data:", error);
-            });
+        // apiServices
+        //     .getAllProjectList()
+        //     .then((res) => {
+        //         res = res?.data?.data?.projects;
+        //         // console.log(res);
+        //         if (res && res.length > 0) {
+        //             setProjectsList(res);
+        //         } else {
+        //             setProjectsList([]);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         setError("Error fetching school data.");
+        //         console.error("Error fetching school data:", error);
+        //     });
 
         getSchoolData();
     }, []);
+
+    useEffect(() => {
+        if (selectedSchool) {
+            getProjectList()
+        }
+    }, [selectedSchool])
 
     const getSchoolData = async () => {
         try {
@@ -232,7 +198,11 @@ function Performance() {
 
     useEffect(() => {
         if (selectedProject && selectedSchool) {
-            const columnDefs2 = topicData?.map((item) => ({
+            const filteredTopics = selectedTopics > 0
+                ? topicData?.filter((item) => item?.id == selectedTopics)
+                : topicData;
+
+            const columnDefs2 = filteredTopics?.map((item) => ({
                 headerName: item?.name,
                 children: [
                     {
@@ -247,6 +217,7 @@ function Performance() {
                     }
                 ]
             }))
+
             setColumDefsWithTopic([{
                 headerName: "Student Name",
                 field: "studentName",
@@ -255,7 +226,7 @@ function Performance() {
                 pinned: "left"
             }, ...columnDefs2])
         }
-    }, [topicData])
+    }, [topicData, selectedTopics])
 
     const handleCellValueChange = (params) => {
         const updatedRow = params.data;
@@ -361,7 +332,7 @@ function Performance() {
                 ]
             }
             const response = await axios.post(
-                `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`, 
+                `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`,
                 requestBody,
                 {
                     responseType: 'blob',
@@ -378,10 +349,10 @@ function Performance() {
             }
         } catch (error) {
             console.error("Download error:", error);
-            
+
             // Get the error message from the API response
             const errorMessage = error.response?.data?.messages?.[0]?.message || "An unexpected error occurred";
-            
+
             setShowToast(true);
             setToastMessage(errorMessage);
             setToastType("danger");
@@ -460,15 +431,6 @@ function Performance() {
                 <div className="school-selector-group">
                     <div className="select-wrapper">
                         <SelectInput
-                            label="Select Project"
-                            value={selectedProject || ""}
-                            options={projectsList}
-                            onChange={(e) => setSelectedProject(e.target.value)}
-                            placeholder="Choose a project..."
-                        />
-                    </div>
-                    <div className="select-wrapper">
-                        <SelectInput
                             label="Select School"
                             value={selectedSchool || ""}
                             options={schoolList}
@@ -478,6 +440,16 @@ function Performance() {
                     </div>
                     <div className="select-wrapper">
                         <SelectInput
+                            label="Select Project"
+                            value={selectedProject || ""}
+                            options={projectsList}
+                            onChange={(e) => setSelectedProject(e.target.value)}
+                            placeholder="Choose a project..."
+                        />
+                    </div>
+
+                    <div className="select-wrapper">
+                        <SelectInput
                             label="Select Topic"
                             value={selectedTopics || ""}
                             options={topicData}
@@ -485,7 +457,7 @@ function Performance() {
                             placeholder="Choose a topic..."
                         />
                     </div>
-                   
+
                     {(selectedProject || selectedSchool || selectedTopics) && (
                         <button
                             className="clear-school-button"
@@ -514,9 +486,9 @@ function Performance() {
                 </div>
                 <div style={{ display: "flex", gap: "10px" }}>
                     <div className="download-container">
-                        <button 
-                            className="icon-button" 
-                            onClick={handleDownloadTemplateClick} 
+                        <button
+                            className="icon-button"
+                            onClick={handleDownloadTemplateClick}
                             title="Download Template"
                         >
                             <MdFileDownload className="button-icon" />
@@ -529,7 +501,7 @@ function Performance() {
                             style={{ display: "none" }}
                             onChange={handleFileChange}
                         />
-                        <button 
+                        <button
                             className="icon-button"
                             onClick={handleUploadClick}
                             title="Upload Marks"
@@ -607,7 +579,7 @@ function Performance() {
                 />
             )}
             {showToast && (
-                <Toast 
+                <Toast
                     type={toastType}
                     message={toastMessage}
                     onClose={() => setShowToast(false)}

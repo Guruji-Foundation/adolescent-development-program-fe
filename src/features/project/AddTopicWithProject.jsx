@@ -54,23 +54,25 @@ function AddTopicWithProject({
                 <div>
 
                     <form onSubmit={handleSubmitButton}>
-                        <div className="form-layout">
-                            <TextInput
-                                label="Topic Name"
-                                name="name"
-                                value={topicData.name}
-                                onChange={handleInputChange}
-                                required
-                            />
+                        <div className="">
+                            <div className='form-row'>
+                                <TextInput
+                                    label="Topic Name"
+                                    name="name"
+                                    value={topicData.name}
+                                    onChange={handleInputChange}
+                                    required
+                                />
 
-                            <TextInput
-                                label="Description"
-                                name="description"
-                                value={topicData.description}
-                                onChange={handleInputChange}
-                                required
-                                isTextArea
-                            />
+                                <TextInput
+                                    label="Description"
+                                    name="description"
+                                    value={topicData.description}
+                                    onChange={handleInputChange}
+                                    required
+                                    isTextArea
+                                />
+                            </div>
                         </div>
                         <div className="modal-actions">
                             <button type="button" className="r-button confirm-button" onClick={onClose} >

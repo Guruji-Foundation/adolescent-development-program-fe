@@ -91,3 +91,9 @@
 .upload-container span:hover {
   text-decoration: underline;
 }
+
+form{
+  max-height: 75vh;
+  max-width: 80vh;
+  overflow-y: scroll;
+}

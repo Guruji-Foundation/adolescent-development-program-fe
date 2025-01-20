@@ -100,20 +100,22 @@ const TeacherForm = ({
       <form onSubmit={handleSubmitButton}>
         <h2>{heading}</h2>
         <div className="form-layout">
-          <TextInput
-            label="Teacher Name"
-            name="name"
-            value={teacherData.name}
-            onChange={handleInputChange}
-            required
-          />
-          <NumberInput
-            label="Experience"
-            name="experience"
-            value={teacherData.experience}
-            onChange={handleInputChange}
-            required
-          />
+          <div className='form-row'>
+            <TextInput
+              label="Teacher Name"
+              name="name"
+              value={teacherData.name}
+              onChange={handleInputChange}
+              required
+            />
+            <NumberInput
+              label="Experience"
+              name="experience"
+              value={teacherData.experience}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
           <SelectInput
             label="School Details"
             value={teacherData.schoolId || ""}

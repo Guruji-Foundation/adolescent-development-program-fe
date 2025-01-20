@@ -158,62 +158,72 @@ const AssignProjectToSchoolForm = ({
       <h2>{heading}</h2>
       <form onSubmit={handleSubmitButton}>
         <div className="form-layout">
-          <SelectInput
-            label="Projects"
-            value={assignProject.projectId || ""}
-            onChange={handleSelectChange}
-            options={projects}
-            selectsomthingtext={"Select Project"}
-            name={"projectId"}
-            required
-            disabled={isEdit}
-          />
-          <SelectInput
-            label="Schools"
-            value={assignProject.schoolId || ""}
-            onChange={handleSelectChange}
-            options={schools}
-            selectsomthingtext={"Select School"}
-            name={"schoolId"}
-            required
-            disabled={isEdit}
-          />
-          <SelectInput
-            label="Teachers"
-            value={assignProject.teacherId || ""}
-            onChange={handleSelectChange}
-            options={teachers}
-            selectsomthingtext={"Select Teacher"}
-            name={"teacherId"}
-            required
-          />
-          <DateInput
-            label="Start Date"
-            name="startDate"
-            value={assignProject.startDate}
-            onChange={handleInputChange}
-            // required
-            min={undefined}
-            max={undefined}
-          />
+          <div className='form-row'>
+            <SelectInput
+              label="Projects"
+              value={assignProject.projectId || ""}
+              onChange={handleSelectChange}
+              options={projects}
+              selectsomthingtext={"Select Project"}
+              name={"projectId"}
+              required
+              disabled={isEdit}
+            />
+            <SelectInput
+              label="Schools"
+              value={assignProject.schoolId || ""}
+              onChange={handleSelectChange}
+              options={schools}
+              selectsomthingtext={"Select School"}
+              name={"schoolId"}
+              required
+              disabled={isEdit}
+            />
+          </div>
 
-          <DateInput
-            label="End Date"
-            name="endDate"
-            value={assignProject.endDate}
-            onChange={handleInputChange}
-            // required
-            min={undefined}
-            max={undefined}
-          />
-          <DateInput
-            label="Actual Start Date"
-            name="actualStartDate"
-            value={assignProject.actualStartDate}
-            onChange={handleInputChange}
-            min={undefined}
-            max={undefined}
-          />
+          <div className='form-row'>
+
+            <SelectInput
+              label="Teachers"
+              value={assignProject.teacherId || ""}
+              onChange={handleSelectChange}
+              options={teachers}
+              selectsomthingtext={"Select Teacher"}
+              name={"teacherId"}
+              required
+            />
+            <DateInput
+              label="Start Date"
+              name="startDate"
+              value={assignProject.startDate}
+              onChange={handleInputChange}
+              // required
+              min={undefined}
+              max={undefined}
+            />
+          </div>
+
+          <div className='form-row'>
+            <DateInput
+              label="End Date"
+              name="endDate"
+              value={assignProject.endDate}
+              onChange={handleInputChange}
+              // required
+              min={undefined}
+              max={undefined}
+            />
+            <DateInput
+              label="Actual Start Date"
+              name="actualStartDate"
+              value={assignProject.actualStartDate}
+              onChange={handleInputChange}
+              min={undefined}
+              max={undefined}
+            />
+          </div>
+
+
           <DateInput
             label="Actual End Date"
             name="actualEndDate"

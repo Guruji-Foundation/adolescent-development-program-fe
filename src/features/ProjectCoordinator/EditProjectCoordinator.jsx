@@ -48,7 +48,7 @@ function EditProjectCoordinator() {
   return (
     <div>
       <ProjectCoordinatorForm
-        heading={"Edit Projectt Coordinators Details"}
+        heading={"Edit Project Coordinators Details"}
         message={{
           heading: "Coordinator Details Edited Successfully",
           description: "You have edited Coordinator",

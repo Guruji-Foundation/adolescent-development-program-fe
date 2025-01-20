@@ -19,7 +19,7 @@ const TextInput: React.FC<TextInputProps> = ({
   required = false,
   type = "text",
   isTextArea = false,
-  rows = 4,
+  rows = 2,
 }) => {
   return (
     <div className="form-field">
