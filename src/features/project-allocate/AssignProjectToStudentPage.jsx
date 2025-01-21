@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaUserPlus, FaUserMinus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { FiAlertTriangle } from 'react-icons/fi';
 
 import "./AssignProjectToStudent.css";
 import "../../CSS/Main.css";
@@ -37,6 +38,12 @@ const AssignProjectToStudentPage = () => {
   const navigate = useNavigate();
   const [selectedAssignLength, setSelectedAssignLength] = useState(0);
   const [selectedUnAssignLength, setSelectedUnAssignLength] = useState(0);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [studentsToUnassign, setStudentsToUnassign] = useState([]);
+
+  // Add refs for both sections
+  const unassignedSectionRef = useRef(null);
+  const assignedSectionRef = useRef(null);
 
   // Fetch list of schools on initial render
   const getSchooList = async () => {
@@ -164,6 +171,12 @@ const AssignProjectToStudentPage = () => {
 
   const handleClose = () => {
     setIsModalVisible(false);
+    // Scroll to appropriate table based on the action
+    if (assignFlag) {
+      assignedSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      unassignedSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const unassignedColumnDefs = [
@@ -301,13 +314,23 @@ const AssignProjectToStudentPage = () => {
     if (gridRef2.current && gridRef2.current.api) {
       const selectedRows = gridRef2.current.api.getSelectedRows();
       const selectedIds = selectedRows.map((row) => row.id);
-      handleUnAssign(selectedIds)
-      setSelectedUnAssignLength(0);
-      console.log("Selected IDs:", selectedIds);
-    } else {
-      console.error("Grid API is not available.");
+      setStudentsToUnassign(selectedIds);
+      setShowConfirmModal(true);
     }
-  }
+  };
+
+  const confirmUnassign = async () => {
+    try {
+      await handleUnAssign(studentsToUnassign);
+      setShowConfirmModal(false);
+      setSelectedUnAssignLength(0);
+      setStudentsToUnassign([]);
+      setAssignFlag(false);
+      setIsModalVisible(true);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   if (loading) return <LoadingSpinner />;
   if (errors.length > 0) return <ErrorMessage errors={errors} />;
@@ -343,20 +366,22 @@ const AssignProjectToStudentPage = () => {
               disabled={!selectedSchoolId}
             />
           </div>
-          {selectedAssignLength > 0 && <div className="select-wrapper multiassign-button-container">
-
-            <button className="create-new-button" onClick={handleAssignMultiple} >
-              Assign {selectedAssignLength} Students
-            </button>
-          </div>}
-
-
         </div>
       </div>
 
-      <div className="section-container">
-        <div className="section-header">
+      <div className="section-container" ref={unassignedSectionRef}>
+        <div className="section-header" style={{ display: "flex", justifyContent: "space-between" }}>
           <h3 className="section-title">Unassigned Students</h3>
+          {selectedAssignLength > 0 && (
+            <button 
+              className="action-button-primary"
+              onClick={handleAssignMultiple}
+            >
+              <FaUserPlus size={16} />
+              Assign Students
+              <span className="student-counter">{selectedAssignLength}</span>
+            </button>
+          )}
         </div>
         <CustomTable
           ref={gridRef}
@@ -371,15 +396,19 @@ const AssignProjectToStudentPage = () => {
         />
       </div>
 
-      <div className="section-container">
-        <div className="section-header" style={{ display: "flex" ,justifyContent:"space-between"}}>
+      <div className="section-container" ref={assignedSectionRef}>
+        <div className="section-header" style={{ display: "flex", justifyContent: "space-between" }}>
           <h3 className="section-title">Assigned Students</h3>
-          {selectedUnAssignLength > 0 && <div className="select-wrapper">
-
-            <button className="create-new-button" onClick={handleUnAssignMultiple} >
-              Unassign {selectedUnAssignLength} Students
+          {selectedUnAssignLength > 0 && (
+            <button 
+              className="action-button-primary action-button-danger"
+              onClick={handleUnAssignMultiple}
+            >
+              <FaUserMinus size={16} />
+              Unassign Students
+              <span className="student-counter">{selectedUnAssignLength}</span>
             </button>
-          </div>}
+          )}
         </div>
         <CustomTable
           ref={gridRef2}
@@ -404,6 +433,35 @@ const AssignProjectToStudentPage = () => {
           data={assignFlag ? AssignModelData : UnAssignModelData}
           onClose={handleClose}
         />
+      )}
+
+      {showConfirmModal && (
+        <div className="modal-overlay">
+          <div className="confirmation-modal">
+            <div className="modal-icon">
+              <FiAlertTriangle size={48} color="#f59e0b" />
+            </div>
+            <h3>Confirm Unassignment</h3>
+            <p>
+              Are you sure you want to unassign {studentsToUnassign.length} student(s)?
+              This action will remove their project allocation and all associated performance data.
+            </p>
+            <div className="modal-actions">
+              <button 
+                className="modal-button secondary"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="modal-button primary danger"
+                onClick={confirmUnassign}
+              >
+                Yes, Unassign
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

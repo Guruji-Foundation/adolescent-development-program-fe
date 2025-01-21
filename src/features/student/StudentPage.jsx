@@ -14,6 +14,7 @@ import axios from "axios";
 import Toast from '../../common/FeedbackComponents/Toast/Toast';
 import FileOperationsButtons from '../../common/GloabalComponent/FileOperationsButtons';
 import CustomTable from '../../common/GloabalComponent/CustomTable';
+import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
 
 const StudentPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
@@ -24,6 +25,7 @@ const StudentPage = () => {
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: 'warning' });
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -142,6 +144,7 @@ const StudentPage = () => {
     }
     const formData = new FormData();
     formData.append("file", file);
+    setIsLoading(true);
     try {
       const response = await axios.post(
         `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/upload?schoolId=${selectedSchool}`,
@@ -169,6 +172,8 @@ const StudentPage = () => {
     } catch (error) {
       console.error("Error uploading file:", error.response || error);
       alert("Failed to upload file. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -456,6 +461,8 @@ const StudentPage = () => {
           onClose={() => setToast({ ...toast, show: false })}
         />
       )}
+
+      {isLoading && <LoadingSpinner />}
     </div>
   );
 };
