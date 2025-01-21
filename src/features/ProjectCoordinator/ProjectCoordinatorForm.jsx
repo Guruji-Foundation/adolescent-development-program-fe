@@ -44,7 +44,7 @@ function ProjectCoordinatorForm({
 
     const handleSubmitButton = async (e) => {
         e.preventDefault()
-        try{
+        try {
             const res = await handleSubmit(formData);
             if (res?.status) {
                 setShowModal(true);
@@ -55,22 +55,34 @@ function ProjectCoordinatorForm({
             } else {
                 setError("An unexpected error occurred.");
             }
-        }catch (error) {
+        } catch (error) {
             setError(error.message || "Error submitting the form.");
         }
     }
     return (
         <div className="form-container">
-            <h2>{heading}</h2>
             <form onSubmit={handleSubmitButton}>
                 <div className="form-layout">
-                    <TextInput
-                        label="Name Of Coordinator"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                    />
+            <h2>{heading}</h2>
+
+                    <div className='form-row'>
+                        <TextInput
+                            label="Name Of Coordinator"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            required
+                        />
+
+                        <TextInput
+                            label="Mobile Number"
+                            name="mobileNumber"
+                            value={formData.mobileNumber}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+
                     {/* <TextInput
                         label="Area of Expertise"
                         name="areaOfExpertise"
@@ -85,13 +97,7 @@ function ProjectCoordinatorForm({
                         onChange={handleInputChange}
                         required
                     /> */}
-                    <TextInput
-                        label="Mobile Number"
-                        name="mobileNumber"
-                        value={formData.mobileNumber}
-                        onChange={handleInputChange}
-                        required
-                    />
+
                     <TextInput
                         label="Address"
                         name="address"

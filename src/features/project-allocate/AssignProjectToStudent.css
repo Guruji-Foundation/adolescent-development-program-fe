@@ -348,3 +348,183 @@ html {
     max-width: 100%;
   }
 }
+
+.multiassign-button-container{
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+/* Action Buttons Styling */
+.action-button-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  cursor: pointer;
+  
+  /* Primary Button Style - Green color matching table button */
+  background: #059669; /* Green color matching the table assign button */
+  color: white;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.1);
+}
+
+.action-button-primary:hover {
+  background: #047857;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(5, 150, 105, 0.2);
+}
+
+.action-button-primary:active {
+  transform: translateY(0);
+}
+
+/* Danger variant for unassign */
+.action-button-danger {
+  background: #dc2626;
+  color: white;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+}
+
+.action-button-danger:hover {
+  background: #b91c1c;
+}
+
+/* Disabled state */
+.action-button-primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Add loading state indicator */
+.action-button-primary.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.action-button-primary.loading::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: button-spin 0.6s linear infinite;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Counter badge */
+.student-counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 2px 8px;
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirmation-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  text-align: center;
+}
+
+.modal-icon {
+  margin-bottom: 16px;
+}
+
+.confirmation-modal h3 {
+  color: #1e293b;
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.confirmation-modal p {
+  color: #64748b;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.modal-button.secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+}
+
+.modal-button.secondary:hover {
+  background: #e2e8f0;
+}
+
+.modal-button.primary.danger {
+  background: #dc2626;
+  color: white;
+  border: none;
+}
+
+.modal-button.primary.danger:hover {
+  background: #b91c1c;
+}
+
+/* Add animation for modal */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.confirmation-modal {
+  animation: modalFadeIn 0.2s ease-out;
+}

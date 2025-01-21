@@ -16,7 +16,8 @@ const CustomTable = ({
   },
   paginationPageSize = 10,
   rowHeight = 48,
-  headerHeight = 48
+  headerHeight = 48,
+  ...props
 }) => {
   return (
     <div className="ag-theme-quartz custom-table-container">
@@ -39,6 +40,7 @@ const CustomTable = ({
           params.api.sizeColumnsToFit();
         }}
         className="custom-ag-table"
+        {...props}
       />
     </div>
   );

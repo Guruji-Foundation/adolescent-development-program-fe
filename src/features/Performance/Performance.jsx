@@ -42,6 +42,7 @@ function Performance() {
     const [toastType, setToastType] = useState("warning");
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = React.useRef(null);
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
@@ -68,61 +69,6 @@ function Performance() {
     const handleEdit = (id) => {
         navigate(`/edit-performance/${id}`);
     };
-
-    const columnDefs = [
-        {
-            headercheckboxSelection: true,
-            checkboxSelection: false,
-            width: 50,
-        },
-        {
-            headerName: "Student",
-            field: "studentName",
-            filter: true,
-            flex: 1,
-            floatingFilter: true,
-        },
-        {
-            headerName: "Topic Name",
-            field: "topicName",
-            filter: true,
-            flex: 1,
-            floatingFilter: true,
-        },
-        {
-            headerName: "Marks before Intervention",
-            field: "beforeInterventionMark",
-            filter: true,
-            floatingFilter: true,
-        },
-        {
-            headerName: "Marks After Intervention",
-            field: "afterInterventionMark",
-            filter: true,
-            floatingFilter: true,
-        },
-        {
-            headerName: "Actions",
-            cellRenderer: (params) => {
-                return (
-                    <div>
-                        <button
-                            onClick={() => handleEdit(params?.data?.id)}
-                            className="action-button edit-button"
-                        >
-                            <FaEdit />
-                        </button>
-                        {/* <button
-                            onClick={() => handleDelete(params?.data?.id)}
-                            className="action-button delete-button"
-                        >
-                            <FaTrashAlt />
-                        </button> */}
-                    </div>
-                );
-            },
-        },
-    ]
 
     const getPerformanceData = async () => {
         try {
@@ -170,25 +116,46 @@ function Performance() {
         getPerformanceData();
     }, [studentData, topicData])
 
+    const getProjectList = async () => {
+        if (selectedSchool) {
+            try {
+                // setLoading(true);
+                const res = (await apiServices.getAllProjectList(selectedSchool))
+                    ?.data?.data?.projects;
+                setProjectsList(res);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                // setLoading(false);
+            }
+        }
+    };
+
     useEffect(() => {
-        apiServices
-            .getAllProjectList()
-            .then((res) => {
-                res = res?.data?.data?.projects;
-                // console.log(res);
-                if (res && res.length > 0) {
-                    setProjectsList(res);
-                } else {
-                    setProjectsList([]);
-                }
-            })
-            .catch((error) => {
-                setError("Error fetching school data.");
-                console.error("Error fetching school data:", error);
-            });
+        // apiServices
+        //     .getAllProjectList()
+        //     .then((res) => {
+        //         res = res?.data?.data?.projects;
+        //         // console.log(res);
+        //         if (res && res.length > 0) {
+        //             setProjectsList(res);
+        //         } else {
+        //             setProjectsList([]);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         setError("Error fetching school data.");
+        //         console.error("Error fetching school data:", error);
+        //     });
 
         getSchoolData();
     }, []);
+
+    useEffect(() => {
+        if (selectedSchool) {
+            getProjectList()
+        }
+    }, [selectedSchool])
 
     const getSchoolData = async () => {
         try {
@@ -232,7 +199,11 @@ function Performance() {
 
     useEffect(() => {
         if (selectedProject && selectedSchool) {
-            const columnDefs2 = topicData?.map((item) => ({
+            const filteredTopics = selectedTopics > 0
+                ? topicData?.filter((item) => item?.id == selectedTopics)
+                : topicData;
+
+            const columnDefs2 = filteredTopics?.map((item) => ({
                 headerName: item?.name,
                 children: [
                     {
@@ -247,6 +218,7 @@ function Performance() {
                     }
                 ]
             }))
+
             setColumDefsWithTopic([{
                 headerName: "Student Name",
                 field: "studentName",
@@ -255,22 +227,21 @@ function Performance() {
                 pinned: "left"
             }, ...columnDefs2])
         }
-    }, [topicData])
+    }, [topicData, selectedTopics])
 
     const handleCellValueChange = (params) => {
         const updatedRow = params.data;
         setEditedData((prev) => {
             const existingIndex = prev.findIndex((row) => row.studentName === updatedRow.studentName);
             if (existingIndex > -1) {
-                // Update existing student data
                 const updated = [...prev];
                 updated[existingIndex] = updatedRow;
                 return updated;
             } else {
-                // Add new student data
                 return [...prev, updatedRow];
             }
         });
+        setHasUnsavedChanges(true);
     };
 
     const prepareDataForPost = () => {
@@ -307,13 +278,13 @@ function Performance() {
                 const res = await apiServices.saveAllPerformanceTable(selectedSchool, selectedProject, postData);
                 if (res?.data?.status) {
                     setEditedData([]);
-                    setShowModal(true)
+                    setShowModal(true);
+                    setHasUnsavedChanges(false);
                 }
             }
             else {
                 return;
             }
-
         } catch (err) {
             throw err;
         }
@@ -361,7 +332,7 @@ function Performance() {
                 ]
             }
             const response = await axios.post(
-                `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`, 
+                `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/performances/download`,
                 requestBody,
                 {
                     responseType: 'blob',
@@ -378,10 +349,10 @@ function Performance() {
             }
         } catch (error) {
             console.error("Download error:", error);
-            
+
             // Get the error message from the API response
             const errorMessage = error.response?.data?.messages?.[0]?.message || "An unexpected error occurred";
-            
+
             setShowToast(true);
             setToastMessage(errorMessage);
             setToastType("danger");
@@ -460,15 +431,6 @@ function Performance() {
                 <div className="school-selector-group">
                     <div className="select-wrapper">
                         <SelectInput
-                            label="Select Project"
-                            value={selectedProject || ""}
-                            options={projectsList}
-                            onChange={(e) => setSelectedProject(e.target.value)}
-                            placeholder="Choose a project..."
-                        />
-                    </div>
-                    <div className="select-wrapper">
-                        <SelectInput
                             label="Select School"
                             value={selectedSchool || ""}
                             options={schoolList}
@@ -478,6 +440,16 @@ function Performance() {
                     </div>
                     <div className="select-wrapper">
                         <SelectInput
+                            label="Select Project"
+                            value={selectedProject || ""}
+                            options={projectsList}
+                            onChange={(e) => setSelectedProject(e.target.value)}
+                            placeholder="Choose a project..."
+                        />
+                    </div>
+
+                    <div className="select-wrapper">
+                        <SelectInput
                             label="Select Topic"
                             value={selectedTopics || ""}
                             options={topicData}
@@ -485,7 +457,7 @@ function Performance() {
                             placeholder="Choose a topic..."
                         />
                     </div>
-                   
+
                     {(selectedProject || selectedSchool || selectedTopics) && (
                         <button
                             className="clear-school-button"
@@ -514,9 +486,9 @@ function Performance() {
                 </div>
                 <div style={{ display: "flex", gap: "10px" }}>
                     <div className="download-container">
-                        <button 
-                            className="icon-button" 
-                            onClick={handleDownloadTemplateClick} 
+                        <button
+                            className="icon-button"
+                            onClick={handleDownloadTemplateClick}
                             title="Download Template"
                         >
                             <MdFileDownload className="button-icon" />
@@ -529,7 +501,7 @@ function Performance() {
                             style={{ display: "none" }}
                             onChange={handleFileChange}
                         />
-                        <button 
+                        <button
                             className="icon-button"
                             onClick={handleUploadClick}
                             title="Upload Marks"
@@ -537,15 +509,6 @@ function Performance() {
                             <MdFileUpload className="button-icon" />
                         </button>
                     </div>
-                    {selectedSchool && selectedProject && (
-                        <button
-                            className="create-new-button"
-                            onClick={saveAllPerformances}
-                            title="Save Changes"
-                        >
-                            Save Changes
-                        </button>
-                    )}
                 </div>
             </div>
 
@@ -554,36 +517,64 @@ function Performance() {
             {!(selectedSchool && selectedProject) ? (
                 <h2 className="project-heading">Please select relevant options to view Performance of Student</h2>
             ) : (
-                <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
-                    <AgGridTable
-                        rowData={rowDataWithTpoic}
-                        columnDefs={columDefsWithTopic}
-                        onCellValueChanged={handleCellValueChange}
-                        defaultColDef={{
-                            sortable: true,
-                            filter: true,
-                            floatingFilter: true,
-                            resizable: true,
-                            suppressSizeToFit: true,
-                            flex: 1,
-                        }}
-                        pagination={true}
-                        paginationPageSize={10}
-                        rowHeight={48}
-                        headerHeight={48}
-                        animateRows={true}
-                        enableCellTextSelection={true}
-                        suppressMovableColumns={true}
-                        suppressDragLeaveHidesColumns={true}
-                        onGridSizeChanged={(params) => {
-                            params.api.sizeColumnsToFit();
-                        }}
-                        onFirstDataRendered={(params) => {
-                            params.api.sizeColumnsToFit();
-                        }}
-                        className="custom-ag-table"
-                    />
-                </div>
+                <>
+                    <div style={{ marginBottom: "80px" }}>
+                        <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
+                            <AgGridTable
+                                rowData={rowDataWithTpoic}
+                                columnDefs={columDefsWithTopic}
+                                onCellValueChanged={handleCellValueChange}
+                                defaultColDef={{
+                                    sortable: true,
+                                    filter: true,
+                                    floatingFilter: true,
+                                    resizable: true,
+                                    suppressSizeToFit: true,
+                                    flex: 1,
+                                }}
+                                pagination={true}
+                                paginationPageSize={10}
+                                rowHeight={48}
+                                headerHeight={48}
+                                animateRows={true}
+                                enableCellTextSelection={true}
+                                suppressMovableColumns={true}
+                                suppressDragLeaveHidesColumns={true}
+                                onGridSizeChanged={(params) => {
+                                    params.api.sizeColumnsToFit();
+                                }}
+                                onFirstDataRendered={(params) => {
+                                    params.api.sizeColumnsToFit();
+                                }}
+                                className="custom-ag-table"
+                            />
+                        </div>
+                    </div>
+                    <div style={{
+                        position: "fixed",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        padding: "15px",
+                        background: "white",
+                        boxShadow: "0 -2px 10px rgba(0,0,0,0.1)",
+                        zIndex: 1000,
+                        display: "flex",
+                        justifyContent: "flex-end"
+                    }}>
+                        <button
+                            className={`create-new-button ${hasUnsavedChanges ? 'unsaved-changes' : ''}`}
+                            onClick={saveAllPerformances}
+                            title="Save Changes"
+                            style={{
+                                background: hasUnsavedChanges ? '#007bff' : '#6c757d',
+                                animation: hasUnsavedChanges ? 'pulse 2s infinite' : 'none'
+                            }}
+                        >
+                            {hasUnsavedChanges ? 'Save Changes*' : 'Save Changes'}
+                        </button>
+                    </div>
+                </>
             )}
 
             {isModalVisible && (
@@ -607,11 +598,26 @@ function Performance() {
                 />
             )}
             {showToast && (
-                <Toast 
+                <Toast
                     type={toastType}
                     message={toastMessage}
                     onClose={() => setShowToast(false)}
                 />
+            )}
+            {hasUnsavedChanges && (
+                <div style={{
+                    position: "fixed",
+                    top: "20px",
+                    right: "20px",
+                    background: "#fff3cd",
+                    color: "#856404",
+                    padding: "10px 20px",
+                    borderRadius: "4px",
+                    boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                    zIndex: 1000,
+                }}>
+                    You have unsaved changes
+                </div>
             )}
         </div>
     );
