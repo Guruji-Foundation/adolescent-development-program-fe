@@ -67,8 +67,6 @@ const TopicsPage = () => {
     if (selectedProjectId) {
       getAllTopicList();
     } else {
-      // setTopics([]);
-      // setLoading(false);
       getAllTopicList()
     }
   }, [selectedProjectId]);

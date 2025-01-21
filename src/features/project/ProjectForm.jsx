@@ -126,46 +126,68 @@ const ProjectForm = ({
     {
       headerName: "Topic Name",
       field: "name",
-      filter: true,
-      floatingFilter: true,
       flex: 1,
+      minWidth: 200,
+      cellStyle: {
+        padding: '12px',
+        display: 'flex',
+        alignItems: 'center'
+      }
     },
     {
       headerName: "Description",
       field: "description",
-      filter: true,
-      floatingFilter: true,
-      flex: 1,
+      flex: 2,
+      minWidth: 300,
+      autoHeight: true,
+      wrapText: true,
+      cellStyle: {
+        padding: '12px',
+        whiteSpace: 'pre-wrap',
+        lineHeight: '1.5',
+        overflow: 'auto',
+        maxHeight: '150px'
+      }
     },
     {
       headerName: "Actions",
-      cellRenderer: (params) => {
-        return (
-          <div>
-            <button
-              type="button"
-              onClick={() => {
-                setEditTopicData(params?.data);
-                setShowAddTopicModal(true);
-              }}
-              className="action-button edit-button"
-            >
-              <FaEdit />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedTopicId(params?.data?.id);
-                setIsShowDeleteModal(true);
-              }}
-              className="action-button delete-button"
-            >
-              <FaTrashAlt />
-            </button>
-          </div>
-        );
-      },
-    },
+      width: 120,
+      cellRenderer: params => (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          gap: '12px',
+          padding: '6px' 
+        }}>
+          <button
+            type="button"
+            onClick={() => {
+              setEditTopicData(params?.data);
+              setShowAddTopicModal(true);
+            }}
+            className="action-button edit-button"
+            title="Edit Topic"
+          >
+            <FaEdit />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedTopicId(params?.data?.id);
+              setIsShowDeleteModal(true);
+            }}
+            className="action-button delete-button"
+            title="Delete Topic"
+          >
+            <FaTrashAlt />
+          </button>
+        </div>
+      ),
+      sortable: false,
+      filter: false,
+      suppressMovable: true,
+      pinned: 'right'
+    }
   ];
 
   return (
@@ -225,11 +247,22 @@ const ProjectForm = ({
           + Add Topic
         </button>
         {topicDataArray?.length > 0 && (
-          <div className="ag-theme-quartz">
+          <div className="topic-table-container">
             <AgGridTable
               rowData={topicDataArray}
               columnDefs={columnDefs}
-              domLayout={"autoHeight"}
+              domLayout="autoHeight"
+              defaultColDef={{
+                sortable: true,
+                filter: true,
+                resizable: true
+              }}
+              className="topic-grid"
+              rowHeight={90}
+              getRowHeight={params => {
+                const descLength = params.data.description?.length || 0;
+                return descLength > 200 ? 150 : 90;
+              }}
             />
           </div>
         )}
