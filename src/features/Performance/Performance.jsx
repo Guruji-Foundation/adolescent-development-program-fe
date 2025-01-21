@@ -42,6 +42,7 @@ function Performance() {
     const [toastType, setToastType] = useState("warning");
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = React.useRef(null);
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
     const handleDelete = (id) => {
         setSelectedPerformanceId(id);
@@ -233,15 +234,14 @@ function Performance() {
         setEditedData((prev) => {
             const existingIndex = prev.findIndex((row) => row.studentName === updatedRow.studentName);
             if (existingIndex > -1) {
-                // Update existing student data
                 const updated = [...prev];
                 updated[existingIndex] = updatedRow;
                 return updated;
             } else {
-                // Add new student data
                 return [...prev, updatedRow];
             }
         });
+        setHasUnsavedChanges(true);
     };
 
     const prepareDataForPost = () => {
@@ -278,13 +278,13 @@ function Performance() {
                 const res = await apiServices.saveAllPerformanceTable(selectedSchool, selectedProject, postData);
                 if (res?.data?.status) {
                     setEditedData([]);
-                    setShowModal(true)
+                    setShowModal(true);
+                    setHasUnsavedChanges(false);
                 }
             }
             else {
                 return;
             }
-
         } catch (err) {
             throw err;
         }
@@ -509,15 +509,6 @@ function Performance() {
                             <MdFileUpload className="button-icon" />
                         </button>
                     </div>
-                    {selectedSchool && selectedProject && (
-                        <button
-                            className="create-new-button"
-                            onClick={saveAllPerformances}
-                            title="Save Changes"
-                        >
-                            Save Changes
-                        </button>
-                    )}
                 </div>
             </div>
 
@@ -526,36 +517,64 @@ function Performance() {
             {!(selectedSchool && selectedProject) ? (
                 <h2 className="project-heading">Please select relevant options to view Performance of Student</h2>
             ) : (
-                <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
-                    <AgGridTable
-                        rowData={rowDataWithTpoic}
-                        columnDefs={columDefsWithTopic}
-                        onCellValueChanged={handleCellValueChange}
-                        defaultColDef={{
-                            sortable: true,
-                            filter: true,
-                            floatingFilter: true,
-                            resizable: true,
-                            suppressSizeToFit: true,
-                            flex: 1,
-                        }}
-                        pagination={true}
-                        paginationPageSize={10}
-                        rowHeight={48}
-                        headerHeight={48}
-                        animateRows={true}
-                        enableCellTextSelection={true}
-                        suppressMovableColumns={true}
-                        suppressDragLeaveHidesColumns={true}
-                        onGridSizeChanged={(params) => {
-                            params.api.sizeColumnsToFit();
-                        }}
-                        onFirstDataRendered={(params) => {
-                            params.api.sizeColumnsToFit();
-                        }}
-                        className="custom-ag-table"
-                    />
-                </div>
+                <>
+                    <div style={{ marginBottom: "80px" }}>
+                        <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
+                            <AgGridTable
+                                rowData={rowDataWithTpoic}
+                                columnDefs={columDefsWithTopic}
+                                onCellValueChanged={handleCellValueChange}
+                                defaultColDef={{
+                                    sortable: true,
+                                    filter: true,
+                                    floatingFilter: true,
+                                    resizable: true,
+                                    suppressSizeToFit: true,
+                                    flex: 1,
+                                }}
+                                pagination={true}
+                                paginationPageSize={10}
+                                rowHeight={48}
+                                headerHeight={48}
+                                animateRows={true}
+                                enableCellTextSelection={true}
+                                suppressMovableColumns={true}
+                                suppressDragLeaveHidesColumns={true}
+                                onGridSizeChanged={(params) => {
+                                    params.api.sizeColumnsToFit();
+                                }}
+                                onFirstDataRendered={(params) => {
+                                    params.api.sizeColumnsToFit();
+                                }}
+                                className="custom-ag-table"
+                            />
+                        </div>
+                    </div>
+                    <div style={{
+                        position: "fixed",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        padding: "15px",
+                        background: "white",
+                        boxShadow: "0 -2px 10px rgba(0,0,0,0.1)",
+                        zIndex: 1000,
+                        display: "flex",
+                        justifyContent: "flex-end"
+                    }}>
+                        <button
+                            className={`create-new-button ${hasUnsavedChanges ? 'unsaved-changes' : ''}`}
+                            onClick={saveAllPerformances}
+                            title="Save Changes"
+                            style={{
+                                background: hasUnsavedChanges ? '#007bff' : '#6c757d',
+                                animation: hasUnsavedChanges ? 'pulse 2s infinite' : 'none'
+                            }}
+                        >
+                            {hasUnsavedChanges ? 'Save Changes*' : 'Save Changes'}
+                        </button>
+                    </div>
+                </>
             )}
 
             {isModalVisible && (
@@ -584,6 +603,21 @@ function Performance() {
                     message={toastMessage}
                     onClose={() => setShowToast(false)}
                 />
+            )}
+            {hasUnsavedChanges && (
+                <div style={{
+                    position: "fixed",
+                    top: "20px",
+                    right: "20px",
+                    background: "#fff3cd",
+                    color: "#856404",
+                    padding: "10px 20px",
+                    borderRadius: "4px",
+                    boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                    zIndex: 1000,
+                }}>
+                    You have unsaved changes
+                </div>
             )}
         </div>
     );

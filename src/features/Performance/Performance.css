@@ -231,3 +231,30 @@
     gap: 5px;
     align-items: center;
 }
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.create-new-button.unsaved-changes {
+    position: relative;
+}
+
+.create-new-button.unsaved-changes:after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background-color: #dc3545;
+    border-radius: 50%;
+}

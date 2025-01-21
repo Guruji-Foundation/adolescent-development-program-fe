@@ -124,3 +124,36 @@ body {
     }
   }
   
+  .topic-table-container {
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .topic-grid {
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  .action-button {
+    padding: 6px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .edit-button {
+    color: #4a90e2;
+    background-color: rgba(74, 144, 226, 0.1);
+  }
+  
+  .delete-button {
+    color: #e25c5c;
+    background-color: rgba(226, 92, 92, 0.1);
+  }
+  
+  .action-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
