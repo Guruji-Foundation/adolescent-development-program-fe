@@ -11,11 +11,11 @@ import SelectInput from "../../common/FormInput/SelectInput";
 import { ImCross, ImDownload2, ImUpload2 } from "react-icons/im";
 import { MdFileDownload, MdFileUpload } from "react-icons/md";
 import axios from "axios";
-import Toast from '../../common/FeedbackComponents/Toast/Toast';
-import FileOperationsButtons from '../../common/GloabalComponent/FileOperationsButtons';
-import CustomTable from '../../common/GloabalComponent/CustomTable';
+import Toast from "../../common/FeedbackComponents/Toast/Toast";
+import FileOperationsButtons from "../../common/GloabalComponent/FileOperationsButtons";
+import CustomTable from "../../common/GloabalComponent/CustomTable";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
-
+const apiUrl = process.env.REACT_APP_API_BASE_URL;
 const StudentPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
   const [selectedStudentId, setSelectedStudentId] = useState(null);
@@ -23,7 +23,11 @@ const StudentPage = () => {
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [file, setFile] = useState(null);
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: '', type: 'warning' });
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "warning",
+  });
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -90,14 +94,14 @@ const StudentPage = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.download-container')) {
+      if (!event.target.closest(".download-container")) {
         setShowDownloadOptions(false);
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
@@ -113,18 +117,16 @@ const StudentPage = () => {
 
   const handleDownloadTemplateClick = async () => {
     try {
-      const response = await axios.get(
-        `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/download-template`,
-        {
-          responseType: "blob",
-          headers: {
-            "Content-Type": "application/json",
-            // Add any authentication headers if needed
-            // 'Authorization': 'Bearer your-token'
-          },
-          // Removed withCredentials: true since it's causing CORS issues
-        }
-      );
+      const url = `${apiUrl}/students/download-template`;
+      const response = await axios.get(url, {
+        responseType: "blob",
+        headers: {
+          "Content-Type": "application/json",
+          // Add any authentication headers if needed
+          // 'Authorization': 'Bearer your-token'
+        },
+        // Removed withCredentials: true since it's causing CORS issues
+      });
 
       downloadCsvData(response.data, "student_template.xlsx");
     } catch (error) {
@@ -137,8 +139,8 @@ const StudentPage = () => {
     if (!selectedSchool) {
       setToast({
         show: true,
-        message: 'Please select a school before uploading',
-        type: 'warning'
+        message: "Please select a school before uploading",
+        type: "warning",
       });
       return;
     }
@@ -146,24 +148,20 @@ const StudentPage = () => {
     formData.append("file", file);
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/upload?schoolId=${selectedSchool}`,
-        formData,
-        {
-          headers: {
-            "sec-ch-ua-platform": '"Windows"',
-            Referer:
-              "https://adolescent-development-program-be-new-245843264012.us-central1.run.app/swagger-ui/index.html",
-            "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-            accept: "application/json",
-            "sec-ch-ua":
-              '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
-            "sec-ch-ua-mobile": "?0",
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const url = `${apiUrl}/students/upload?schoolId=${selectedSchool}`;
+      const response = await axios.post(url, formData, {
+        headers: {
+          "sec-ch-ua-platform": '"Windows"',
+          Referer: `${apiUrl}/swagger-ui/index.html`,
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+          accept: "application/json",
+          "sec-ch-ua":
+            '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
+          "sec-ch-ua-mobile": "?0",
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response?.status === 200) {
         setFile(null);
         setShowUploadSuccessModal(true);
@@ -200,7 +198,7 @@ const StudentPage = () => {
       field: "name",
       minWidth: 180,
       flex: 1.2,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="name-cell">
           <span>{params.value}</span>
         </div>
@@ -211,7 +209,7 @@ const StudentPage = () => {
       field: "schoolName",
       minWidth: 180,
       flex: 1.2,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="school-cell">
           <span className="school-badge">{params.value}</span>
         </div>
@@ -222,12 +220,12 @@ const StudentPage = () => {
       field: "dob",
       minWidth: 130,
       flex: 1,
-      cellRenderer: params => {
+      cellRenderer: (params) => {
         const date = new Date(params.value);
-        return date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
         });
       },
     },
@@ -236,7 +234,7 @@ const StudentPage = () => {
       field: "email",
       minWidth: 200,
       flex: 1.5,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="email-cell">
           <span>{params.value}</span>
         </div>
@@ -247,7 +245,7 @@ const StudentPage = () => {
       field: "phoneNumber",
       minWidth: 150,
       flex: 1,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="phone-cell">
           <span>{params.value}</span>
         </div>
@@ -258,7 +256,7 @@ const StudentPage = () => {
       field: "address",
       minWidth: 200,
       flex: 1.5,
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="address-cell" title={params.value}>
           {params.value}
         </div>
@@ -285,7 +283,7 @@ const StudentPage = () => {
     {
       headerName: "Actions",
       field: "actions",
-      cellRenderer: params => (
+      cellRenderer: (params) => (
         <div className="action-buttons">
           <button
             onClick={() => handleEdit(params.data.id)}
@@ -308,9 +306,9 @@ const StudentPage = () => {
       width: 120,
       minWidth: 120,
       maxWidth: 120,
-      pinned: 'right',
-      cellStyle: { padding: '0 8px' }
-    }
+      pinned: "right",
+      cellStyle: { padding: "0 8px" },
+    },
   ];
 
   const defaultColDef = {
@@ -320,7 +318,7 @@ const StudentPage = () => {
     resizable: true,
     suppressSizeToFit: true,
     flex: 1,
-    cellStyle: { display: 'flex', alignItems: 'center' }
+    cellStyle: { display: "flex", alignItems: "center" },
   };
 
   const downloadCsvData = (data, filename) => {
@@ -350,21 +348,21 @@ const StudentPage = () => {
     if (!selectedSchool) {
       setToast({
         show: true,
-        message: 'Please select a school before downloading',
-        type: 'warning'
+        message: "Please select a school before downloading",
+        type: "warning",
       });
       return;
     }
     try {
-      let url = `https://adolescent-development-program-be-new-245843264012.us-central1.run.app/students/download?schoolId=${selectedSchool}`;
+      let url = `${apiUrl}/students/download?schoolId=${selectedSchool}`;
       const response = await axios.get(url, {
         responseType: "blob",
       });
 
       // Generate filename with current date and time
       const now = new Date();
-      const date = now.toISOString().split('T')[0];
-      const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
+      const date = now.toISOString().split("T")[0];
+      const time = now.toTimeString().split(" ")[0].replace(/:/g, "-");
       const filename = `students_${date}_${time}.xlsx`;
 
       // Trigger download
@@ -388,8 +386,8 @@ const StudentPage = () => {
           />
         </div>
         {selectedSchool && (
-          <button 
-            className="clear-school-button" 
+          <button
+            className="clear-school-button"
             onClick={() => setSelectedSchool(null)}
             title="Clear school filter"
           >
@@ -426,8 +424,8 @@ const StudentPage = () => {
 
       {renderFileUploadSection()}
 
-      <CustomTable 
-        rowData={rowData} 
+      <CustomTable
+        rowData={rowData}
         columnDefs={columnDefs}
         paginationPageSize={20}
         rowHeight={40}
