@@ -24,20 +24,12 @@ export default {
         token: "admin",
       };
     } else if (
-      formData.email == "projectcoordinator@gmail.com" &&
-      formData.password == "1234"
+      formData.email == "lalita.deshpande.gef@gmail.com" &&
+      formData.password == "123@Gef"
     ) {
       return {
         message: "Login Successfully",
-        token: "project-coordinator",
-      };
-    } else if (
-      formData.email == "schoolcoordinator@gmail.com" &&
-      formData.password == "1234"
-    ) {
-      return {
-        message: "Login Successfully",
-        token: "school-coordinator",
+        token: "admin",
       };
     } else {
       return new Error("Login Failed");
@@ -49,9 +41,9 @@ export default {
     const tokenvalue = localStorage.getItem("token");
     if (tokenvalue === "admin") {
       return {
-        email: "admin@gmail.com",
+        email: "lalita.deshpande.gef@gmail.com",
         role: "admin",
-        name: "Rajesh Pokharkar",
+        name: "Lalita Deshpande",
       };
     } else if (tokenvalue == "project-coordinator") {
       return {
@@ -278,7 +270,7 @@ export default {
 
   downloadStudentListBySchoolId: (id) => {
     return apiServiceBased.get(`${STUDENT}/download?schoolId=${id}`, {
-      responseType: 'blob', // Ensure the response is treated as a binary blob
+      responseType: "blob", // Ensure the response is treated as a binary blob
     });
   },
 
@@ -310,12 +302,16 @@ export default {
   },
 
   saveAllPerformanceTable: (schoolId, projectId, data) => {
-    return apiServiceBased.put(`${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`, data);
+    return apiServiceBased.put(
+      `${PERFORMANCE}/students?schoolId=${schoolId}&projectId=${projectId}`,
+      data
+    );
   },
 
   downloadPerformanceTemplate: (data) => {
-    return apiServiceBased.post(`${PERFORMANCE}/download`,data,
-      { responseType: "blob" });
+    return apiServiceBased.post(`${PERFORMANCE}/download`, data, {
+      responseType: "blob",
+    });
   },
 
   //Student
@@ -323,7 +319,9 @@ export default {
     return apiServiceBased.get(
       `${STUDENTS}?schoolId=${selectedSchool ? selectedSchool : ""}`
     );
-    return apiServiceBased.get(`${STUDENTS}?schoolId=${selectedSchool ? selectedSchool : ""}`);
+    return apiServiceBased.get(
+      `${STUDENTS}?schoolId=${selectedSchool ? selectedSchool : ""}`
+    );
   },
 
   addStudent: (data) => {
