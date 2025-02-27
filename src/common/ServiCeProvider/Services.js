@@ -24,7 +24,7 @@ export default {
         token: "admin",
       };
     } else if (
-      formData.email == "lalita.deshpande.gef@gmail.com" &&
+      formData.email == "lalita.despande@gurujifoundation.in" &&
       formData.password == "123@Gef"
     ) {
       return {
@@ -41,7 +41,7 @@ export default {
     const tokenvalue = localStorage.getItem("token");
     if (tokenvalue === "admin") {
       return {
-        email: "lalita.deshpande.gef@gmail.com",
+        email: "lalita.despande@gurujifoundation.in",
         role: "admin",
         name: "Lalita Deshpande",
       };
