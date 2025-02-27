@@ -2,10 +2,18 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children, roles }) => {
-  const { user } = useAuth();
-  if (!user || !roles.includes(user?.role)) {
-    return <Navigate to="/accessdenied" replace />;
+  const { user, loading } = useAuth();
+
+  // Show nothing while loading
+  if (loading) {
+    return null; // Or return a loading spinner component
   }
+
+  // Check if user has required role
+  if (!user || !roles.includes(user.role)) {
+    return <Navigate to="/accessdenied" />;
+  }
+
   return children;
 };
 
