@@ -24,6 +24,22 @@ export default {
         token: "admin",
       };
     } else if (
+      formData.email == "schoolcoordinator@gmail.com" &&
+      formData.password == "1234"
+    ) {
+      return {
+        message: "Login Successfully",
+        token: "school-coordinator",
+      };
+    } else if (
+      formData.email == "projectcoordinator@gmail.com" &&
+      formData.password == "1234"
+    ) {
+      return {
+        message: "Login Successfully",
+        token: "project-coordinator",
+      };
+    } else if (
       formData.email == "lalita.despande@gurujifoundation.in" &&
       formData.password == "123@Gef"
     ) {
