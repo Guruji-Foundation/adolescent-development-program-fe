@@ -26,6 +26,7 @@ const SchoolForm = ({
     trusteeContactInfo: schoolDataDefault?.trusteeContactInfo,
     website: schoolDataDefault?.website,
   });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setSchoolData(schoolDataDefault);
@@ -45,6 +46,8 @@ const SchoolForm = ({
   const handleSubmitButton = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+    setLoading(true);
     try {
       const response = await handleSubmit(schoolData); // Wait for the handleSubmit function
 
@@ -58,6 +61,8 @@ const SchoolForm = ({
       }
     } catch (error) {
       setError(error.message || "Error submitting the form.");
+    } finally {
+      setLoading(false); // Re-enable button
     }
   };
 

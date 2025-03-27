@@ -136,8 +136,7 @@ function SchoolPage() {
     }
   };
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
+  const handleFileUpload = async (file) => {
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -160,7 +159,6 @@ function SchoolPage() {
         });
       }
     }
-    event.target.value = "";
   };
 
   useEffect(() => {

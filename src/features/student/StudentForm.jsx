@@ -19,6 +19,8 @@ function StudentForm({
     const { errors, setError, clearError } = useError();
     const [schoolDropDownData, setSchoolDropDownData] = useState([])
     const [showModal, setShowModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const handleClose = () => {
@@ -27,6 +29,8 @@ function StudentForm({
 
     const handleSubmitButton = async (e) => {
         e.preventDefault()
+        if (loading) return;
+        setLoading(true)
         try {
             const postData = {
                 schoolId: formData?.schoolId,
@@ -55,6 +59,9 @@ function StudentForm({
             }
         } catch (error) {
             setError(error.message || "Error submitting the form.");
+        }
+        finally {
+            setLoading(false); // Re-enable button
         }
     }
 
@@ -104,7 +111,7 @@ function StudentForm({
         <div className="form-container">
             <form onSubmit={handleSubmitButton}>
                 <div className="form-layout">
-            <h2>{heading}</h2>
+                    <h2>{heading}</h2>
 
                     <div className='form-row'>
                         <TextInput
@@ -203,7 +210,7 @@ function StudentForm({
                             onChange={handleInputChange}
                         // required
                         /> */}
-                        </div>
+                    </div>
 
                 </div>
                 <Button

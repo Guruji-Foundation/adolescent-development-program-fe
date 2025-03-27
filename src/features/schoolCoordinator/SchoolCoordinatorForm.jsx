@@ -23,6 +23,7 @@ function SchoolCoordinatorForm({
     mobileNumber: "",
     address: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     navigate("/school-coordinator");
@@ -44,6 +45,8 @@ function SchoolCoordinatorForm({
 
   const handleSubmitButton = async (e) => {
     e.preventDefault();
+    if (loading) return
+    setLoading(true);
     try {
       const res = await handleSubmit(formData);
       if (res?.status) {
@@ -57,6 +60,8 @@ function SchoolCoordinatorForm({
       }
     } catch (error) {
       setError(error.message || "Error submitting the form.");
+    } finally {
+      setLoading(false); // Re-enable button
     }
   };
   return (
