@@ -76,7 +76,8 @@ const TopicsForm = ({
   //submit button
   const handleSubmitButton = async (e) => {
     e.preventDefault();
-
+    if (loading) return
+    setLoading(true)
     try {
       const response = await handleSubmit(topics); // Wait for the handleSubmit function
 
@@ -90,6 +91,8 @@ const TopicsForm = ({
       }
     } catch (error) {
       setError(error.message || "Error submitting the form.");
+    } finally {
+      setLoading(false); // Re-enable button
     }
   };
 

@@ -72,7 +72,9 @@ const TeacherForm = ({
 
   const handleSubmitButton = async (e) => {
     e.preventDefault();
+    if (loading) return
     if (teacherData.schoolId != null && teacherData.schoolId) {
+      setLoading(true)
       try {
         const response = await handleSubmit(teacherData);
 
@@ -86,6 +88,8 @@ const TeacherForm = ({
         }
       } catch (error) {
         setError(error.message || "Error submitting the form.");
+      } finally {
+        setLoading(false); // Re-enable button
       }
     }
   };

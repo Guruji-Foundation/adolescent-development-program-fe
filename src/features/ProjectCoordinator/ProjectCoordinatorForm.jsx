@@ -23,6 +23,7 @@ function ProjectCoordinatorForm({
         mobileNumber: "",
         address: ""
     })
+    const [loading, setLoading] = useState(false);
 
     const handleClose = () => {
         navigate("/project-coordinator")
@@ -44,6 +45,8 @@ function ProjectCoordinatorForm({
 
     const handleSubmitButton = async (e) => {
         e.preventDefault()
+        if (loading) return;
+        setLoading(true)
         try {
             const res = await handleSubmit(formData);
             if (res?.status) {
@@ -57,13 +60,15 @@ function ProjectCoordinatorForm({
             }
         } catch (error) {
             setError(error.message || "Error submitting the form.");
+        } finally {
+            setLoading(false); // Re-enable button
         }
     }
     return (
         <div className="form-container">
             <form onSubmit={handleSubmitButton}>
                 <div className="form-layout">
-            <h2>{heading}</h2>
+                    <h2>{heading}</h2>
 
                     <div className='form-row'>
                         <TextInput

@@ -75,6 +75,8 @@ const ProjectForm = ({
 
   const handleSubmitButton = async (e) => {
     e.preventDefault();
+    if (loading) return
+    setLoading(true);
     try {
       const postData = {
         name: projectData?.name,
@@ -94,6 +96,8 @@ const ProjectForm = ({
       }
     } catch (err) {
       setError(err.message || "Error submitting the form.");
+    } finally {
+      setLoading(false); // Re-enable button
     }
   };
 
@@ -153,11 +157,11 @@ const ProjectForm = ({
       headerName: "Actions",
       width: 120,
       cellRenderer: params => (
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
           gap: '12px',
-          padding: '6px' 
+          padding: '6px'
         }}>
           <button
             type="button"

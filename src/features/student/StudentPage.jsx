@@ -15,6 +15,9 @@ import Toast from "../../common/FeedbackComponents/Toast/Toast";
 import FileOperationsButtons from "../../common/GloabalComponent/FileOperationsButtons";
 import CustomTable from "../../common/GloabalComponent/CustomTable";
 import LoadingSpinner from "../../common/FeedbackComponents/Loading/LoadingSpinner";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+
 const apiUrl = process.env.REACT_APP_API_BASE_URL;
 const StudentPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
@@ -30,6 +33,29 @@ const StudentPage = () => {
   });
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const options = {
+    chart: { type: "column" },
+    title: { text: "Student Progress" },
+    xAxis: { categories: ["Math", "Science", "English", "History"] },
+    yAxis: { title: { text: "Marks" } },
+    series: [
+      { name: "Pre-Intervention", data: [60, 55, 70, 50] },
+      { name: "Post-Intervention", data: [80, 75, 85, 65] },
+    ],
+  };
+
+  const stackedProjectProgress = {
+    chart: { type: "bar" }, // Use "column" or "line" for different visualizations
+    title: { text: "Project Progress" },
+    xAxis: { categories: ["Project A", "Project B", "Project C"] },
+    yAxis: { title: { text: "Average Marks" } },
+    series: [
+      { name: "Pre-Intervention", data: [58, 62, 55] },
+      { name: "Post-Intervention", data: [78, 80, 72] },
+    ],
+  };
+
 
   const navigate = useNavigate();
 
@@ -461,6 +487,10 @@ const StudentPage = () => {
       )}
 
       {isLoading && <LoadingSpinner />}
+
+      {/* <HighchartsReact highcharts={Highcharts} options={options} />
+
+      <HighchartsReact highcharts={Highcharts} options={stackedProjectProgress} /> */}
     </div>
   );
 };
