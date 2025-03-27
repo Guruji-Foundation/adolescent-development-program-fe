@@ -1,108 +1,62 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-
-import "./Sidebar.css"; // Import custom styles
-// import { FaSchool, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa"; // Import icons from react-icons
-import { MdCastForEducation, MdAssignment, MdTopic } from "react-icons/md";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import { BiChevronDown } from "react-icons/bi";
-import { HiOutlineUserGroup } from "react-icons/hi";
+import "./Sidebar.css";
 import {
-  FaSchool,
-  FaChalkboardTeacher,
-  FaUserGraduate,
-  FaChartBar,
-  FaCentercode,
-} from "react-icons/fa"; // Import icons from react-icons
+  BsBuilding,
+  BsPerson,
+  BsPeople,
+  BsPersonLinesFill,
+  BsPersonWorkspace,
+  BsKanban,
+  BsBook,
+  BsListCheck,
+  BsGraphUp,
+  BsChevronLeft,
+} from "react-icons/bs";
 import { useAuth } from "../../../context/AuthContext";
-import Tooltip from "../../FeedbackComponents/Tooltip/ToolTip";
 
-const SchoolCoordinatorSiderbar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const [isProjectsSubmenuOpen, setIsProjectsSubmenuOpen] = useState(false);
-  const location = useLocation(); // Get current location
+const SchoolCoordinatorSidebar = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
   const { user } = useAuth();
-  const toggleProjectsSubmenu = () => {
-    setIsProjectsSubmenuOpen(!isProjectsSubmenuOpen);
-  };
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
+  const navItems = [
+    { path: "/school", name: "School", icon: <BsBuilding /> },
+    { path: "/teacher", name: "Teacher", icon: <BsPerson /> },
+    { path: "/student", name: "Student", icon: <BsPeople /> },
+    { path: "/project-assign", name: "Assign Project", icon: <BsListCheck /> },
+    { path: "/performance", name: "Performance", icon: <BsGraphUp /> },
+  ];
 
-  // Helper function to check if the route is active
-  const isActive = (path) => location.pathname === path;
+  if (!user?.email) return null;
 
-  const returnFun = () => {
-    if (user?.email && user?.role === "school-coordinator") {
-      return (
-        <div className={isCollapsed ? "sidebar collapsed" : "sidebar"}>
-          {/* User Info and Button Wrapper */}
-          <div className="user-info-wrapper">
-            {/* User Info Section */}
-            <div className="user-info">
-              <p>Welcome School coordinator</p>
-              <h1>{user?.name}</h1>
-            </div>
+  return (
+    <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+      <button
+        className="collapse-btn"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        title={isCollapsed ? "Expand" : "Collapse"}
+      >
+        <BsChevronLeft />
+      </button>
 
-            {/* Toggle Button */}
-            <button className="toggle-button" onClick={toggleSidebar}>
-              {isCollapsed ? "»" : "«"}
-            </button>
-          </div>
-
-          {/* Divider Line */}
-          <hr className="sidebar-divider" />
-
-          {/* Sidebar Menu */}
-          <ul className="sidebar-menu">
-            <Tooltip text="Teacher" hide={!isCollapsed}>
-              <li>
-                <Link
-                  to="/teacher"
-                  className={`menu-item ${
-                    isActive("/teacher") ? "active" : ""
-                  }`}
-                >
-                  <FaChalkboardTeacher className="icon" /> {/* Teacher icon */}
-                  {!isCollapsed && <span>Teacher</span>}
-                </Link>
-              </li>
-            </Tooltip>
-            <Tooltip text="Teacher" hide={!isCollapsed}>
-              <li>
-                <Link
-                  to="/student"
-                  className={`menu-item ${
-                    isActive("/student") ? "active" : ""
-                  }`}
-                >
-                  <FaUserGraduate className="icon" /> {/* Student icon */}
-                  {!isCollapsed && <span>Student</span>}
-                </Link>
-              </li>
-            </Tooltip>
-            <Tooltip text="Teacher" hide={!isCollapsed}>
-              <li>
-                <Link
-                  to="/performance"
-                  className={`menu-item ${
-                    isActive("/performance") ? "active" : ""
-                  }`}
-                >
-                  <FaChartBar className="icon" />
-                  {!isCollapsed && <span>Performance</span>}
-                </Link>
-              </li>
-            </Tooltip>
-          </ul>
-        </div>
-      );
-    } else {
-      return <></>;
-    }
-  };
-  return returnFun();
+      <nav className="nav-menu">
+        {navItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`nav-item ${
+              location.pathname === item.path ? "active" : ""
+            }`}
+            title={item.name}
+          >
+            <span className="nav-icon">{item.icon}</span>
+            <span className="nav-label">{item.name}</span>
+          </Link>
+        ))}
+      </nav>
+    </div>
+  );
 };
 
-export default SchoolCoordinatorSiderbar;
+export default SchoolCoordinatorSidebar;
