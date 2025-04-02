@@ -44,8 +44,8 @@ const HttpInterceptor = () => {
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.response?.status === 401) {
-        // Handle unauthorized access
+      if (error.response?.status === 401 && !error.config.url.includes('/auth/login')) {
+        // Handle unauthorized access (except for login endpoint)
         localStorage.removeItem("token");
         window.location.href = "/login";
       }

@@ -32,6 +32,7 @@ export default {
         localStorage.setItem('email', formData.email);
         
         return {
+          status: true,
           message: "Login Successfully",
           token: response.data.data.token,
           role: response.data.data.role,
@@ -39,14 +40,18 @@ export default {
         };
       }
       
-      throw new Error("Login Failed: Invalid response format");
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || 
-                         error.response?.data?.error || 
-                         error.message || 
-                         "Server error occurred";
+      return {
+        status: false,
+        message: response.data?.messages?.[0]?.message || "Invalid username or password"
+      };
       
-      throw new Error(errorMessage);
+    } catch (error) {
+      return {
+        status: false,
+        message: error.response?.data?.messages?.[0]?.message || 
+                error.message || 
+                "Invalid username or password"
+      };
     }
   },
   // Add this method to your Services object
