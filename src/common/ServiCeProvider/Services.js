@@ -8,6 +8,7 @@ import {
   STUDENT,
   PROJECT_COORDINATOR,
   TOPIC,
+  AUTH, // Add AUTH to the import list
 } from "./APIURLs";
 
 const apiServiceBased = HttpInterceptor();
@@ -18,52 +19,70 @@ export default {
     // return apiServiceBased.post(`${AUTH}/register`, formData);
   },
   login: async (formData) => {
-    if (formData.email == "admin@gmail.com" && formData.password == "1234") {
-      return {
-        message: "Login Successfully",
-        token: "admin",
-      };
-    } else if (
-      formData.email == "lalita.despande@gurujifoundation.in" &&
-      formData.password == "123@Gef"
-    ) {
-      return {
-        message: "Login Successfully",
-        token: "admin",
-      };
-    } else {
-      return new Error("Login Failed");
+    try {
+      const response = await apiServiceBased.post(`/auth/login`, {
+        email: formData.email,
+        password: formData.password
+      });
+      
+      if (response.data?.status && response.data?.data?.token) {
+        // Store all user data in localStorage
+        localStorage.setItem('token', response.data.data.token);
+        localStorage.setItem('role', response.data.data.role);
+        localStorage.setItem('email', formData.email);
+        
+        return {
+          message: "Login Successfully",
+          token: response.data.data.token,
+          role: response.data.data.role,
+          expiresIn: response.data.data.expiresIn
+        };
+      }
+      
+      throw new Error("Login Failed: Invalid response format");
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 
+                         error.response?.data?.error || 
+                         error.message || 
+                         "Server error occurred";
+      
+      throw new Error(errorMessage);
     }
+  },
+  // Add this method to your Services object
+  logout: () => {
+    try {
+      // Clear all authentication-related data from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      localStorage.removeItem('email');
+      localStorage.removeItem('name');
+      
+      return true;
+    } catch (error) {
+      console.error('Logout error:', error);
+      return false;
+    }
+  },
 
     // return apiServiceBased.post(`${AUTH}/login`, formData);
-  },
   getProfile: async () => {
-    const tokenvalue = localStorage.getItem("token");
-    if (tokenvalue === "admin") {
+    try {
+      const storedEmail = localStorage.getItem("email");
+      const storedName = localStorage.getItem("name");
+      const storedRole = (localStorage.getItem("role") || "").toLowerCase();
+
       return {
-        email: "lalita.despande@gurujifoundation.in",
-        role: "admin",
-        name: "Lalita Deshpande",
+        email: storedEmail || "teacher@gurujifoundation.in",
+        name: storedName || "John Doe",
+        role: storedRole || "TEACHER"
       };
-    } else if (tokenvalue == "project-coordinator") {
-      return {
-        email: "projectcoordinator@gmail.com",
-        role: "project-coordinator",
-        name: "Akshay Pokharkar",
-      };
-    } else if (tokenvalue == "school-coordinator") {
-      return {
-        email: "schoolcoordinator@gmail.com",
-        role: "school-coordinator",
-        name: "Rajesh Pokharkar",
-      };
+    } catch (error) {
+      throw new Error("Failed to load user profile");
     }
-
-    // return apiServiceBased.get(`${AUTH}/profile`);
   },
-  //school api methods
 
-  //get all school list
+  //school api methods
   getAllSchoolList: async () => {
     return apiServiceBased.get(SCHOOL);
   },

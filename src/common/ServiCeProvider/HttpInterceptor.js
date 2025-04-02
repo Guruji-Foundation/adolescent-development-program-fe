@@ -3,13 +3,6 @@ const apiUrl = process.env.REACT_APP_API_BASE_URL;
 
 const HttpInterceptor = () => {
   const instance = axios.create({ baseURL: apiUrl });
-  // console.log("localstorage token",instance, localStorage.getItem('authtoken'))
-  // const defaultHeaders = () => {
-  //     return {
-  //         'Authorization': "Bearer " + localStorage.getItem('authtoken').replace(/"/g, ''),
-  //         'Content-Type': 'application/json',
-  //     };
-  // };
 
   const defaultHeaders = () => {
     const authToken = localStorage.getItem("token");
@@ -19,11 +12,46 @@ const HttpInterceptor = () => {
     };
 
     if (authToken) {
-      headers["Authorization"] = "Bearer " + authToken.replace(/"/g, "");
+      try {
+        // Remove any quotes and whitespace from the token
+        const cleanToken = authToken.trim().replace(/['"]+/g, '');
+        headers["Authorization"] = `Bearer ${cleanToken}`;
+      } catch (error) {
+        console.error("Error processing auth token:", error);
+        // Remove invalid token
+        localStorage.removeItem("token");
+      }
     }
 
     return headers;
   };
+
+  // Add request interceptor
+  instance.interceptors.request.use(
+    (config) => {
+      config.headers = {
+        ...config.headers,
+        ...defaultHeaders(),
+      };
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  // Add response interceptor
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response?.status === 401) {
+        // Handle unauthorized access
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      }
+      return Promise.reject(error);
+    }
+  );
 
   const request = async (method, url, data = null, customHeaders = {}, configOptions = {}) => {
     const headers = { ...defaultHeaders(), ...customHeaders };
@@ -48,15 +76,14 @@ const HttpInterceptor = () => {
       if (axios.isCancel(error)) {
         console.log("Request canceled:", error.message);
       } else {
-        // Handle other errors
         console.error("Error:", error);
       }
       throw error;
     }
   };
 
-  const get = (url, customHeaders = {},configOptions={}) => {
-    return request("get", url, null, customHeaders,configOptions);
+  const get = (url, customHeaders = {}, configOptions = {}) => {
+    return request("get", url, null, customHeaders, configOptions);
   };
 
   const post = (url, data, customHeaders = {}) => {

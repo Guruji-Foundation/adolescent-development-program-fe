@@ -1,5 +1,5 @@
 export const SCHOOL = "/schools";
-
+export const AUTH = "/auth";
 export const TEACHER = "/teachers";
 export const TOPIC = "/topics";
 export const STUDENT = "/students";
