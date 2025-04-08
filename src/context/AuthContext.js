@@ -13,17 +13,25 @@ export const useAuth = () => {
 
 // Auth provider to wrap your app and provide the authentication state
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    role: "",
-  });
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Load the user from localStorage or API when the app mounts
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      getProfile();
+      getProfile()
+        .catch(error => {
+          console.error("Error loading profile:", error);
+          // Clear invalid token
+          localStorage.removeItem("token");
+          setUser(null);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -66,7 +74,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
