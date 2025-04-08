@@ -5,6 +5,7 @@ import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { BsPersonCircle, BsBell, BsChevronDown, BsBoxArrowRight, BsGear } from "react-icons/bs";
+import Services from "../../../common/ServiCeProvider/Services";
 
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -26,7 +27,8 @@ const Navbar: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    logout();
+    Services.logout(); // Clear all localStorage data
+    logout(); // Call the auth context logout
     navigate("/login");
     setIsDropdownOpen(false);
   };

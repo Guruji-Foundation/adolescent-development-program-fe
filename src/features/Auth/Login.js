@@ -62,18 +62,21 @@ const Login = () => {
     try {
       setLoadingModel(true);
       const res = await Services.login(formData);
-      // const token = res?.data?.token;
-      const token = res?.token;
-      console.log(token);
+      
+      if (!res.status) {
+        setErrors(res.message);
+        setLoadingModel(false);
+        return;
+      }
 
-      if (!token) {
+      if (!res.token) {
         setErrors("Failed to retrieve token. Please try again.");
         setLoadingModel(false);
         return;
       }
 
       try {
-        const user = await login(token); // Call login with token
+        const user = await login(res.token);
         if (user) {
           navigateTo(user.role);
         } else {
