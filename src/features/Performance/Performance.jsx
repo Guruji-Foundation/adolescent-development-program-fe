@@ -352,10 +352,7 @@ function Performance() {
         projectId: Number(selectedProject),
         topicIds: [Number(selectedTopics)],
       };
-      const url = `${apiUrl}/performances/download`;
-      const response = await axios.post(url, requestBody, {
-        responseType: "blob",
-      });
+      const response = await apiServices.downloadPerformanceTemplate(requestBody);
 
       // Check if the response is actually a blob (successful download)
       if (response.data instanceof Blob) {
@@ -405,24 +402,8 @@ function Performance() {
 
   const uploadFile = async (file) => {
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
-      const url = `${apiUrl}/performances/upload`;
-      const response = await axios.post(url, formData, {
-        headers: {
-          "sec-ch-ua-platform": '"Windows"',
-          Referer: `${apiUrl}/swagger-ui/index.html`,
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-          accept: "application/json",
-          "sec-ch-ua":
-            '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
-          "sec-ch-ua-mobile": "?0",
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await apiServices.uploadFile('/performances/upload', file);
 
       if (response?.status) {
         setFile(null);

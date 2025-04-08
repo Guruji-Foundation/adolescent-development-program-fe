@@ -26,6 +26,7 @@ function SchoolPage() {
     type: "warning",
   });
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
+  const [uploadResults, setUploadResults] = useState(null);
 
   const navigate = useNavigate();
 
@@ -104,11 +105,7 @@ function SchoolPage() {
 
   const handleDownloadTemplateClick = async () => {
     try {
-      const url = `${apiUrl}/schools/download-template`;
-      const response = await axios.get(url, {
-        responseType: "blob",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await apiServices.downloadSchoolTemplate();
       downloadCsvData(response.data, "school_template.xlsx");
     } catch (error) {
       setToast({
@@ -121,8 +118,7 @@ function SchoolPage() {
 
   const downloadSchoolList = async () => {
     try {
-      const url = `${apiUrl}/schools/download`;
-      const response = await axios.get(url, { responseType: "blob" });
+      const response = await apiServices.downloadSchoolList();
       const now = new Date();
       const date = now.toISOString().split("T")[0];
       const time = now.toTimeString().split(" ")[0].replace(/:/g, "-");
@@ -138,16 +134,11 @@ function SchoolPage() {
 
   const handleFileUpload = async (file) => {
     if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-
+      setLoading(true);
       try {
-        const url = `${apiUrl}/schools/upload`;
-        const response = await axios.post(url, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        if (response?.status === 200) {
+        const response = await apiServices.uploadFile('/schools/upload', file);
+        if (response?.status) {
+          setUploadResults(response.data);
           setShowUploadSuccessModal(true);
           await getSchoolList();
         }
@@ -157,6 +148,8 @@ function SchoolPage() {
           message: "Failed to upload file",
           type: "error",
         });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -286,16 +279,30 @@ function SchoolPage() {
         />
       )}
 
-      {showUploadSuccessModal && (
+      {showUploadSuccessModal && uploadResults && (
         <ConfirmationModal
-          title="Upload Successful"
-          message="School data has been successfully uploaded!"
-          onConfirm={() => setShowUploadSuccessModal(false)}
-          onCancel={() => setShowUploadSuccessModal(false)}
+          title="Upload Results"
+          message={
+            `Upload Results Summary\n\n` +
+            `✓ Successfully processed: ${uploadResults.successCount}\n` +
+            `✕ Failed to process: ${uploadResults.failureCount}\n` +
+            `• Total items: ${uploadResults.totalProcessed}` +
+            (uploadResults.failedItems?.length > 0 ? 
+              `\n\nFailed Items:\n${uploadResults.failedItems.map(item => `• ${item}`).join('\n')}` : '')
+          }
+          onConfirm={() => {
+            setShowUploadSuccessModal(false);
+            setUploadResults(null);
+          }}
+          onCancel={() => {
+            setShowUploadSuccessModal(false);
+            setUploadResults(null);
+          }}
           confirmText="OK"
           showCancelButton={false}
         />
       )}
+
 
       {toast.show && (
         <Toast

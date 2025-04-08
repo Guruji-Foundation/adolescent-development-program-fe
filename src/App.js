@@ -52,7 +52,8 @@ import EditSchoolCoordinator from "./features/schoolCoordinator/EditSchoolCoordi
 
 //pages import
 import Login from "./features/Auth/Login";
-import AccessDenied from "./Pages/AccessDenied";
+// Remove this import line
+// import AccessDenied from "./Pages/AccessDenied";
 import HomePage from "./Pages/homepage";
 
 //routes restriction feature import
@@ -314,9 +315,8 @@ const App = () => {
               }
             />
             {/* pages */}
-            <Route path="/accessdenied" element={<AccessDenied />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
       </div>
