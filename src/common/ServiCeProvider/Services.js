@@ -112,6 +112,26 @@ export default {
     return apiServiceBased.put(`${SCHOOL}/${id}`, schoolData);
   },
 
+  //download school template
+  downloadSchoolTemplate: async () => {
+    return apiServiceBased.getBlob(`${SCHOOL}/download-template`);
+  },
+
+  //download school list
+  downloadSchoolList: async () => {
+    return apiServiceBased.getBlob(`${SCHOOL}/download`);
+  },
+
+  //upload file
+  uploadFile: async (url, file) => {
+    return apiServiceBased.uploadFile(url, file);
+  },
+
+  //download performance template
+  downloadPerformanceTemplate: async (requestBody) => {
+    return apiServiceBased.postBlob(`${PERFORMANCE}/download`, requestBody);
+  },
+
   //---------------------------
 
   //Teacher api methods
@@ -332,11 +352,11 @@ export default {
     );
   },
 
-  downloadPerformanceTemplate: (data) => {
-    return apiServiceBased.post(`${PERFORMANCE}/download`, data, {
-      responseType: "blob",
-    });
-  },
+  // downloadPerformanceTemplate: (data) => {
+  //   return apiServiceBased.post(`${PERFORMANCE}/download`, data, {
+  //     responseType: "blob",
+  //   });
+  // },
 
   //Student
   getStudentList: (selectedSchool) => {
