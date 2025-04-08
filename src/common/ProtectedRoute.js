@@ -3,18 +3,25 @@ import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
+  const token = localStorage.getItem("token");
 
-  // Show nothing while loading
+  // Show loading spinner while checking authentication
   if (loading) {
-    return null; // Or return a loading spinner component
+    return <div>Loading...</div>; // You can replace this with a proper loading component
   }
 
-  // Check if user has required role
-  if (!user || !roles.includes(user.role)) {
-    return <Navigate to="/accessdenied" />;
+  // If no token exists, redirect to login
+  if (!token) {
+    return <Navigate to="/login" replace />;
   }
 
-  return children;
+  // If we have user data and roles match, render the protected content
+  if (user && (!roles || roles.includes(user.role))) {
+    return children;
+  }
+
+  // If we get here, user is logged in but doesn't have the required role
+  return <Navigate to="/accessdenied" replace />;
 };
 
 export default ProtectedRoute;

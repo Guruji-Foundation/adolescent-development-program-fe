@@ -29,9 +29,17 @@ const HttpInterceptor = () => {
   // Add request interceptor
   instance.interceptors.request.use(
     (config) => {
+      const isFileUpload = config.data instanceof FormData;
+      const headers = defaultHeaders();
+      
+      // For file uploads, don't set Content-Type header
+      if (isFileUpload) {
+        delete headers["Content-Type"];
+      }
+
       config.headers = {
         ...config.headers,
-        ...defaultHeaders(),
+        ...headers,
       };
       return config;
     },
@@ -54,7 +62,7 @@ const HttpInterceptor = () => {
   );
 
   const request = async (method, url, data = null, customHeaders = {}, configOptions = {}) => {
-    const headers = { ...defaultHeaders(), ...customHeaders };
+    let headers = { ...defaultHeaders(), ...customHeaders };
     const source = axios.CancelToken.source();
 
     const config = {
@@ -86,6 +94,12 @@ const HttpInterceptor = () => {
     return request("get", url, null, customHeaders, configOptions);
   };
 
+  const getBlob = (url, customHeaders = {}) => {
+    return request("get", url, null, customHeaders, {
+      responseType: "blob"
+    });
+  };
+
   const post = (url, data, customHeaders = {}) => {
     return request("post", url, data, customHeaders);
   };
@@ -98,7 +112,40 @@ const HttpInterceptor = () => {
     return request("delete", url, data, customHeaders);
   };
 
-  return { get, post, put, delete: _delete };
+  const postBlob = (url, data, customHeaders = {}) => {
+    return request("post", url, data, customHeaders, {
+      responseType: "blob"
+    });
+  };
+
+  const uploadFile = async (url, file, customHeaders = {}) => {
+    console.log('uploadFile', url, file, customHeaders);
+    if (!file) {
+      throw new Error('File is required for upload');
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // For file uploads, we need to let the browser set the Content-Type header
+    // with the correct boundary parameter
+    const headers = {
+      ...customHeaders,
+      'Content-Type': 'multipart/form-data',
+      Accept: '*/*'
+    };
+    console.log('uploadFile', url, formData, headers);
+
+    try {
+      const response = await request('post', url, formData, headers);
+      return response.data;
+    } catch (error) {
+      console.error('File upload error:', error);
+      throw error.response?.data || error;
+    }
+  };
+
+  return { get, post, put, delete: _delete, getBlob, postBlob, uploadFile };
 };
 
 export default HttpInterceptor;
