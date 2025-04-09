@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import "./TextInput.css";
 
 interface TextInputProps {
   label: string;
@@ -21,6 +23,12 @@ const TextInput: React.FC<TextInputProps> = ({
   isTextArea = false,
   rows = 2,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="form-field">
       <label htmlFor={name} className={required ? "required" : ""}>
@@ -37,14 +45,25 @@ const TextInput: React.FC<TextInputProps> = ({
           style={{width:"100%"}}
         />
       ) : (
-        <input
-          type={type}
-          id={name}
-          name={name}
-          value={value}
-          onChange={onChange}
-          required={required}
-        />
+        <div className="input-with-icon">
+          <input
+            type={type === "password" ? (showPassword ? "text" : "password") : type}
+            id={name}
+            name={name}
+            value={value}
+            onChange={onChange}
+            required={required}
+          />
+          {type === "password" && (
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
