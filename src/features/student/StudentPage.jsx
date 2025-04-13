@@ -175,8 +175,10 @@ const StudentPage = () => {
     setIsLoading(true);
     try {
       const url = `${apiUrl}/students/upload?schoolId=${selectedSchool}`;
+      const authToken = localStorage.getItem('token')
       const response = await axios.post(url, formData, {
         headers: {
+          "Authorization": `Bearer ${authToken}`,
           "sec-ch-ua-platform": '"Windows"',
           Referer: `${apiUrl}/swagger-ui/index.html`,
           "User-Agent":
