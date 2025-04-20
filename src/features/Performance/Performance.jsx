@@ -536,6 +536,7 @@ function Performance() {
                   resizable: true,
                   suppressSizeToFit: true,
                   flex: 1,
+                  cellStyle: {color: 'red', 'background-color': 'green'}
                 }}
                 pagination={true}
                 paginationPageSize={10}

@@ -98,18 +98,18 @@ const ProjectPage = () => {
         </div>
       )
     },
-    {
-      headerName: "Status",
-      field: "status",
-      flex: 1,
-      cellRenderer: params => (
-        <div className="status-cell">
-          <span className={`status-badge ${params.value.toLowerCase()}`}>
-            {params.value}
-          </span>
-        </div>
-      )
-    },
+    // {
+    //   headerName: "Status",
+    //   field: "status",
+    //   flex: 1,
+    //   cellRenderer: params => (
+    //     <div className="status-cell">
+    //       <span className={`status-badge ${params?.value?.toLowerCase()}`}>
+    //         {params.value}
+    //       </span>
+    //     </div>
+    //   )
+    // },
     {
       headerName: "Actions",
       cellRenderer: params => (

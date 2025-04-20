@@ -219,13 +219,13 @@ const ProjectForm = ({
           </div>
 
           <div className='form-row'>
-            <TextInput
+            {/* <TextInput
               label="Status"
               name="status"
               value={projectData.status}
               onChange={handleInputChange}
               required
-            />
+            /> */}
             <SelectInput
               label="Project Coordinator"
               value={projectData.projectCoordinatorId || ""}
@@ -233,6 +233,9 @@ const ProjectForm = ({
               options={coordinatorList}
               required
             />
+            <div>
+              
+            </div>
           </div>
 
         </div>

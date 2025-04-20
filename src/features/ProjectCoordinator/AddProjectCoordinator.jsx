@@ -1,5 +1,5 @@
 import React from 'react'
-import ProjectCoordinatorForm from './ProjectCoordinatorForm'
+import AddProjectCoordinatorForm from './AddProjectCoordinatorForm'
 import { useNavigate } from 'react-router-dom';
 import apiServices from "../../common/ServiCeProvider/Services";
 
@@ -19,7 +19,7 @@ function AddProjectCoordinator() {
     }
     return (
         <div>
-            <ProjectCoordinatorForm
+            <AddProjectCoordinatorForm
                 heading={"Add Coordinator"}
                 handleSubmit={handleAddCoordinator}
                 message={{
