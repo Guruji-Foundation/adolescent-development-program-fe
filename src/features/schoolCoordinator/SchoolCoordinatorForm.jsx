@@ -76,13 +76,13 @@ function SchoolCoordinatorForm({
             onChange={handleInputChange}
             required
           />
-          <TextInput
+          {/* <TextInput
             label="Area of Expertise"
             name="areaOfExpertise"
             value={formData.areaOfExpertise}
             onChange={handleInputChange}
             required
-          />
+          /> */}
           {/* <TextInput
                         label="Avalability"
                         name="availability"
