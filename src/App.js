@@ -61,6 +61,7 @@ import ProtectedRoute from "./common/ProtectedRoute";
 
 //css files
 import "./App.css"; // Global styles
+import ErrorPageForUpload from "./common/ErrorPageForUpload";
 
 const App = () => {
   return (
@@ -77,6 +78,12 @@ const App = () => {
                 <ProtectedRoute roles={["admin", "project-coordinator"]}>
                   <SchoolPage />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/errorpageforupload"
+              element={
+               <ErrorPageForUpload/>
               }
             />
             <Route
