@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./SchoolPage.css";
 import "../../CSS/Main.css";
 
@@ -138,16 +138,17 @@ function SchoolPage() {
       try {
         const response = await apiServices.uploadFile('/schools/upload', file);
         if (response?.status) {
-          setUploadResults(response.data);
+          setUploadResults(response);
           setShowUploadSuccessModal(true);
           await getSchoolList();
         }
       } catch (error) {
-        setToast({
-          show: true,
-          message: "Failed to upload file",
-          type: "error",
-        });
+        // console.log(error);
+        if (error?.data) {
+          setUploadResults(error);
+          setShowUploadSuccessModal(true);
+          await getSchoolList();
+        }
       } finally {
         setLoading(false);
       }
@@ -284,12 +285,12 @@ function SchoolPage() {
           title="Upload Results"
           message={
             `Upload Results Summary\n\n` +
-            `✓ Successfully processed: ${uploadResults.successCount}\n` +
-            `✕ Failed to process: ${uploadResults.failureCount}\n` +
-            `• Total items: ${uploadResults.totalProcessed}` +
-            (uploadResults.failedItems?.length > 0 ? 
-              `\n\nFailed Items:\n${uploadResults.failedItems.map(item => `• ${item}`).join('\n')}` : '')
+            `✓ Successfully processed: ${uploadResults?.data.successCount}\n` +
+            `✕ Failed to process: ${uploadResults?.data.failureCount}\n` +
+            `• Total items: ${uploadResults?.data.totalProcessed}`
           }
+          seeMore = {!uploadResults.status}
+          data={uploadResults}
           onConfirm={() => {
             setShowUploadSuccessModal(false);
             setUploadResults(null);
